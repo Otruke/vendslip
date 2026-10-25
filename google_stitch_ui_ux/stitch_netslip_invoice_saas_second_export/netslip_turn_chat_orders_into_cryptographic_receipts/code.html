@@ -1,0 +1,1033 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_standard" name="shell-type"/><title>NetSlip | Digital Receipts &amp; Ledger Infrastructure</title><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+          "outline-variant": "#bfc8ca",
+          "background": "#f8f9ff",
+          "on-primary-container": "#d0f6ff",
+          "secondary-fixed-dim": "#a1cde0",
+          "primary-container": "#377581",
+          "on-tertiary-fixed": "#001f24",
+          "on-surface": "#151c24",
+          "error": "#ba1a1a",
+          "on-primary-fixed-variant": "#004e5a",
+          "tertiary": "#005d69",
+          "inverse-surface": "#2a313a",
+          "surface-bright": "#f8f9ff",
+          "error-container": "#ffdad6",
+          "inverse-primary": "#93d0dd",
+          "on-secondary-fixed-variant": "#1e4c5c",
+          "on-error-container": "#93000a",
+          "surface": "#f8f9ff",
+          "inverse-on-surface": "#eaf1fd",
+          "surface-variant": "#dce3ee",
+          "on-tertiary-container": "#cdf6ff",
+          "tertiary-fixed-dim": "#8ad2df",
+          "on-surface-variant": "#40484a",
+          "secondary-container": "#bae6fa",
+          "surface-dim": "#d4dae6",
+          "on-secondary-fixed": "#001f29",
+          "primary": "#185c68",
+          "secondary-fixed": "#bde9fd",
+          "on-tertiary": "#ffffff",
+          "on-secondary": "#ffffff",
+          "on-primary": "#ffffff",
+          "secondary": "#386475",
+          "primary-fixed": "#afecfa",
+          "surface-container-lowest": "#ffffff",
+          "tertiary-container": "#297683",
+          "primary-fixed-dim": "#93d0dd",
+          "on-primary-fixed": "#001f25",
+          "tertiary-fixed": "#a6eefc",
+          "outline": "#70797b",
+          "surface-container-high": "#e2e9f4",
+          "surface-tint": "#266772",
+          "surface-container-low": "#eef4ff",
+          "surface-container": "#e8eefa",
+          "surface-container-highest": "#dce3ee",
+          "on-secondary-container": "#3d6879",
+          "on-error": "#ffffff",
+          "on-background": "#151c24",
+          "on-tertiary-fixed-variant": "#004e59"
+        },
+        "borderRadius": {
+          "DEFAULT": "0.125rem",
+          "lg": "0.25rem",
+          "xl": "0.5rem",
+          "full": "0.75rem"
+        },
+        "spacing": {
+          "gutter-lg": "1.5rem",
+          "margin-md": "1.5rem",
+          "margin": "1rem",
+          "margin-lg": "2.5rem",
+          "space-lg": "1.25rem",
+          "space-md": "0.875rem",
+          "space-xl": "2rem",
+          "gutter": "1rem",
+          "space-xs": "0.25rem",
+          "space-2xl": "3rem",
+          "space-sm": "0.5rem"
+        },
+        "fontFamily": {
+          "headline-lg": [
+            "Plus Jakarta Sans"
+          ],
+          "slip-accent-script": [
+            "\"Brush Script MT, cursive\""
+          ],
+          "headline-xl-mobile": [
+            "Plus Jakarta Sans"
+          ],
+          "headline-md": [
+            "Plus Jakarta Sans"
+          ],
+          "currency-cell": [
+            "Plus Jakarta Sans"
+          ],
+          "headline-xl": [
+            "Plus Jakarta Sans"
+          ],
+          "label-xs": [
+            "Plus Jakarta Sans"
+          ],
+          "body-md": [
+            "Plus Jakarta Sans"
+          ],
+          "body-lg": [
+            "Plus Jakarta Sans"
+          ],
+          "body-sm": [
+            "Plus Jakarta Sans"
+          ],
+          "headline-lg-mobile": [
+            "Plus Jakarta Sans"
+          ],
+          "label-md": [
+            "Plus Jakarta Sans"
+          ],
+          "currency-display": [
+            "Plus Jakarta Sans"
+          ]
+        },
+        "fontSize": {
+          "headline-lg": [
+            "28px",
+            {
+              "lineHeight": "36px",
+              "letterSpacing": "-0.015em",
+              "fontWeight": "700"
+            }
+          ],
+          "slip-accent-script": [
+            "18px",
+            {
+              "lineHeight": "24px",
+              "fontWeight": "400"
+            }
+          ],
+          "headline-xl-mobile": [
+            "28px",
+            {
+              "lineHeight": "36px",
+              "letterSpacing": "-0.015em",
+              "fontWeight": "800"
+            }
+          ],
+          "headline-md": [
+            "20px",
+            {
+              "lineHeight": "28px",
+              "letterSpacing": "-0.01em",
+              "fontWeight": "600"
+            }
+          ],
+          "currency-cell": [
+            "14px",
+            {
+              "lineHeight": "20px",
+              "fontWeight": "600"
+            }
+          ],
+          "headline-xl": [
+            "36px",
+            {
+              "lineHeight": "44px",
+              "letterSpacing": "-0.02em",
+              "fontWeight": "800"
+            }
+          ],
+          "label-xs": [
+            "10px",
+            {
+              "lineHeight": "14px",
+              "letterSpacing": "0.06em",
+              "fontWeight": "700"
+            }
+          ],
+          "body-md": [
+            "14px",
+            {
+              "lineHeight": "20px",
+              "fontWeight": "400"
+            }
+          ],
+          "body-lg": [
+            "16px",
+            {
+              "lineHeight": "24px",
+              "fontWeight": "400"
+            }
+          ],
+          "body-sm": [
+            "12px",
+            {
+              "lineHeight": "16px",
+              "fontWeight": "400"
+            }
+          ],
+          "headline-lg-mobile": [
+            "22px",
+            {
+              "lineHeight": "30px",
+              "letterSpacing": "-0.01em",
+              "fontWeight": "700"
+            }
+          ],
+          "label-md": [
+            "12px",
+            {
+              "lineHeight": "16px",
+              "letterSpacing": "0.04em",
+              "fontWeight": "600"
+            }
+          ],
+          "currency-display": [
+            "32px",
+            {
+              "lineHeight": "40px",
+              "letterSpacing": "-0.01em",
+              "fontWeight": "700"
+            }
+          ]
+        }
+      }
+    }
+  }</script></head><body class="bg-background font-body-md text-body-md text-on-surface antialiased"><header class="fixed top-0 left-0 right-0 z-50 bg-surface-container-lowest/85 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-20 max-w-7xl mx-auto px-margin-md lg:px-margin-lg flex items-center justify-between gap-gutter"><div class="flex items-center gap-space-md"><div class="flex items-center gap-space-sm"><span class="flex items-center justify-center w-9 h-9 rounded-xl bg-primary-container text-on-primary-container shadow-sm"><span class="material-symbols-outlined text-[20px]">receipt_long</span></span><span class="font-headline-md text-headline-md text-on-surface tracking-tight font-extrabold">NetSlip</span></div><span class="hidden sm:inline-flex items-center px-space-sm py-space-xs rounded-full bg-secondary-container text-on-secondary-container font-label-xs text-label-xs font-bold uppercase tracking-wider">Ledger v2.4</span></div><nav class="hidden lg:flex items-center gap-space-lg" data-active-classes="text-primary font-semibold"><a aria-current="page" class="transition-colors text-primary font-semibold" data-path="landing-page" href="#">Features</a><a class="font-body-md text-body-md text-on-surface-variant hover:text-on-surface transition-colors" data-path="how-it-works" href="#">How It Works</a><a class="font-body-md text-body-md text-on-surface-variant hover:text-on-surface transition-colors" data-path="ledger-security" href="#">Ledger Security</a><a class="font-body-md text-body-md text-on-surface-variant hover:text-on-surface transition-colors" data-path="pricing" href="#">Pricing</a><a class="font-body-md text-body-md text-on-surface-variant hover:text-on-surface transition-colors" data-path="api-docs" href="#">API Docs</a></nav><div class="flex items-center gap-space-md"><a class="hidden sm:inline-flex items-center px-space-md py-space-sm rounded-xl font-label-md text-label-md text-primary hover:bg-surface-container-low hover:text-primary transition-all font-semibold" data-path="login" href="#">Sign In</a><a class="inline-flex items-center px-space-lg py-space-sm rounded-xl bg-primary text-on-primary hover:bg-primary-container hover:text-on-primary font-label-md text-label-md font-semibold transition-all shadow-sm active:scale-[0.98]" data-path="signup" href="#">Launch App</a><div class="pl-space-xs border-l border-surface-variant"><img alt="Profile" class="w-8 h-8 rounded-full object-cover ring-2 ring-primary-container/20" src="https://lh3.googleusercontent.com/aida/AEtjO1WLaDa0NCfzEurMqJwwHUoAPx2nzVWD49nSzjicRmv67jrsdvvleKp2fKIsmfUYc_lyDJpEG8Mi6wxCCAjsrLbTtCgFWFtt5yrXHGJ_Lkp1E2zCWak2bNcYJTF2JRphj--b8NMG3fBDXXc2PL2dX6BcIfJVDjcJjJ9MH3UlaShSnu6oD6iLeX_a8Nd8TF-mBO2H-JSdDPs9DgMoFAiKYy1uAKVTfVCRITCjj1fvmDuMDWWTYECZh96pGvFtFWLe7C4joLggZGAu_ss"/></div></div></div></header><main class="w-full pt-20 bg-background min-h-screen"><div class="flex flex-col w-full">
+<!-- ========================================== -->
+<!-- HERO: TACTILE CONVERSATIONAL SLIP WORKSPACE -->
+<!-- ========================================== -->
+<section class="relative w-full pt-12 pb-24 lg:pt-16 lg:pb-32 overflow-hidden bg-background">
+<!-- Atmospheric subtle ledger mesh background -->
+<div class="absolute inset-0 pointer-events-none opacity-[0.035] bg-[radial-gradient(#185c68_1px,transparent_1px)] [background-size:24px_24px]"></div>
+<div class="absolute -top-40 right-[-10%] w-[680px] h-[680px] rounded-full bg-primary-fixed/30 blur-[130px] pointer-events-none"></div>
+<div class="absolute top-1/2 left-[-15%] w-[540px] h-[540px] rounded-full bg-secondary-container/40 blur-[120px] pointer-events-none"></div>
+<div class="max-w-7xl mx-auto px-margin-md lg:px-margin-lg relative z-10">
+<!-- Overline Tag -->
+<div class="flex items-center justify-start mb-space-lg">
+<div class="inline-flex items-center gap-space-sm px-space-md py-space-xs rounded-full bg-surface-container-low shadow-[0_2px_8px_rgba(24,92,104,0.06)] border border-outline-variant/40">
+<span class="inline-block w-2 h-2 rounded-full bg-primary animate-ping"></span>
+<span class="font-label-md text-label-md text-primary font-bold tracking-wider uppercase">1-Tap Conversational Commerce · Cryptographic Receipts</span>
+</div>
+</div>
+<!-- Main Headline + Value Subtitle Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter-lg items-end mb-space-2xl">
+<div class="lg:col-span-8 flex flex-col gap-space-md">
+<h1 class="font-headline-xl text-headline-xl lg:text-[54px] lg:leading-[60px] tracking-tight font-extrabold text-on-surface">
+            Turn chat orders into <br class="hidden sm:inline"/>
+<span class="text-primary underline decoration-secondary-container decoration-4 underline-offset-8">cryptographically sealed</span> receipts in 3 seconds.
+          </h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl leading-relaxed">
+            For modern African merchants selling across WhatsApp, Telegram &amp; Instagram. Generate tamper-proof digital paper slips, collect instantaneous Flutterwave &amp; stablecoin settlements, and anchor an immutable audit trail without ever leaving your chat thread.
+          </p>
+</div>
+<div class="lg:col-span-4 flex flex-col sm:flex-row lg:flex-col gap-space-sm pb-space-xs">
+<div class="flex items-center gap-space-sm">
+<a class="inline-flex items-center justify-center gap-space-sm px-space-xl py-space-md rounded-xl bg-primary text-on-primary font-headline-md text-headline-md shadow-[0_8px_20px_rgba(24,92,104,0.24)] hover:bg-primary-container transition-all active:scale-[0.98]" href="#slip-sandbox">
+<span>Start Issuing Free</span>
+<span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+</a>
+<a class="inline-flex items-center justify-center gap-space-xs px-space-lg py-space-md rounded-xl bg-surface-container-lowest text-primary font-label-md text-label-md shadow-sm border border-outline-variant/50 hover:bg-surface-container-low transition-all" href="#how-it-works">
+<span class="material-symbols-outlined text-primary text-[20px]">smart_toy</span>
+<span>Telegram Bot Demo</span>
+</a>
+</div>
+<div class="flex items-center gap-space-xs pt-space-xs text-on-surface-variant font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-primary text-[18px]">verified</span>
+<span>No credit card required. 15 free slips instantly issued.</span>
+</div>
+</div>
+</div>
+<!-- Trust Strip -->
+<div class="py-space-md px-space-lg rounded-xl bg-surface-container-low/80 backdrop-blur mb-space-2xl flex flex-wrap items-center justify-between gap-gutter shadow-sm border border-outline-variant/30">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-primary text-[20px]">storefront</span>
+<p class="font-body-sm text-body-sm text-on-surface font-medium">
+            Powering <span class="font-bold text-primary">1,840+</span> bespoke ateliers, luxury watch curators &amp; high-volume boutique vendors in Lagos, Abuja &amp; Nairobi.
+          </p>
+</div>
+<div class="flex items-center gap-space-lg opacity-70 grayscale hover:grayscale-0 transition-all font-headline-md text-headline-md font-bold tracking-tight text-on-surface-variant">
+<span class="text-[13px] tracking-widest font-extrabold uppercase">Amina Silk</span>
+<span class="text-[13px] tracking-widest font-extrabold uppercase">LuxeVault NG</span>
+<span class="text-[13px] tracking-widest font-extrabold uppercase">Orijin Roasters</span>
+<span class="text-[13px] tracking-widest font-extrabold uppercase">Kigali Kicks</span>
+</div>
+</div>
+<!-- PHOTOREALISTIC SPLIT SHOWCASE (Tactile Paper + Live Chat) -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-xl items-center">
+<!-- Left Column: Realistic WhatsApp / Chat Dispatch Bubble -->
+<div class="lg:col-span-5 flex flex-col gap-space-md">
+<div class="p-space-lg rounded-full bg-surface-container-lowest shadow-[0_12px_36px_rgba(24,92,104,0.08)] border border-outline-variant/40 relative">
+<!-- Chat App Bar Mockup -->
+<div class="flex items-center justify-between pb-space-sm mb-space-md border-b border-surface-container">
+<div class="flex items-center gap-space-sm">
+<div class="w-10 h-10 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-bold">
+<span class="material-symbols-outlined text-[20px]">chat</span>
+</div>
+<div>
+<div class="flex items-center gap-space-xs">
+<span class="font-headline-md text-[15px] font-bold text-on-surface">Maison Al-Dhabi VIP Desk</span>
+<span class="material-symbols-outlined text-primary text-[16px]">verified</span>
+</div>
+<span class="font-body-sm text-label-xs text-on-surface-variant">WhatsApp Commerce Bridge • Online</span>
+</div>
+</div>
+<span class="px-space-sm py-space-xs rounded-full bg-secondary-container text-on-secondary-container font-label-xs text-label-xs font-bold">SECURE CHANNEL</span>
+</div>
+<!-- Customer Message Bubble -->
+<div class="flex flex-col gap-space-sm">
+<div class="self-start max-w-[85%] bg-surface-container p-space-md rounded-xl rounded-tl-none shadow-sm">
+<p class="font-body-md text-body-md text-on-surface">
+                  Good afternoon Sis! Please I will take the <span class="font-bold">2 Emerald Silk Kaftans</span> and the <span class="font-bold">Embossed Leather Mule Shoes</span> (Size 43). Send official invoice please.
+                </p>
+<span class="font-body-sm text-[10px] text-on-surface-variant flex justify-end mt-1">14:22</span>
+</div>
+<!-- Vendor Bot Slash Command Input Simulation -->
+<div class="self-end max-w-[90%] bg-primary-container text-on-primary-container p-space-md rounded-xl rounded-tr-none shadow-md">
+<div class="flex items-center gap-space-xs font-label-md text-label-md font-mono mb-1 text-primary-fixed">
+<span class="material-symbols-outlined text-[14px]">terminal</span>
+<span>/slip 2 "Emerald Kaftan" 46000 + 1 "Mule Shoes" 35500 to @Alhaji_Bello</span>
+</div>
+<p class="font-body-sm text-[11px] opacity-90">Executing NetSlip Ledger Dispatch protocol...</p>
+<span class="font-body-sm text-[10px] opacity-80 flex justify-end mt-1">14:23 • Delivered</span>
+</div>
+<!-- Instant NetSlip Bot Card in Chat -->
+<div class="self-end max-w-[92%] bg-surface-container-lowest p-space-md rounded-xl border border-secondary-fixed shadow-[0_6px_20px_rgba(24,92,104,0.12)]">
+<div class="flex items-center justify-between pb-space-xs border-b border-surface-container">
+<div class="flex items-center gap-space-xs">
+<span class="w-5 h-5 rounded-md bg-primary text-on-primary flex items-center justify-center font-bold text-[10px]">N</span>
+<span class="font-label-md text-label-md font-bold text-primary">NetSlip Verified Invoice</span>
+</div>
+<span class="font-label-xs text-label-xs px-2 py-0.5 rounded bg-amber-100 text-amber-900 font-bold uppercase">Awaiting Transfer</span>
+</div>
+<div class="py-space-sm flex items-center justify-between">
+<div>
+<div class="font-headline-md text-headline-md font-extrabold text-on-surface">₦81,500.00</div>
+<div class="font-body-sm text-label-xs text-on-surface-variant">Slip #NS-9804 • Maison Al-Dhabi</div>
+</div>
+<div class="text-right">
+<div class="font-label-xs text-[10px] text-on-surface-variant">Dual Rail Settlement</div>
+<div class="font-body-sm text-[11px] font-semibold text-primary">Bank / USSD / USDT</div>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-space-xs pt-space-xs">
+<button class="py-space-xs px-space-sm rounded bg-primary text-on-primary font-label-md text-label-md font-semibold text-center hover:opacity-90 transition-all flex items-center justify-center gap-1">
+<span class="material-symbols-outlined text-[16px]">account_balance</span>
+<span>1-Tap Pay</span>
+</button>
+<button class="py-space-xs px-space-sm rounded bg-surface-container text-on-surface font-label-md text-label-md font-semibold text-center hover:bg-surface-container-high transition-all flex items-center justify-center gap-1">
+<span class="material-symbols-outlined text-[16px]">download</span>
+<span>View Slip</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Tactile High-Fidelity Paper Slip (Visual Centerpiece) -->
+<div class="lg:col-span-7 flex justify-center">
+<div class="relative w-full max-w-[480px]">
+<!-- Ambient paper floating shadow -->
+<div class="absolute inset-x-6 bottom-[-18px] h-14 bg-on-surface/15 blur-xl rounded-full pointer-events-none"></div>
+<!-- Crisp Physical Paper Container -->
+<div class="relative bg-surface-container-lowest rounded-xl shadow-[0_20px_50px_rgba(24,92,104,0.16)] border border-outline-variant/60 overflow-hidden transform transition-transform hover:-translate-y-1 duration-300">
+<!-- Subtle Paper Top Receipt Header Bar -->
+<div class="bg-primary text-on-primary px-space-lg py-space-md flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-[24px]">receipt_long</span>
+<div>
+<span class="font-headline-md text-headline-md font-bold tracking-tight block">MAISON AL-DHABI</span>
+<span class="font-label-xs text-[10px] opacity-80 uppercase tracking-widest block">HAUTE COUTURE &amp; BESPOKE LEATHERS</span>
+</div>
+</div>
+<div class="text-right">
+<span class="px-space-sm py-0.5 rounded-full bg-on-primary/20 text-on-primary font-label-xs text-label-xs font-bold uppercase tracking-wider">OFFICIAL SLIP</span>
+<span class="block font-mono text-[11px] opacity-90 mt-0.5">#NS-2025-9804</span>
+</div>
+</div>
+<!-- Metadata Strip -->
+<div class="p-space-lg border-b border-surface-container bg-surface-container-low/40">
+<div class="grid grid-cols-2 gap-space-md font-body-sm text-body-sm">
+<div>
+<span class="font-label-xs text-label-xs text-on-surface-variant uppercase tracking-wider block font-bold">Billed To</span>
+<span class="font-bold text-on-surface">Alhaji Bello G. Danbatta</span>
+<span class="text-on-surface-variant block text-[11px]">Victoria Island, Lagos • +234 803 *** 8192</span>
+</div>
+<div class="text-right">
+<span class="font-label-xs text-label-xs text-on-surface-variant uppercase tracking-wider block font-bold">Ledger Timestamp</span>
+<span class="font-mono text-on-surface text-[12px] font-semibold">24 Oct 2025 • 14:23:09 WAT</span>
+<span class="text-primary block text-[11px] font-medium">FIRS E-VAT Compliant</span>
+</div>
+</div>
+</div>
+<!-- Line Items Table (Fintech Tabular Precision) -->
+<div class="p-space-lg">
+<table class="w-full text-left font-body-sm text-body-sm">
+<thead>
+<tr class="border-b border-surface-variant text-on-surface-variant font-label-xs text-label-xs uppercase tracking-wider">
+<th class="pb-space-xs font-bold">Item Description</th>
+<th class="pb-space-xs text-center font-bold">Qty</th>
+<th class="pb-space-xs text-right font-bold">Rate</th>
+<th class="pb-space-xs text-right font-bold">Amount</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container">
+<tr>
+<td class="py-space-sm font-semibold text-on-surface">
+                        Emerald Raw Silk Kaftan (Hand-Embroidered)
+                        <span class="block text-[11px] text-on-surface-variant font-normal">Emerald Green / Tall Cut (Chest 42)</span>
+</td>
+<td class="py-space-sm text-center font-mono">2</td>
+<td class="py-space-sm text-right font-mono">₦23,000.00</td>
+<td class="py-space-sm text-right font-mono font-bold text-on-surface">₦46,000.00</td>
+</tr>
+<tr>
+<td class="py-space-sm font-semibold text-on-surface">
+                        Embossed Calfskin Mules (Suede Lining)
+                        <span class="block text-[11px] text-on-surface-variant font-normal">Onyx Black / Size EU 43 / Vibram Sole</span>
+</td>
+<td class="py-space-sm text-center font-mono">1</td>
+<td class="py-space-sm text-right font-mono">₦35,500.00</td>
+<td class="py-space-sm text-right font-mono font-bold text-on-surface">₦35,500.00</td>
+</tr>
+</tbody>
+</table>
+<!-- Subtotals and Tax Breakdown -->
+<div class="mt-space-md pt-space-sm border-t border-surface-variant flex flex-col gap-1 text-right font-body-sm text-body-sm">
+<div class="flex justify-between text-on-surface-variant">
+<span>Subtotal:</span>
+<span class="font-mono">₦81,500.00</span>
+</div>
+<div class="flex justify-between text-on-surface-variant">
+<span>VAT (7.5% Included in price):</span>
+<span class="font-mono text-[11px]">₦5,686.04</span>
+</div>
+<div class="flex justify-between text-on-surface-variant">
+<span>Express Dispatch (Ikoyi/VI Island Couriers):</span>
+<span class="font-mono text-primary font-semibold">FREE (Boutique Tier)</span>
+</div>
+</div>
+<!-- Grand Total Box -->
+<div class="mt-space-md p-space-md rounded-xl bg-on-surface text-background flex items-center justify-between shadow-inner">
+<div>
+<span class="font-label-xs text-label-xs text-outline-variant uppercase tracking-wider block font-bold">Total Amount Due</span>
+<span class="font-body-sm text-[11px] text-secondary-fixed">Status: Sealed on Ledger</span>
+</div>
+<div class="font-currency-display text-currency-display font-extrabold text-primary-fixed">
+                    ₦81,500.00
+                  </div>
+</div>
+<!-- Tactile Perforation Seam -->
+<div class="relative my-space-lg flex items-center justify-center">
+<div class="w-full border-t border-dashed border-outline-variant"></div>
+<!-- Concave cutout dots mimicking thermal receipt tear -->
+<div class="absolute -left-7 w-4 h-4 rounded-full bg-background border-r border-outline-variant/40"></div>
+<div class="absolute -right-7 w-4 h-4 rounded-full bg-background border-l border-outline-variant/40"></div>
+<span class="absolute bg-surface-container-lowest px-space-sm font-label-xs text-[9px] uppercase tracking-widest text-outline">
+                    Cryptographic Tear Line • SHA-256 Ledger
+                  </span>
+</div>
+<!-- Proof Anchor + Hand-signed gratitude -->
+<div class="grid grid-cols-12 gap-space-md items-center">
+<div class="col-span-8 flex flex-col gap-1">
+<!-- Script Accent Gratitude -->
+<div class="font-slip-accent-script text-slip-accent-script text-primary italic text-[22px] leading-6">
+                      "Thank you for your noble patronage, Alhaji Bello!"
+                    </div>
+<div class="font-mono text-[9px] text-on-surface-variant break-all mt-1">
+                      HASH: 0x9f884ba89104e76a0d221c82ec45812e52b217dc3c6aa6
+                    </div>
+<div class="flex items-center gap-space-xs font-label-xs text-[10px] text-primary font-bold">
+<span class="material-symbols-outlined text-[14px]">lock</span>
+<span>Immutable Block Verification #4819204</span>
+</div>
+</div>
+<!-- QR Code Verification Stamp -->
+<div class="col-span-4 flex flex-col items-end">
+<div class="w-20 h-20 p-1.5 rounded-lg bg-surface border border-outline-variant/60 shadow-sm flex items-center justify-center">
+<!-- High density simulated QR vector -->
+<svg class="w-full h-full text-on-surface" fill="currentColor" viewbox="0 0 100 100">
+<path d="M0,0 h30 v30 h-30 z M10,10 h10 v10 h-10 z M70,0 h30 v30 h-30 z M80,10 h10 v10 h-10 z M0,70 h30 v30 h-30 z M10,80 h10 v10 h-10 z M40,10 h10 v10 h-10 z M50,30 h20 v10 h-20 z M40,60 h10 v30 h-10 z M60,60 h10 v10 h-10 z M70,70 h20 v10 h-20 z M80,80 h20 v20 h-20 z M60,80 h10 v20 h-10 z"></path>
+</svg>
+</div>
+<span class="font-label-xs text-[8px] text-on-surface-variant font-mono mt-1 uppercase">Scan to Verify</span>
+</div>
+</div>
+</div>
+<!-- Live Dynamic Floating Tag -->
+<div class="bg-surface-container py-space-xs px-space-md flex items-center justify-between text-on-surface-variant font-label-xs text-[11px]">
+<span class="flex items-center gap-1 font-semibold text-primary">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+                  Instant Flutterwave Transfer Settled
+                </span>
+<span class="font-mono">PDF &amp; Web Link Auto-Sent</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- ========================================== -->
+<!-- THE BROKEN STATUS QUO VS THE NETSLIP FIX  -->
+<!-- ========================================== -->
+<section class="w-full py-space-2xl bg-surface-container-low/50">
+<div class="max-w-7xl mx-auto px-margin-md lg:px-margin-lg">
+<div class="text-center max-w-3xl mx-auto mb-space-2xl">
+<span class="font-label-md text-label-md text-primary font-bold uppercase tracking-widest block mb-space-xs">Forensic Commerce Comparison</span>
+<h2 class="font-headline-xl text-headline-xl font-extrabold text-on-surface">The chaos of screenshot receipts vs The NetSlip standard.</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-space-sm">
+          Social commerce in Africa generates over $18 Billion annually. Yet 91% of vendors still lose money to fake payment screenshots, messy DM arguments, and tax audit penalties.
+        </p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-gutter-lg">
+<!-- The Broken Old Way -->
+<div class="p-space-xl rounded-xl bg-surface-container-lowest border border-error/20 shadow-sm relative overflow-hidden">
+<div class="flex items-center justify-between mb-space-md">
+<span class="px-space-md py-space-xs rounded-full bg-error-container text-on-error-container font-label-md text-label-md font-bold uppercase tracking-wider flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">close</span>
+              The Broken Status Quo
+            </span>
+<span class="font-body-sm text-body-sm text-error font-medium">High Risk &amp; Lost Trust</span>
+</div>
+<div class="flex flex-col gap-space-md">
+<!-- Problem item 1 -->
+<div class="flex items-start gap-space-sm p-space-sm rounded bg-surface-container-low">
+<span class="material-symbols-outlined text-error text-[20px] mt-0.5">screenshot_monitor</span>
+<div>
+<div class="font-headline-md text-[15px] font-bold text-on-surface">Fake Transfer Alerts &amp; Photoshop "Done" Slips</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Customers send doctored bank screenshot receipts created in 60 seconds with malicious apps. You pack goods before actual clearing.</p>
+</div>
+</div>
+<!-- Problem item 2 -->
+<div class="flex items-start gap-space-sm p-space-sm rounded bg-surface-container-low">
+<span class="material-symbols-outlined text-error text-[20px] mt-0.5">search_off</span>
+<div>
+<div class="font-headline-md text-[15px] font-bold text-on-surface">Lost DM Chat History &amp; Zero Dispute Defense</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">When chats are archived or deleted, item details, delivery promises, and custom measurements vanish into thin air.</p>
+</div>
+</div>
+<!-- Problem item 3 -->
+<div class="flex items-start gap-space-sm p-space-sm rounded bg-surface-container-low">
+<span class="material-symbols-outlined text-error text-[20px] mt-0.5">menu_book</span>
+<div>
+<div class="font-headline-md text-[15px] font-bold text-on-surface">Manual Paper Receipt Books &amp; Zero Sync</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Writing out physical carbon-copy slips by hand in Lagos traffic is slow, unprofessional, and impossible to audit for FIRS or bank loans.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- The NetSlip Standard -->
+<div class="p-space-xl rounded-xl bg-surface-container-lowest border border-primary/30 shadow-[0_8px_30px_rgba(24,92,104,0.08)] relative overflow-hidden">
+<div class="flex items-center justify-between mb-space-md">
+<span class="px-space-md py-space-xs rounded-full bg-primary text-on-primary font-label-md text-label-md font-bold uppercase tracking-wider flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">verified</span>
+              The NetSlip Standard
+            </span>
+<span class="font-body-sm text-body-sm text-primary font-bold">100% Cryptographic Certainty</span>
+</div>
+<div class="flex flex-col gap-space-md">
+<!-- Solution item 1 -->
+<div class="flex items-start gap-space-sm p-space-sm rounded bg-secondary-container/20">
+<span class="material-symbols-outlined text-primary text-[20px] mt-0.5">encrypted</span>
+<div>
+<div class="font-headline-md text-[15px] font-bold text-on-surface">SHA-256 Ledger Stamp That Cannot Be Doctored</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Every NetSlip is locked with a unique SHA-256 cryptographic hash verified against our central ledger. Zero screenshot tampering.</p>
+</div>
+</div>
+<!-- Solution item 2 -->
+<div class="flex items-start gap-space-sm p-space-sm rounded bg-secondary-container/20">
+<span class="material-symbols-outlined text-primary text-[20px] mt-0.5">bolt</span>
+<div>
+<div class="font-headline-md text-[15px] font-bold text-on-surface">Direct Flutterwave &amp; Stablecoin Settlement</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">The customer clicks the receipt link and pays directly via USSD, Bank Transfer, or USDT. The slip auto-stamps "PAID" instantly.</p>
+</div>
+</div>
+<!-- Solution item 3 -->
+<div class="flex items-start gap-space-sm p-space-sm rounded bg-secondary-container/20">
+<span class="material-symbols-outlined text-primary text-[20px] mt-0.5">terminal</span>
+<div>
+<div class="font-headline-md text-[15px] font-bold text-on-surface">3-Second /slash Command in WhatsApp &amp; Telegram</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">No opening complex ERP apps or logging into dashboards. Simply type <code class="font-mono text-primary font-bold">/slip</code> in your bot chat and receive a verified PDF.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- ========================================== -->
+<!-- PRODUCT ARCHITECTURE & 3-STEP DISPATCH     -->
+<!-- ========================================== -->
+<section class="w-full py-space-2xl bg-background" id="how-it-works">
+<div class="max-w-7xl mx-auto px-margin-md lg:px-margin-lg">
+<div class="flex flex-col md:flex-row md:items-end justify-between mb-space-2xl gap-space-md">
+<div>
+<span class="font-label-md text-label-md text-primary font-bold uppercase tracking-widest block mb-space-xs">Conversational Protocol</span>
+<h2 class="font-headline-xl text-headline-xl font-extrabold text-on-surface">How NetSlip runs your business inside chat.</h2>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-md">
+          Built specifically for the mobile keyboard workflow. No clunky forms, no desktop-only requirements, and zero friction.
+        </p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-space-xl">
+<!-- Step 1 -->
+<div class="flex flex-col gap-space-md p-space-xl rounded-xl bg-surface-container-lowest border border-outline-variant/50 shadow-sm relative group hover:shadow-md transition-shadow">
+<div class="flex items-center justify-between">
+<span class="w-12 h-12 rounded-xl bg-primary-container text-on-primary-container flex items-center justify-center font-headline-md text-headline-md font-bold">
+              01
+            </span>
+<span class="font-label-xs text-label-xs px-space-sm py-space-xs rounded bg-surface-container font-mono text-on-surface-variant">WHATSAPP / TELEGRAM</span>
+</div>
+<h3 class="font-headline-md text-headline-md font-bold text-on-surface">Trigger via Instant /slash Command</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">
+            While chatting with your buyer, simply send the item parameters: <br/>
+<span class="font-mono text-[11px] bg-surface-container px-2 py-1 rounded inline-block mt-2 text-primary font-bold">
+              /slip 3 "Linen Shirt" 18500 to @chidi
+            </span>
+</p>
+<div class="mt-auto pt-space-md border-t border-surface-container flex items-center gap-space-xs text-primary font-label-md text-label-md font-semibold">
+<span class="material-symbols-outlined text-[18px]">bolt</span>
+<span>Takes under 3.2 seconds</span>
+</div>
+</div>
+<!-- Step 2 -->
+<div class="flex flex-col gap-space-md p-space-xl rounded-xl bg-surface-container-lowest border border-outline-variant/50 shadow-sm relative group hover:shadow-md transition-shadow">
+<div class="flex items-center justify-between">
+<span class="w-12 h-12 rounded-xl bg-secondary text-on-secondary flex items-center justify-center font-headline-md text-headline-md font-bold">
+              02
+            </span>
+<span class="font-label-xs text-label-xs px-space-sm py-space-xs rounded bg-surface-container font-mono text-on-surface-variant">DUAL SETTLEMENT</span>
+</div>
+<h3 class="font-headline-md text-headline-md font-bold text-on-surface">Automatic Multi-Rail Payment Link</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">
+            Your customer receives a zero-zoom mobile receipt with direct payment options: instant Nigerian bank checkout via Flutterwave, USSD codes, or stablecoin USDT/USDC.
+          </p>
+<div class="mt-auto pt-space-md border-t border-surface-container flex items-center gap-space-xs text-primary font-label-md text-label-md font-semibold">
+<span class="material-symbols-outlined text-[18px]">verified_user</span>
+<span>Auto-cleared into your ledger</span>
+</div>
+</div>
+<!-- Step 3 -->
+<div class="flex flex-col gap-space-md p-space-xl rounded-xl bg-surface-container-lowest border border-outline-variant/50 shadow-sm relative group hover:shadow-md transition-shadow">
+<div class="flex items-center justify-between">
+<span class="w-12 h-12 rounded-xl bg-surface-container-highest text-on-surface flex items-center justify-center font-headline-md text-headline-md font-bold">
+              03
+            </span>
+<span class="font-label-xs text-label-xs px-space-sm py-space-xs rounded bg-surface-container font-mono text-on-surface-variant">PROOF OF SALE</span>
+</div>
+<h3 class="font-headline-md text-headline-md font-bold text-on-surface">Cryptographic Proof &amp; PDF Dispatch</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">
+            A permanent SHA-256 seal is generated. The customer downloads a beautiful branded thermal PDF slip with your custom handwritten gratitude note.
+          </p>
+<div class="mt-auto pt-space-md border-t border-surface-container flex items-center gap-space-xs text-primary font-label-md text-label-md font-semibold">
+<span class="material-symbols-outlined text-[18px]">receipt</span>
+<span>Watermark-free PDF output</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- ========================================== -->
+<!-- INTERACTIVE SLIP FORMAT GALLERY           -->
+<!-- ========================================== -->
+<section class="w-full py-space-2xl bg-surface-container-low/40" id="slip-sandbox">
+<div class="max-w-7xl mx-auto px-margin-md lg:px-margin-lg">
+<div class="flex flex-col md:flex-row md:items-end justify-between mb-space-2xl gap-space-md">
+<div>
+<span class="font-label-md text-label-md text-primary font-bold uppercase tracking-widest block mb-space-xs">Aesthetic Precision</span>
+<h2 class="font-headline-xl text-headline-xl font-extrabold text-on-surface">Three bespoke slip templates. Zero generic spreadsheets.</h2>
+</div>
+<div class="inline-flex items-center gap-space-xs px-space-md py-space-xs rounded-full bg-surface-container-lowest shadow-sm border border-outline-variant/40">
+<span class="material-symbols-outlined text-primary text-[18px]">verified</span>
+<span class="font-label-md text-label-md font-bold text-on-surface">100% Watermark-Free on All Paid Slips</span>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter-lg">
+<!-- Format Card 1: Minimalist Social Slip (9:16 Mobile First) -->
+<div class="p-space-lg rounded-xl bg-surface-container-lowest border border-outline-variant/60 shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-space-sm">
+<span class="font-headline-md text-headline-md font-bold text-on-surface">Minimalist Social Slip</span>
+<span class="px-space-xs py-0.5 rounded bg-secondary-container text-on-secondary-container font-label-xs text-[10px] font-bold">9:16 DM FORMAT</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-space-md">
+              Designed specifically for smartphone screens. Perfect for WhatsApp Status, Instagram Stories, and Telegram DMs with zero-pinch zoom.
+            </p>
+<!-- Mini Mockup Preview -->
+<div class="p-space-md rounded-lg bg-surface-container-low border border-surface-variant flex flex-col gap-2">
+<div class="flex justify-between items-center text-[11px] font-bold text-primary">
+<span>Luxe Fragrance Hub</span>
+<span>₦42,000</span>
+</div>
+<div class="w-full h-1 bg-surface-variant rounded"></div>
+<div class="text-[10px] text-on-surface-variant flex justify-between">
+<span>Tom Ford Oud Wood 50ml</span>
+<span class="font-mono">x1</span>
+</div>
+<div class="font-slip-accent-script text-slip-accent-script text-primary text-[16px] text-right">
+                "Thank you for shopping scent with us!"
+              </div>
+</div>
+</div>
+<div class="mt-space-lg pt-space-sm border-t border-surface-container flex items-center justify-between font-body-sm text-body-sm text-primary font-semibold">
+<span>Used by 85% of DM Sellers</span>
+<span class="material-symbols-outlined text-[18px]">smartphone</span>
+</div>
+</div>
+<!-- Format Card 2: Executive Ledger Slip (Formal Corporate) -->
+<div class="p-space-lg rounded-xl bg-surface-container-lowest border border-outline-variant/60 shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-space-sm">
+<span class="font-headline-md text-headline-md font-bold text-on-surface">Executive Ledger Slip</span>
+<span class="px-space-xs py-0.5 rounded bg-surface-container text-on-surface font-label-xs text-[10px] font-bold">CORPORATE A4</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-space-md">
+              Full enterprise letterhead layout with complete FIRS tax breakdown, CAC registration numbers, and banking remittance instructions.
+            </p>
+<!-- Mini Mockup Preview -->
+<div class="p-space-md rounded-lg bg-surface-container-low border border-surface-variant flex flex-col gap-2">
+<div class="flex justify-between items-center text-[11px] font-bold text-on-surface">
+<span>Vanguard Tech Logistics Ltd</span>
+<span class="font-mono">TAX INVOICE</span>
+</div>
+<div class="w-full h-1 bg-surface-variant rounded"></div>
+<div class="text-[10px] text-on-surface-variant flex justify-between">
+<span>Enterprise Retainer Q4</span>
+<span class="font-mono font-bold">₦1,250,000</span>
+</div>
+<div class="text-[9px] font-mono text-outline">FIRS TIN: 2901-4491-0001 • NDPR Validated</div>
+</div>
+</div>
+<div class="mt-space-lg pt-space-sm border-t border-surface-container flex items-center justify-between font-body-sm text-body-sm text-on-surface-variant font-semibold">
+<span>For B2B &amp; High-Ticket Retainers</span>
+<span class="material-symbols-outlined text-[18px]">business_center</span>
+</div>
+</div>
+<!-- Format Card 3: Amina Haute Slip (Boutique & Fashion) -->
+<div class="p-space-lg rounded-xl bg-surface-container-lowest border border-outline-variant/60 shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-space-sm">
+<span class="font-headline-md text-headline-md font-bold text-on-surface">Amina Haute Slip</span>
+<span class="px-space-xs py-0.5 rounded bg-primary-container text-on-primary-container font-label-xs text-[10px] font-bold">LUXURY ATELIER</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-space-md">
+              Artisan paper textures with gold and slate teal accents. Features customizable cursive sign-offs and bespoke packaging tracking badges.
+            </p>
+<!-- Mini Mockup Preview -->
+<div class="p-space-md rounded-lg bg-surface-container-low border border-surface-variant flex flex-col gap-2">
+<div class="flex justify-between items-center text-[11px] font-bold text-primary">
+<span>Zaynab Bridal Couture</span>
+<span class="font-mono">₦320,000</span>
+</div>
+<div class="w-full h-1 bg-surface-variant rounded"></div>
+<div class="font-slip-accent-script text-slip-accent-script text-primary text-[17px] text-center">
+                "Crafted with pure silk &amp; endless grace"
+              </div>
+<div class="text-[9px] font-mono text-outline text-center">SEAL: 0x8891...32F</div>
+</div>
+</div>
+<div class="mt-space-lg pt-space-sm border-t border-surface-container flex items-center justify-between font-body-sm text-body-sm text-primary font-semibold">
+<span>Tailors, Jewelers &amp; Makers</span>
+<span class="material-symbols-outlined text-[18px]">styler</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- ========================================== -->
+<!-- TRANSPARENT PRICING & PAYG PACKS          -->
+<!-- ========================================== -->
+<section class="w-full py-space-2xl bg-background" id="pricing">
+<div class="max-w-7xl mx-auto px-margin-md lg:px-margin-lg">
+<div class="text-center max-w-3xl mx-auto mb-space-2xl">
+<span class="font-label-md text-label-md text-primary font-bold uppercase tracking-widest block mb-space-xs">Simple Non-Expiring Economics</span>
+<h2 class="font-headline-xl text-headline-xl font-extrabold text-on-surface">Sell on your own rhythm. No recurring trap.</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-space-sm">
+          Unlike foreign tools that bill $49 every month regardless of sales volume, NetSlip offers both predictable monthly plans and non-expiring credit packs.
+        </p>
+</div>
+<!-- Pricing Tier Cards -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-gutter-lg items-stretch mb-space-2xl">
+<!-- Tier 1: Free Starter -->
+<div class="p-space-xl rounded-xl bg-surface-container-lowest border border-outline-variant/40 shadow-sm flex flex-col justify-between">
+<div>
+<span class="font-label-md text-label-md text-primary font-bold uppercase tracking-wider block mb-1">Starter Vendor</span>
+<div class="flex items-baseline gap-1 my-space-sm">
+<span class="font-currency-display text-currency-display font-extrabold text-on-surface">₦0</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">/ forever</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-space-lg">Perfect for side-hustlers and new vendors launching on social channels.</p>
+<ul class="flex flex-col gap-space-sm font-body-sm text-body-sm text-on-surface">
+<li class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>
+<span>15 Free Cryptographic Slips</span>
+</li>
+<li class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>
+<span>WhatsApp &amp; Telegram Bot access</span>
+</li>
+<li class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>
+<span>Basic PDF download links</span>
+</li>
+<li class="flex items-center gap-space-xs text-on-surface-variant">
+<span class="material-symbols-outlined text-outline-variant text-[18px]">remove</span>
+<span>Standard NetSlip mini-watermark</span>
+</li>
+</ul>
+</div>
+<div class="pt-space-xl">
+<button class="w-full py-space-sm rounded-xl bg-surface-container text-on-surface font-label-md text-label-md font-bold hover:bg-surface-container-high transition-all">
+              Claim 15 Free Slips
+            </button>
+</div>
+</div>
+<!-- Tier 2: Pro Merchant (Highlighted) -->
+<div class="p-space-xl rounded-xl bg-surface-container-lowest border-2 border-primary shadow-[0_12px_36px_rgba(24,92,104,0.14)] flex flex-col justify-between relative">
+<div class="absolute -top-3 right-6 px-space-sm py-0.5 rounded-full bg-primary text-on-primary font-label-xs text-label-xs font-bold uppercase tracking-wider shadow-sm">
+            MOST POPULAR
+          </div>
+<div>
+<span class="font-label-md text-label-md text-primary font-bold uppercase tracking-wider block mb-1">Pro Merchant</span>
+<div class="flex items-baseline gap-1 my-space-sm">
+<span class="font-currency-display text-currency-display font-extrabold text-on-surface">₦2,500</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">/ month</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-space-lg">For active daily Instagram &amp; WhatsApp boutique sellers.</p>
+<ul class="flex flex-col gap-space-sm font-body-sm text-body-sm text-on-surface">
+<li class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>
+<span class="font-bold">Unlimited Invoices &amp; Slips</span>
+</li>
+<li class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>
+<span>100% Watermark-Free Receipts</span>
+</li>
+<li class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>
+<span>Custom Cursive Signature Accent</span>
+</li>
+<li class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>
+<span>Instant Flutterwave &amp; Crypto Payouts</span>
+</li>
+<li class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>
+<span>Customer Ledger History</span>
+</li>
+</ul>
+</div>
+<div class="pt-space-xl">
+<button class="w-full py-space-sm rounded-xl bg-primary text-on-primary font-label-md text-label-md font-bold hover:bg-primary-container shadow-md transition-all active:scale-[0.98]">
+              Upgrade to Pro Merchant
+            </button>
+</div>
+</div>
+<!-- Tier 3: Business Plus -->
+<div class="p-space-xl rounded-xl bg-surface-container-lowest border border-outline-variant/40 shadow-sm flex flex-col justify-between">
+<div>
+<span class="font-label-md text-label-md text-primary font-bold uppercase tracking-wider block mb-1">Business Plus</span>
+<div class="flex items-baseline gap-1 my-space-sm">
+<span class="font-currency-display text-currency-display font-extrabold text-on-surface">₦6,000</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">/ month</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-space-lg">For ateliers with multiple sales reps, branches, and custom ERP needs.</p>
+<ul class="flex flex-col gap-space-sm font-body-sm text-body-sm text-on-surface">
+<li class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>
+<span>Everything in Pro</span>
+</li>
+<li class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>
+<span>Up to 5 Sales Rep WhatsApp Numbers</span>
+</li>
+<li class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>
+<span>Developer REST API &amp; Webhooks</span>
+</li>
+<li class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>
+<span>FIRS Automated VAT Filing Export</span>
+</li>
+</ul>
+</div>
+<div class="pt-space-xl">
+<button class="w-full py-space-sm rounded-xl bg-surface-container text-on-surface font-label-md text-label-md font-bold hover:bg-surface-container-high transition-all">
+              Launch Business Plus
+            </button>
+</div>
+</div>
+</div>
+<!-- THE PAYG PACK HIGHLIGHT BOX (Tactile & Distinct) -->
+<div class="p-space-xl rounded-xl bg-gradient-to-r from-surface-container to-surface-container-low border border-primary/20 shadow-sm flex flex-col md:flex-row items-center justify-between gap-space-lg">
+<div class="flex items-start gap-space-md">
+<div class="w-12 h-12 rounded-xl bg-primary text-on-primary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[24px]">token</span>
+</div>
+<div>
+<div class="flex items-center gap-space-sm">
+<h3 class="font-headline-md text-headline-md font-bold text-on-surface">Hate monthly subscriptions? Buy Non-Expiring PAYG Packs.</h3>
+<span class="px-space-xs py-0.5 rounded bg-secondary-container text-on-secondary-container font-label-xs text-[10px] font-bold">NEVER EXPIRES</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1 max-w-2xl">
+              Buy credits once and use them over 1, 2, or 3 years. Perfect if your sales are seasonal. Top up 50 slips for just <span class="font-bold text-on-surface">₦1,000</span> or 250 slips for <span class="font-bold text-on-surface">₦4,200</span>.
+            </p>
+</div>
+</div>
+<button class="shrink-0 px-space-lg py-space-md rounded-xl bg-surface-container-lowest text-primary font-headline-md text-[14px] font-bold border border-outline-variant/60 hover:bg-primary hover:text-on-primary transition-all shadow-sm">
+          Buy Slip Credit Packs
+        </button>
+</div>
+</div>
+</section>
+<!-- ========================================== -->
+<!-- FORENSIC TRUST & GOVERNANCE DOSSIER       -->
+<!-- ========================================== -->
+<section class="w-full py-space-2xl bg-surface-container-low/60">
+<div class="max-w-7xl mx-auto px-margin-md lg:px-margin-lg">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-xl items-center">
+<div class="lg:col-span-5 flex flex-col gap-space-md">
+<span class="font-label-md text-label-md text-primary font-bold uppercase tracking-widest">Regulatory Dossier</span>
+<h2 class="font-headline-xl text-headline-xl font-extrabold text-on-surface">
+            Forensically auditable by banks and tax authorities.
+          </h2>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+            When social merchants apply for working capital loans or file statutory documentation with the FIRS, bank loan officers routinely reject handwritten receipts or WhatsApp chat transcripts. NetSlip gives your social storefront enterprise legitimacy.
+          </p>
+<div class="flex flex-col gap-space-sm pt-space-xs">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-primary text-[20px]">verified_user</span>
+<span class="font-body-md text-body-md font-semibold text-on-surface">FIRS Value Added Tax (VAT) Rule 14 Compliant</span>
+</div>
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-primary text-[20px]">shield</span>
+<span class="font-body-md text-body-md font-semibold text-on-surface">Nigeria Data Protection Regulation (NDPR) Certified Vault</span>
+</div>
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-primary text-[20px]">fingerprint</span>
+<span class="font-body-md text-body-md font-semibold text-on-surface">HMAC-SHA256 Webhook Verification on Settlement</span>
+</div>
+</div>
+</div>
+<div class="lg:col-span-7">
+<div class="p-space-xl rounded-xl bg-surface-container-lowest border border-outline-variant/50 shadow-md">
+<div class="flex items-center justify-between pb-space-sm mb-space-md border-b border-surface-container">
+<div class="flex items-center gap-space-xs font-mono text-on-surface text-[12px] font-bold">
+<span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+<span>LEDGER STATE: ANCHORED &amp; MUTABLE-AUDITED</span>
+</div>
+<span class="font-mono text-[11px] text-outline">BLOCK #4,819,204</span>
+</div>
+<div class="space-y-space-sm font-mono text-[11px] text-on-surface-variant bg-surface-container-low p-space-md rounded-lg overflow-x-auto">
+<div class="flex justify-between">
+<span class="text-outline">TRANSACTION_ID:</span>
+<span class="text-on-surface font-semibold">tx_9804_al_dhabi_20251024</span>
+</div>
+<div class="flex justify-between">
+<span class="text-outline">SETTLEMENT_RAIL:</span>
+<span class="text-primary font-semibold">FLW_NIP_INSTANT_TRANSFER</span>
+</div>
+<div class="flex justify-between">
+<span class="text-outline">MERCHANT_CAC_RC:</span>
+<span class="text-on-surface">RC-1849201-NG</span>
+</div>
+<div class="flex justify-between">
+<span class="text-outline">BUYER_AUTHENTICATED:</span>
+<span class="text-emerald-700 font-bold">TRUE (WA_PHONE_TOKEN_2FA)</span>
+</div>
+<div class="flex justify-between">
+<span class="text-outline">SHA256_PROOF:</span>
+<span class="text-primary">8f1e29dc3309a4...c7104b</span>
+</div>
+</div>
+<div class="mt-space-md flex items-center justify-between font-body-sm text-body-sm text-on-surface-variant">
+<span>Ready for commercial loan underwriting</span>
+<a class="font-label-md text-label-md font-bold text-primary hover:underline flex items-center gap-0.5" href="#">
+<span>View Forensic Whitepaper</span>
+<span class="material-symbols-outlined text-[16px]">north_east</span>
+</a>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- ========================================== -->
+<!-- FINAL HIGH-CONTRAST CONVERSATION CTA       -->
+<!-- ========================================== -->
+<section class="w-full py-space-2xl bg-background">
+<div class="max-w-7xl mx-auto px-margin-md lg:px-margin-lg">
+<!-- Deep Slate Teal Signature Callout Box -->
+<div class="relative p-space-xl lg:p-space-2xl rounded-2xl bg-secondary text-on-secondary shadow-[0_24px_60px_rgba(24,92,104,0.28)] overflow-hidden">
+<!-- Subtle perforated watermark graphics -->
+<div class="absolute -right-16 -bottom-16 w-80 h-80 rounded-full bg-primary-container/20 pointer-events-none blur-3xl"></div>
+<div class="absolute top-0 right-0 w-64 h-64 opacity-5 pointer-events-none">
+<span class="material-symbols-outlined text-[200px]">receipt_long</span>
+</div>
+<div class="relative z-10 max-w-3xl">
+<span class="px-space-sm py-space-xs rounded bg-on-secondary/10 text-on-secondary font-label-xs text-label-xs font-bold uppercase tracking-widest inline-block mb-space-sm">
+            Zero Onboarding Friction
+          </span>
+<h2 class="font-headline-xl text-headline-xl lg:text-[44px] lg:leading-[50px] font-extrabold text-on-secondary mb-space-sm">
+            Close your next sale before you leave the chat.
+          </h2>
+<div class="font-slip-accent-script text-slip-accent-script text-primary-fixed text-[24px] mb-space-md">
+            "Close the sale. Send the slip."
+          </div>
+<p class="font-body-lg text-body-lg opacity-90 mb-space-xl max-w-xl">
+            Join over 1,800 African merchants running tamper-proof conversational commerce. Type your phone number to get your bot invitation right now.
+          </p>
+<!-- Rapid Number Input Box -->
+<div class="flex flex-col sm:flex-row items-center gap-space-sm max-w-lg">
+<div class="w-full relative">
+<span class="absolute left-space-md top-1/2 -translate-y-1/2 font-bold text-on-surface-variant text-[14px]">🇳🇬 +234</span>
+<input class="w-full h-12 pl-20 pr-space-md rounded-xl bg-surface-container-lowest text-on-surface font-headline-md text-[15px] focus:outline-none focus:ring-2 focus:ring-primary-fixed shadow-inner" placeholder="803 000 0000" type="tel"/>
+</div>
+<button class="w-full sm:w-auto shrink-0 h-12 px-space-xl rounded-xl bg-primary-fixed text-on-primary-fixed font-headline-md text-[14px] font-bold hover:bg-white transition-all shadow-md active:scale-[0.98]">
+              Connect Bot
+            </button>
+</div>
+<div class="flex items-center gap-space-lg mt-space-lg text-[12px] opacity-80">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">check</span>
+              Instant Telegram Link
+            </span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">check</span>
+              WhatsApp Business Webhook
+            </span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">check</span>
+              No App Install Required
+            </span>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div></main><footer class="w-full bg-surface-container-lowest text-on-surface"><div class="w-full bg-surface-container-low/70 py-space-lg"><div class="max-w-7xl mx-auto px-margin-md lg:px-margin-lg flex flex-wrap items-center justify-between gap-gutter"><div class="flex items-center gap-space-sm"><span class="flex h-2.5 w-2.5 rounded-full bg-primary animate-pulse"></span><span class="font-label-md text-label-md font-semibold text-primary uppercase tracking-wider">Consensus State</span><span class="font-body-sm text-body-sm text-on-surface-variant">Block Height #4,819,204</span></div><div class="flex flex-wrap items-center gap-gutter"><div class="flex items-center gap-space-xs px-space-sm py-space-xs rounded-xl bg-surface-container-lowest shadow-sm"><span class="material-symbols-outlined text-primary text-[18px]">verified_user</span><span class="font-label-xs text-label-xs text-on-surface font-semibold">CBN &amp; FIRS Tax Rule Validated</span></div><div class="flex items-center gap-space-xs px-space-sm py-space-xs rounded-xl bg-surface-container-lowest shadow-sm"><span class="material-symbols-outlined text-primary text-[18px]">lock</span><span class="font-label-xs text-label-xs text-on-surface font-semibold">NDPR Privacy Certified</span></div><div class="flex items-center gap-space-xs px-space-sm py-space-xs rounded-xl bg-surface-container-lowest shadow-sm"><span class="material-symbols-outlined text-primary text-[18px]">fingerprint</span><span class="font-label-xs text-label-xs text-on-surface font-semibold">SHA-256 Ledger Anchor</span></div></div></div></div><div class="max-w-7xl mx-auto px-margin-md lg:px-margin-lg pt-space-2xl pb-space-xl"><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-space-xl"><div class="lg:col-span-2 flex flex-col gap-space-md"><div class="flex items-center gap-space-sm"><span class="flex items-center justify-center w-8 h-8 rounded-xl bg-primary-container text-on-primary-container"><span class="material-symbols-outlined text-[18px]">receipt_long</span></span><span class="font-headline-md text-headline-md font-bold text-on-surface">NetSlip</span></div><p class="font-body-md text-body-md text-on-surface-variant max-w-sm">The definitive cryptographic digital receipt infrastructure for high-velocity social commerce, DMs, and merchant ledgers. Instant dispatch across messaging networks.</p><div class="flex items-center gap-space-sm pt-space-xs"><span class="px-space-sm py-space-xs rounded-xl bg-surface-container-high text-on-surface font-label-xs text-label-xs font-semibold">WhatsApp Direct</span><span class="px-space-sm py-space-xs rounded-xl bg-surface-container-high text-on-surface font-label-xs text-label-xs font-semibold">Telegram Bot</span><span class="px-space-sm py-space-xs rounded-xl bg-surface-container-high text-on-surface font-label-xs text-label-xs font-semibold">IG DM Webhook</span></div></div><div><div class="font-label-md text-label-md uppercase tracking-wider text-on-surface font-bold mb-space-md">Product</div><ul class="flex flex-col gap-space-sm"><li class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface transition-colors cursor-pointer">Slip Studio</li><li class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface transition-colors cursor-pointer">Conversational Dispatch</li><li class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface transition-colors cursor-pointer">Dynamic QR Invoicing</li><li class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface transition-colors cursor-pointer">Settlement Tracer</li><li class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface transition-colors cursor-pointer">Tax Engine (FIRS Mode)</li></ul></div><div><div class="font-label-md text-label-md uppercase tracking-wider text-on-surface font-bold mb-space-md">Developers</div><ul class="flex flex-col gap-space-sm"><li class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface transition-colors cursor-pointer">Documentation</li><li class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface transition-colors cursor-pointer">Receipt Cryptographic Proof</li><li class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface transition-colors cursor-pointer">Webhooks &amp; Events</li><li class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface transition-colors cursor-pointer">Sandbox Environment</li><li class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface transition-colors cursor-pointer">System Status (99.99%)</li></ul></div><div><div class="font-label-md text-label-md uppercase tracking-wider text-on-surface font-bold mb-space-md">Governance</div><ul class="flex flex-col gap-space-sm"><li class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface transition-colors cursor-pointer">Ledger Transparency</li><li class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface transition-colors cursor-pointer">NDPR Compliance</li><li class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface transition-colors cursor-pointer">Merchant Terms</li><li class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface transition-colors cursor-pointer">Data Privacy Vault</li><li class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface transition-colors cursor-pointer">Security Bug Bounty</li></ul></div></div><div class="mt-space-2xl pt-space-lg flex flex-col md:flex-row items-center justify-between gap-space-md"><div class="flex items-center gap-space-sm"><span class="font-body-sm text-body-sm text-on-surface-variant">© 2025 NetSlip Financial Technologies Ltd. Immutable Ledger Protocol.</span></div><div class="flex items-center gap-space-lg font-body-sm text-body-sm text-on-surface-variant"><span class="hover:text-on-surface cursor-pointer">Privacy Policy</span><span class="hover:text-on-surface cursor-pointer">Terms of Service</span><span class="hover:text-on-surface cursor-pointer">Security Disclosures</span></div></div></div></footer></body></html>

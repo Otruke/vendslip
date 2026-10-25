@@ -1,0 +1,14 @@
+NetSLip Backend Command
+
+# 1. Run migrations against your PostgreSQL 18.3 netslip_db database
+php artisan migrate
+
+# 2. Publish Sanctum API, Spatie Permission, Laravel Data & TypeScript Transformer configs
+php artisan install:api
+php artisan vendor:publish --provider="Spatie\Permission\PermissionServiceProvider"
+php artisan vendor:publish --provider="Spatie\LaravelData\LaravelDataServiceProvider" --tag="data-config"
+php artisan vendor:publish --provider="Spatie\TypeScriptTransformer\TypeScriptTransformerServiceProvider" --tag="config"
+
+
+
+

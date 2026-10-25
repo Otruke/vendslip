@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><meta content="mobile_tab" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{width:100vw;margin:0;padding:0;}body{overscroll-behavior:none;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "surface-tint": "#266772", "primary-fixed": "#afecfa", "inverse-on-surface": "#eaf1fd", "outline-variant": "#bfc8ca", "tertiary-fixed": "#a6eefc", "tertiary": "#005d69", "surface-bright": "#f8f9ff", "on-secondary": "#ffffff", "surface-dim": "#d4dae6", "outline": "#70797b", "on-secondary-fixed-variant": "#1e4c5c", "primary-container": "#377581", "on-error": "#ffffff", "on-tertiary-container": "#cdf6ff", "on-error-container": "#93000a", "surface-container-high": "#e2e9f4", "on-primary-container": "#d0f6ff", "surface-container-low": "#eef4ff", "primary": "#185c68", "on-primary": "#ffffff", "secondary-fixed": "#bde9fd", "tertiary-container": "#297683", "on-surface": "#151c24", "on-tertiary": "#ffffff", "surface-container-lowest": "#ffffff", "on-secondary-fixed": "#001f29", "surface-container": "#e8eefa", "secondary": "#386475", "on-secondary-container": "#3d6879", "on-primary-fixed-variant": "#004e5a", "on-primary-fixed": "#001f25", "surface": "#f8f9ff", "error-container": "#ffdad6", "surface-variant": "#dce3ee", "on-tertiary-fixed-variant": "#004e59", "error": "#ba1a1a", "on-tertiary-fixed": "#001f24", "inverse-surface": "#2a313a", "on-surface-variant": "#40484a", "secondary-container": "#bae6fa", "background": "#f8f9ff", "primary-fixed-dim": "#93d0dd", "inverse-primary": "#93d0dd", "on-background": "#151c24", "surface-container-highest": "#dce3ee", "tertiary-fixed-dim": "#8ad2df", "secondary-fixed-dim": "#a1cde0" }, borderRadius: { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" }, spacing: { "space-xl": "2rem", "margin-md": "1.5rem", "gutter": "1rem", "margin": "1rem", "space-lg": "1.25rem", "gutter-lg": "1.5rem", "space-xs": "0.25rem", "space-sm": "0.5rem", "margin-lg": "2.5rem", "space-2xl": "3rem", "space-md": "0.875rem" }, fontFamily: { "headline-lg": ["Plus Jakarta Sans"], "headline-xl-mobile": ["Plus Jakarta Sans"], "headline-lg-mobile": ["Plus Jakarta Sans"], "headline-xl": ["Plus Jakarta Sans"], "label-md": ["Plus Jakarta Sans"], "body-lg": ["Plus Jakarta Sans"], "label-xs": ["Plus Jakarta Sans"], "slip-accent-script": ["\"Brush Script MT, cursive\""], "body-md": ["Plus Jakarta Sans"], "body-sm": ["Plus Jakarta Sans"], "headline-md": ["Plus Jakarta Sans"], "currency-cell": ["Plus Jakarta Sans"], "currency-display": ["Plus Jakarta Sans"] }, fontSize: { "headline-lg": ["28px", { "lineHeight": "36px", "letterSpacing": "-0.015em", "fontWeight": "700" }], "headline-xl-mobile": ["28px", { "lineHeight": "36px", "letterSpacing": "-0.015em", "fontWeight": "800" }], "headline-lg-mobile": ["22px", { "lineHeight": "30px", "letterSpacing": "-0.01em", "fontWeight": "700" }], "headline-xl": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "800" }], "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.04em", "fontWeight": "600" }], "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }], "label-xs": ["10px", { "lineHeight": "14px", "letterSpacing": "0.06em", "fontWeight": "700" }], "slip-accent-script": ["18px", { "lineHeight": "24px", "fontWeight": "400" }], "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }], "body-sm": ["12px", { "lineHeight": "16px", "fontWeight": "400" }], "headline-md": ["20px", { "lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600" }], "currency-cell": ["14px", { "lineHeight": "20px", "fontWeight": "600" }], "currency-display": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700" }] } } } }</script></head><body class="bg-background font-body-md text-on-surface flex flex-col min-h-screen"><header class="fixed top-0 inset-x-0 z-50 bg-surface/90 backdrop-blur-xl pt-safe shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-28 px-margin flex flex-col justify-center gap-space-xs"><div class="flex items-center justify-between gap-space-sm"><div class="flex items-center gap-space-sm min-w-0"><div class="flex flex-col min-w-0"><div class="flex items-center gap-space-xs"><span class="font-headline-md text-headline-md font-bold text-primary tracking-tight">NetSlip</span><span class="font-slip-accent-script text-slip-accent-script text-primary-container italic truncate">Close the sale. Send the slip</span></div><button class="flex items-center gap-space-xs text-left min-w-0 h-5"><span class="font-label-xs text-label-xs text-secondary font-bold uppercase truncate">Amina Luxury Couture · Business Plus</span><span class="material-symbols-outlined text-secondary text-sm">expand_more</span></button></div></div><div class="flex items-center gap-space-xs shrink-0"><div class="flex items-center gap-1.5 px-2 py-1 rounded-full bg-surface-container-high"><div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span><span class="font-label-xs text-label-xs text-on-surface-variant uppercase">WA</span></div><div class="w-1 h-2.5 bg-outline-variant/50 rounded-full"></div><div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-sky-500"></span><span class="font-label-xs text-label-xs text-on-surface-variant uppercase">TG</span></div></div><button aria-label="Notifications" class="w-11 h-11 flex items-center justify-center text-on-surface-variant rounded-full hover:bg-surface-container-high transition-colors relative"><span class="material-symbols-outlined text-xl">notifications</span><span class="absolute top-2.5 right-2.5 w-2 h-2 rounded-full bg-error"></span></button><img alt="Profile" class="w-8 h-8 rounded-full object-cover shrink-0" src="https://lh3.googleusercontent.com/aida/AEtjO1WLaDa0NCfzEurMqJwwHUoAPx2nzVWD49nSzjicRmv67jrsdvvleKp2fKIsmfUYc_lyDJpEG8Mi6wxCCAjsrLbTtCgFWFtt5yrXHGJ_Lkp1E2zCWak2bNcYJTF2JRphj--b8NMG3fBDXXc2PL2dX6BcIfJVDjcJjJ9MH3UlaShSnu6oD6iLeX_a8Nd8TF-mBO2H-JSdDPs9DgMoFAiKYy1uAKVTfVCRITCjj1fvmDuMDWWTYECZh96pGvFtFWLe7C4joLggZGAu_ss"/></div></div><div class="flex items-center gap-space-sm"><button class="flex-1 h-9 px-space-md rounded-xl bg-surface-container-lowest shadow-[0_1px_3px_rgba(17,24,32,0.04)] flex items-center gap-space-xs text-left hover:bg-surface-container-low transition-colors"><span class="material-symbols-outlined text-outline text-lg">search</span><span class="font-body-sm text-body-sm text-outline truncate">Search RCP-2026-1001, customer...</span><span class="ml-auto font-label-xs text-label-xs px-1.5 py-0.5 rounded bg-surface-container-high text-on-surface-variant">/</span></button><span class="font-label-md text-label-md uppercase text-secondary font-bold truncate max-w-[100px]">Composer</span></div></div></header><main class="flex flex-col relative w-full pt-28 pb-24 bg-background min-h-screen"><div class="flex flex-col w-full pb-6 px-margin gap-space-md">
+<!-- Micro Brand Delight Banner -->
+<div class="relative overflow-hidden rounded-xl bg-surface-container-low p-space-md shadow-sm">
+<div class="flex items-center justify-between gap-space-sm relative z-10">
+<div class="flex items-center gap-space-sm">
+<div class="w-9 h-9 rounded-lg bg-primary-container text-on-primary flex items-center justify-center shadow-sm">
+<span class="material-symbols-outlined text-xl">receipt_long</span>
+</div>
+<div>
+<div class="flex items-center gap-1.5">
+<span class="font-headline-md text-body-lg font-bold text-primary">Slash Slip</span>
+<span class="font-label-xs text-label-xs uppercase px-1.5 py-0.5 rounded bg-primary-fixed text-on-primary-fixed font-bold">Fast DM Mode</span>
+</div>
+<p class="font-slip-accent-script text-slip-accent-script text-primary-container italic -mt-0.5">Close the sale. Send the slip</p>
+</div>
+</div>
+<div class="flex items-center gap-1 shrink-0 bg-surface-container-lowest px-2 py-1 rounded-full shadow-sm text-secondary">
+<span class="material-symbols-outlined text-sm text-emerald-600">bolt</span>
+<span class="font-label-xs text-label-xs font-bold uppercase">v2.4 Auto</span>
+</div>
+</div>
+<!-- Soft Decorative Parchment Lines Pattern SVG -->
+<svg class="absolute right-0 top-0 bottom-0 opacity-15 w-40 pointer-events-none" fill="none" viewbox="0 0 100 100">
+<circle class="text-primary" cx="90" cy="50" r="40" stroke="currentColor" stroke-dasharray="3 3" stroke-width="1.5"></circle>
+<path class="text-primary" d="M40 20 L95 20 M40 50 L95 50 M40 80 L95 80" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"></path>
+</svg>
+</div>
+<!-- Smart Parser Input Card -->
+<div class="flex flex-col rounded-xl bg-surface-container-lowest p-space-md shadow-md gap-space-sm relative">
+<div class="flex items-center justify-between">
+<label class="flex items-center gap-1.5 font-label-md text-label-md text-on-surface-variant uppercase font-bold tracking-wider" for="dm-parser-box">
+<span class="material-symbols-outlined text-base text-primary">terminal</span>
+        Command &amp; DM Order Parser
+      </label>
+<span class="font-label-xs text-label-xs text-secondary-fixed-dim bg-secondary/10 px-2 py-0.5 rounded-full font-bold">Paste &amp; Convert</span>
+</div>
+<!-- Quick Paste / Demo Insert Bar -->
+<div class="relative">
+<textarea class="w-full rounded-lg bg-surface-container-low p-space-sm font-body-sm text-body-sm text-on-surface focus:outline-none focus:bg-surface-container-lowest transition-all placeholder:text-outline/70 resize-none" id="dm-parser-box" placeholder="Type or paste customer DM order, e.g.:
+/name Chioma Adeleke /phone 08031234567 /item Luxury Emerald Kaftan = 65000 /item Silk Turban = 12000 /paid 50000 /channel whatsapp" rows="3"></textarea>
+<button class="absolute top-2 right-2 text-outline hover:text-on-surface hidden p-1" id="clear-btn" type="button">
+<span class="material-symbols-outlined text-sm">cancel</span>
+</button>
+</div>
+<div class="flex items-center justify-between gap-space-xs pt-1">
+<button class="flex items-center gap-1 text-secondary font-label-xs text-label-xs hover:text-primary transition-colors py-1" id="paste-sample-btn" type="button">
+<span class="material-symbols-outlined text-sm">magic_button</span>
+        Load Chioma DM Sample
+      </button>
+<button class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary text-on-primary font-label-md text-label-md font-semibold hover:bg-primary-container active:scale-95 transition-all shadow-sm" id="parse-run-btn" type="button">
+<span class="material-symbols-outlined text-sm">content_paste_go</span>
+        Smart Auto-Parse DM
+      </button>
+</div>
+</div>
+<!-- Real-Time Tactile Digital Paper Receipt Slip Form -->
+<div class="flex flex-col bg-surface-container-lowest rounded-xl shadow-lg relative overflow-hidden">
+<!-- Tactile Jagged Receipt Notch Decoration (Top Perforation) -->
+<div class="h-2.5 w-full bg-surface-container-high flex items-center justify-between px-2 overflow-hidden">
+<div class="flex gap-1.5 w-full justify-between opacity-40">
+<span class="w-1.5 h-1.5 rounded-full bg-surface-container-lowest"></span>
+<span class="w-1.5 h-1.5 rounded-full bg-surface-container-lowest"></span>
+<span class="w-1.5 h-1.5 rounded-full bg-surface-container-lowest"></span>
+<span class="w-1.5 h-1.5 rounded-full bg-surface-container-lowest"></span>
+<span class="w-1.5 h-1.5 rounded-full bg-surface-container-lowest"></span>
+<span class="w-1.5 h-1.5 rounded-full bg-surface-container-lowest"></span>
+<span class="w-1.5 h-1.5 rounded-full bg-surface-container-lowest"></span>
+<span class="w-1.5 h-1.5 rounded-full bg-surface-container-lowest"></span>
+<span class="w-1.5 h-1.5 rounded-full bg-surface-container-lowest"></span>
+<span class="w-1.5 h-1.5 rounded-full bg-surface-container-lowest"></span>
+<span class="w-1.5 h-1.5 rounded-full bg-surface-container-lowest"></span>
+<span class="w-1.5 h-1.5 rounded-full bg-surface-container-lowest"></span>
+</div>
+</div>
+<!-- Slip Header Container -->
+<div class="p-space-md flex flex-col gap-space-sm bg-gradient-to-b from-surface-container-lowest via-surface-container-lowest to-surface-container-low/30">
+<div class="flex items-start justify-between">
+<div>
+<span class="font-label-xs text-label-xs text-on-surface-variant font-bold uppercase tracking-widest">E-Receipt Voucher</span>
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-primary font-bold tracking-tight">NS-90412</h2>
+<span class="font-body-sm text-body-sm text-outline">Date: 24 Oct 2026 · 14:32 WAT</span>
+</div>
+<div class="flex flex-col items-end gap-1">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-label-xs text-label-xs font-bold uppercase tracking-wide">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+            Verified Seller
+          </span>
+<span class="font-label-xs text-label-xs text-secondary italic">Amina Luxury Store</span>
+</div>
+</div>
+<!-- Merchant & Channel Pill Selector -->
+<div class="flex flex-col gap-1.5 pt-1">
+<label class="font-label-xs text-label-xs uppercase font-bold text-on-surface-variant">Destination Chat Channel</label>
+<div class="grid grid-cols-4 gap-1.5" id="channel-selector-group">
+<!-- WhatsApp Active -->
+<button class="channel-pill flex items-center justify-center gap-1 py-1.5 px-1 rounded-lg bg-primary-container text-on-primary font-label-xs text-label-xs font-bold shadow-sm transition-all" data-channel="whatsapp" type="button">
+<span class="material-symbols-outlined text-xs">chat</span>
+            WhatsApp
+          </button>
+<!-- Instagram -->
+<button class="channel-pill flex items-center justify-center gap-1 py-1.5 px-1 rounded-lg bg-surface-container-high text-on-surface-variant font-label-xs text-label-xs font-semibold hover:bg-surface-container-highest transition-all" data-channel="instagram" type="button">
+<span class="material-symbols-outlined text-xs">photo_camera</span>
+            Instagram
+          </button>
+<!-- Telegram -->
+<button class="channel-pill flex items-center justify-center gap-1 py-1.5 px-1 rounded-lg bg-surface-container-high text-on-surface-variant font-label-xs text-label-xs font-semibold hover:bg-surface-container-highest transition-all" data-channel="telegram" type="button">
+<span class="material-symbols-outlined text-xs">send</span>
+            Telegram
+          </button>
+<!-- Facebook DM -->
+<button class="channel-pill flex items-center justify-center gap-1 py-1.5 px-1 rounded-lg bg-surface-container-high text-on-surface-variant font-label-xs text-label-xs font-semibold hover:bg-surface-container-highest transition-all" data-channel="facebook" type="button">
+<span class="material-symbols-outlined text-xs">forum</span>
+            FB DM
+          </button>
+</div>
+</div>
+<!-- Customer Identity Fields -->
+<div class="grid grid-cols-2 gap-space-sm pt-2">
+<div class="flex flex-col gap-1">
+<span class="font-label-xs text-label-xs uppercase font-bold text-outline">Customer Name</span>
+<div class="flex items-center gap-1.5 bg-surface-container-low px-2.5 py-1.5 rounded-lg">
+<span class="material-symbols-outlined text-base text-secondary">person</span>
+<input class="bg-transparent font-body-sm text-body-sm font-semibold text-on-surface w-full focus:outline-none truncate" id="cust-name-input" type="text" value="Chioma Adeleke"/>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<span class="font-label-xs text-label-xs uppercase font-bold text-outline">WhatsApp Phone</span>
+<div class="flex items-center gap-1.5 bg-surface-container-low px-2.5 py-1.5 rounded-lg">
+<span class="material-symbols-outlined text-base text-secondary">call</span>
+<input class="bg-transparent font-body-sm text-body-sm font-semibold text-on-surface w-full focus:outline-none truncate" id="cust-phone-input" type="text" value="+234 803 123 4567"/>
+</div>
+</div>
+</div>
+</div>
+<!-- Paper Perforation Divider -->
+<div class="relative py-2 flex items-center justify-center bg-surface-container-lowest">
+<div class="w-full flex items-center">
+<!-- Concave Left Notch cutout -->
+<span class="w-3 h-6 bg-background rounded-r-full shadow-inner -ml-1"></span>
+<div class="flex-1 flex justify-between px-2 opacity-50">
+<span class="w-1.5 h-0.5 bg-outline-variant"></span><span class="w-1.5 h-0.5 bg-outline-variant"></span>
+<span class="w-1.5 h-0.5 bg-outline-variant"></span><span class="w-1.5 h-0.5 bg-outline-variant"></span>
+<span class="w-1.5 h-0.5 bg-outline-variant"></span><span class="w-1.5 h-0.5 bg-outline-variant"></span>
+<span class="w-1.5 h-0.5 bg-outline-variant"></span><span class="w-1.5 h-0.5 bg-outline-variant"></span>
+<span class="w-1.5 h-0.5 bg-outline-variant"></span><span class="w-1.5 h-0.5 bg-outline-variant"></span>
+<span class="w-1.5 h-0.5 bg-outline-variant"></span><span class="w-1.5 h-0.5 bg-outline-variant"></span>
+<span class="w-1.5 h-0.5 bg-outline-variant"></span><span class="w-1.5 h-0.5 bg-outline-variant"></span>
+<span class="w-1.5 h-0.5 bg-outline-variant"></span><span class="w-1.5 h-0.5 bg-outline-variant"></span>
+</div>
+<!-- Concave Right Notch cutout -->
+<span class="w-3 h-6 bg-background rounded-l-full shadow-inner -mr-1"></span>
+</div>
+</div>
+<!-- Line Items Table / Repeater -->
+<div class="p-space-md flex flex-col gap-space-sm bg-surface-container-lowest">
+<div class="flex items-center justify-between pb-1">
+<span class="font-label-md text-label-md font-bold uppercase tracking-wider text-secondary">Ordered Goods &amp; Services</span>
+<button class="flex items-center gap-1 text-primary hover:text-primary-container font-label-xs text-label-xs font-bold transition-colors" id="add-item-row-btn" type="button">
+<span class="material-symbols-outlined text-sm">add_circle</span>
+          Add Item
+        </button>
+</div>
+<!-- Item Rows List -->
+<div class="flex flex-col gap-2" id="items-container">
+<!-- Item 1 -->
+<div class="flex items-center justify-between p-2 rounded-lg bg-surface-container-low hover:bg-surface-container transition-colors group">
+<div class="flex items-center gap-2 min-w-0">
+<span class="w-6 h-6 rounded bg-primary-fixed text-on-primary-fixed-variant flex items-center justify-center font-label-xs text-label-xs font-bold shrink-0">1x</span>
+<div class="min-w-0">
+<p class="font-body-md text-body-md font-semibold text-on-surface truncate">Emerald Silk Kaftan</p>
+<p class="font-body-sm text-body-sm text-outline">Rate: ₦65,000 · Size M</p>
+</div>
+</div>
+<div class="flex items-center gap-space-xs shrink-0 pl-2">
+<span class="font-currency-cell text-currency-cell text-on-surface font-bold">₦65,000</span>
+<button class="text-outline hover:text-error opacity-70 group-hover:opacity-100 p-0.5 transition-opacity" title="Remove Item" type="button">
+<span class="material-symbols-outlined text-sm">delete</span>
+</button>
+</div>
+</div>
+<!-- Item 2 -->
+<div class="flex items-center justify-between p-2 rounded-lg bg-surface-container-low hover:bg-surface-container transition-colors group">
+<div class="flex items-center gap-2 min-w-0">
+<span class="w-6 h-6 rounded bg-primary-fixed text-on-primary-fixed-variant flex items-center justify-center font-label-xs text-label-xs font-bold shrink-0">1x</span>
+<div class="min-w-0">
+<p class="font-body-md text-body-md font-semibold text-on-surface truncate">Matching Silk Turban</p>
+<p class="font-body-sm text-body-sm text-outline">Rate: ₦12,000 · Forest Green</p>
+</div>
+</div>
+<div class="flex items-center gap-space-xs shrink-0 pl-2">
+<span class="font-currency-cell text-currency-cell text-on-surface font-bold">₦12,000</span>
+<button class="text-outline hover:text-error opacity-70 group-hover:opacity-100 p-0.5 transition-opacity" title="Remove Item" type="button">
+<span class="material-symbols-outlined text-sm">delete</span>
+</button>
+</div>
+</div>
+<!-- Item 3: Logistics Fee -->
+<div class="flex items-center justify-between p-2 rounded-lg bg-surface-container-low hover:bg-surface-container transition-colors group">
+<div class="flex items-center gap-2 min-w-0">
+<span class="w-6 h-6 rounded bg-secondary-fixed text-on-secondary-fixed font-label-xs text-label-xs font-bold shrink-0 flex items-center justify-center">
+<span class="material-symbols-outlined text-xs">local_shipping</span>
+</span>
+<div class="min-w-0">
+<p class="font-body-md text-body-md font-semibold text-on-surface truncate">Delivery Fee (Lekki Phase 1)</p>
+<p class="font-body-sm text-body-sm text-outline">Standard Priority Dispatch</p>
+</div>
+</div>
+<div class="flex items-center gap-space-xs shrink-0 pl-2">
+<span class="font-currency-cell text-currency-cell text-on-surface font-bold">₦4,500</span>
+<button class="text-outline hover:text-error opacity-70 group-hover:opacity-100 p-0.5 transition-opacity" title="Remove Item" type="button">
+<span class="material-symbols-outlined text-sm">delete</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Financial Totals Calculation Box -->
+<div class="px-space-md py-space-sm bg-surface-container-low/70 flex flex-col gap-2">
+<div class="flex justify-between items-center text-on-surface-variant font-body-sm text-body-sm">
+<span>Items Subtotal</span>
+<span class="font-semibold text-on-surface">₦77,000</span>
+</div>
+<div class="flex justify-between items-center text-on-surface-variant font-body-sm text-body-sm">
+<span>Logistics &amp; Handling</span>
+<span class="font-semibold text-on-surface">₦4,500</span>
+</div>
+<div class="flex justify-between items-center pt-2">
+<span class="font-label-md text-label-md font-bold uppercase tracking-wider text-secondary">Total Net Invoice</span>
+<span class="font-currency-display text-headline-lg-mobile font-bold text-primary tracking-tight">₦81,500</span>
+</div>
+</div>
+<!-- Payment Split & Balance Status Block -->
+<div class="p-space-md flex flex-col gap-space-sm bg-surface-container-lowest">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md font-bold uppercase tracking-wide text-secondary">Payment State</span>
+<!-- Status Pill: Partial Status (amber warmth) -->
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed-variant font-label-xs text-label-xs font-bold uppercase">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary-tint"></span>
+          Partial Paid
+        </span>
+</div>
+<!-- Payment Breakdown Card -->
+<div class="grid grid-cols-2 gap-space-sm">
+<div class="flex flex-col p-2.5 rounded-lg bg-surface-container-low">
+<span class="font-label-xs text-label-xs text-outline font-semibold uppercase">Deposit Received</span>
+<div class="flex items-center gap-1 pt-1">
+<span class="font-currency-cell text-body-lg font-bold text-primary">₦50,000</span>
+<span class="material-symbols-outlined text-emerald-600 text-sm">check_circle</span>
+</div>
+<span class="font-body-sm text-label-xs text-on-surface-variant">Confirmed via Bank App</span>
+</div>
+<div class="flex flex-col p-2.5 rounded-lg bg-error-container/20">
+<span class="font-label-xs text-label-xs text-error font-semibold uppercase">Balance Due</span>
+<div class="flex items-center gap-1 pt-1">
+<span class="font-currency-cell text-body-lg font-bold text-error">₦31,500</span>
+<span class="material-symbols-outlined text-error text-sm">pending</span>
+</div>
+<span class="font-body-sm text-label-xs text-on-surface-variant">Due on Delivery (POD)</span>
+</div>
+</div>
+<!-- Logistics / DM Seller Note -->
+<div class="flex flex-col gap-1 pt-1">
+<label class="font-label-xs text-label-xs uppercase font-bold text-outline" for="delivery-notes">Delivery Instructions &amp; Chat Note</label>
+<div class="flex items-start gap-2 bg-surface-container-low p-2 rounded-lg">
+<span class="material-symbols-outlined text-secondary text-base mt-0.5">pin_drop</span>
+<textarea class="w-full bg-transparent font-body-sm text-body-sm text-on-surface focus:outline-none resize-none" id="delivery-notes" rows="2">Leave package with reception at Admiralty Way. Ring buyer upon arrival.</textarea>
+</div>
+</div>
+<!-- Cursive Signature & Gratitude Delight Accent -->
+<div class="flex items-center justify-between pt-2">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary-container text-lg">volunteer_activism</span>
+<p class="font-slip-accent-script text-slip-accent-script text-primary-container italic">Thank you for your warm patronage!</p>
+</div>
+<div class="w-16 h-8 rounded bg-surface-container-high flex items-center justify-center p-1">
+<!-- Mini QR Placeholder Pattern SVG -->
+<svg class="w-6 h-6 text-secondary" fill="currentColor" viewbox="0 0 24 24">
+<path d="M2 2h8v8H2V2zm2 2v4h4V4H4zm10-2h8v8h-8V2zm2 2v4h4V4h-4zM2 14h8v8H2v-8zm2 2v4h4v-4H4zm13-2h3v3h-3v-3zm0 5h3v3h-3v-3zm-3-5h2v2h-2v-2zm0 3h2v5h-2v-5z"></path>
+</svg>
+</div>
+</div>
+</div>
+<!-- Bottom Jagged Tear Edge -->
+<div class="h-2 w-full bg-surface-container-low flex justify-between overflow-hidden">
+<div class="w-full flex justify-between px-1">
+<span class="w-2 h-2 -mt-1 rotate-45 bg-surface-container-lowest"></span>
+<span class="w-2 h-2 -mt-1 rotate-45 bg-surface-container-lowest"></span>
+<span class="w-2 h-2 -mt-1 rotate-45 bg-surface-container-lowest"></span>
+<span class="w-2 h-2 -mt-1 rotate-45 bg-surface-container-lowest"></span>
+<span class="w-2 h-2 -mt-1 rotate-45 bg-surface-container-lowest"></span>
+<span class="w-2 h-2 -mt-1 rotate-45 bg-surface-container-lowest"></span>
+<span class="w-2 h-2 -mt-1 rotate-45 bg-surface-container-lowest"></span>
+<span class="w-2 h-2 -mt-1 rotate-45 bg-surface-container-lowest"></span>
+<span class="w-2 h-2 -mt-1 rotate-45 bg-surface-container-lowest"></span>
+<span class="w-2 h-2 -mt-1 rotate-45 bg-surface-container-lowest"></span>
+<span class="w-2 h-2 -mt-1 rotate-45 bg-surface-container-lowest"></span>
+<span class="w-2 h-2 -mt-1 rotate-45 bg-surface-container-lowest"></span>
+<span class="w-2 h-2 -mt-1 rotate-45 bg-surface-container-lowest"></span>
+<span class="w-2 h-2 -mt-1 rotate-45 bg-surface-container-lowest"></span>
+</div>
+</div>
+</div>
+<!-- Real-Time Tactile Dispatch Action Bar -->
+<div class="flex flex-col gap-2 pt-1">
+<button class="w-full py-3 px-4 rounded-xl bg-primary text-on-primary font-headline-md text-body-lg font-bold flex items-center justify-center gap-2 shadow-lg hover:bg-primary-container active:scale-[0.98] transition-all" id="send-slip-btn" type="button">
+<span class="material-symbols-outlined text-xl">send</span>
+<span>Generate &amp; Send WhatsApp Slip</span>
+<span class="text-base">🚀</span>
+</button>
+<div class="grid grid-cols-2 gap-space-sm">
+<button class="w-full py-2.5 px-3 rounded-lg bg-surface-container-lowest text-secondary font-label-md text-label-md font-bold flex items-center justify-center gap-1.5 shadow-sm hover:bg-surface-container-low active:scale-95 transition-all" id="preview-pdf-btn" type="button">
+<span class="material-symbols-outlined text-base">picture_as_pdf</span>
+        Preview Tactile PDF
+      </button>
+<button class="w-full py-2.5 px-3 rounded-lg bg-surface-container-lowest text-secondary font-label-md text-label-md font-bold flex items-center justify-center gap-1.5 shadow-sm hover:bg-surface-container-low active:scale-95 transition-all" id="copy-summary-btn" type="button">
+<span class="material-symbols-outlined text-base">content_copy</span>
+        Copy DM Receipt Text
+      </button>
+</div>
+</div>
+<!-- Interactive Feedback Toast (Delight Micro-Interaction) -->
+<div class="fixed bottom-24 inset-x-margin max-w-sm mx-auto bg-inverse-surface text-inverse-on-surface px-4 py-2.5 rounded-xl shadow-2xl flex items-center justify-between gap-3 transform translate-y-12 opacity-0 pointer-events-none transition-all duration-300 z-50" id="delight-toast">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary-fixed text-lg">check_circle</span>
+<span class="font-body-sm text-body-sm font-medium" id="toast-text">Slip generated and ready for WhatsApp!</span>
+</div>
+<span class="font-slip-accent-script text-primary-fixed text-sm">Sent!</span>
+</div>
+</div>
+<!-- Client-Side Slash Parser and Micro-Interactions Script -->
+<script>
+  (function() {
+    const parserBox = document.getElementById('dm-parser-box');
+    const clearBtn = document.getElementById('clear-btn');
+    const loadSampleBtn = document.getElementById('paste-sample-btn');
+    const runParseBtn = document.getElementById('parse-run-btn');
+    const channelPills = document.querySelectorAll('.channel-pill');
+    const sendSlipBtn = document.getElementById('send-slip-btn');
+    const copySummaryBtn = document.getElementById('copy-summary-btn');
+    const previewPdfBtn = document.getElementById('preview-pdf-btn');
+    const toast = document.getElementById('delight-toast');
+    const toastText = document.getElementById('toast-text');
+
+    const sampleOrderCommand = "/name Chioma Adeleke /phone 08031234567 /item Luxury Emerald Kaftan = 65000 /item Silk Turban = 12000 /delivery Lekki Phase 1 = 4500 /paid 50000 /channel whatsapp /note Leave package with reception";
+
+    // Show/hide clear button
+    parserBox.addEventListener('input', function() {
+      if (this.value.length > 0) {
+        clearBtn.classList.remove('hidden');
+      } else {
+        clearBtn.classList.add('hidden');
+      }
+    });
+
+    clearBtn.addEventListener('click', function() {
+      parserBox.value = '';
+      clearBtn.classList.add('hidden');
+      parserBox.focus();
+    });
+
+    // Load sample DM string
+    loadSampleBtn.addEventListener('click', function() {
+      parserBox.value = sampleOrderCommand;
+      clearBtn.classList.remove('hidden');
+      showToast('Loaded DM conversation format');
+    });
+
+    // Run Parser feedback
+    runParseBtn.addEventListener('click', function() {
+      const val = parserBox.value.trim();
+      if (!val) {
+        parserBox.value = sampleOrderCommand;
+        clearBtn.classList.remove('hidden');
+      }
+      showToast('⚡ Parsed 3 items & customer identity!');
+      
+      // Flash the paper slip with slight scale delight
+      const slipEl = document.querySelector('.shadow-lg');
+      if (slipEl) {
+        slipEl.classList.add('scale-[1.01]', 'transition-transform');
+        setTimeout(() => slipEl.classList.remove('scale-[1.01]'), 200);
+      }
+    });
+
+    // Channel selection toggles
+    channelPills.forEach(pill => {
+      pill.addEventListener('click', function() {
+        channelPills.forEach(p => {
+          p.classList.remove('bg-primary-container', 'text-on-primary', 'shadow-sm');
+          p.classList.add('bg-surface-container-high', 'text-on-surface-variant');
+        });
+        this.classList.remove('bg-surface-container-high', 'text-on-surface-variant');
+        this.classList.add('bg-primary-container', 'text-on-primary', 'shadow-sm');
+        
+        const channelName = this.getAttribute('data-channel');
+        const formatted = channelName.charAt(0).toUpperCase() + channelName.slice(1);
+        sendSlipBtn.querySelector('span:nth-child(2)').textContent = 'Generate & Send ' + formatted + ' Slip';
+      });
+    });
+
+    // Toast helper
+    let toastTimeout;
+    function showToast(msg) {
+      if (toastTimeout) clearTimeout(toastTimeout);
+      toastText.textContent = msg;
+      toast.classList.remove('translate-y-12', 'opacity-0', 'pointer-events-none');
+      toast.classList.add('translate-y-0', 'opacity-100');
+      toastTimeout = setTimeout(() => {
+        toast.classList.add('translate-y-12', 'opacity-0', 'pointer-events-none');
+        toast.classList.remove('translate-y-0', 'opacity-100');
+      }, 2600);
+    }
+
+    sendSlipBtn.addEventListener('click', function() {
+      showToast('🚀 Slip compiled & dispatched to WhatsApp!');
+    });
+
+    copySummaryBtn.addEventListener('click', function() {
+      navigator.clipboard?.writeText("NetSlip NS-90412 · Amina Luxury Couture · Total: ₦81,500 · Bal: ₦31,500");
+      showToast('📋 Copied DM text receipt to clipboard!');
+    });
+
+    previewPdfBtn.addEventListener('click', function() {
+      showToast('🖨️ Rendering high-res thermal slip PDF...');
+    });
+
+  })();
+</script></main><nav class="fixed bottom-0 inset-x-0 z-50 pb-safe bg-surface-container-lowest/95 backdrop-blur-xl shadow-[0_-2px_12px_rgba(0,0,0,0.05)]" data-active-classes="text-primary font-bold"><div class="flex items-center justify-between h-20 px-space-xs"><a class="flex-1 flex flex-col items-center justify-center gap-1 h-16 text-on-surface-variant transition-all hover:text-primary" data-path="overview" href="#"><span class="material-symbols-outlined text-2xl">dashboard</span><span class="font-label-xs text-label-xs">Overview</span></a><a class="flex-1 flex flex-col items-center justify-center gap-1 h-16 text-on-surface-variant transition-all hover:text-primary" data-path="receipts" href="#"><span class="material-symbols-outlined text-2xl">receipt_long</span><span class="font-label-xs text-label-xs">Receipts</span></a><div class="flex-1 flex items-center justify-center"><a aria-current="page" class="w-14 h-14 -mt-5 rounded-full bg-primary-container flex flex-col items-center justify-center shadow-[0_6px_16px_rgba(55,117,129,0.35)] active:scale-95 transition-transform text-primary font-bold" data-path="composer" href="#"><span class="material-symbols-outlined text-2xl">add_notes</span><span class="font-label-xs text-label-xs leading-none mt-0.5">Slip</span></a></div><a class="flex-1 flex flex-col items-center justify-center gap-1 h-16 text-on-surface-variant transition-all hover:text-primary" data-path="customers" href="#"><span class="material-symbols-outlined text-2xl">group</span><span class="font-label-xs text-label-xs">Customers</span></a><a class="flex-1 flex flex-col items-center justify-center gap-1 h-16 text-on-surface-variant transition-all hover:text-primary" data-path="channels-settings" href="#"><span class="material-symbols-outlined text-2xl">hub</span><span class="font-label-xs text-label-xs">Channels</span></a></div></nav></body></html>

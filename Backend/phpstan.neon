@@ -1,0 +1,13 @@
+includes:
+    - vendor/larastan/larastan/extension.neon
+
+parameters:
+    level: 8
+    paths:
+        - app
+        - ../whatsapp_bot/src
+        - ../telegram_bot/src
+        - ../instagram_bot/src
+        - ../facebook_bot/src
+    tmpDir: storage/framework/cache/phpstan
+    treatPhpDocTypesAsCertain: false

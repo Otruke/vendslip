@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "on-error-container": "#93000a", "surface-container-high": "#e2e9f4", "primary-fixed": "#afecfa", "outline": "#70797b", "on-error": "#ffffff", "surface-container-low": "#eef4ff", "on-primary-fixed": "#001f25", "surface-dim": "#d4dae6", "surface-container": "#e8eefa", "inverse-on-surface": "#eaf1fd", "tertiary-fixed-dim": "#8ad2df", "primary-container": "#377581", "on-primary": "#ffffff", "surface-container-highest": "#dce3ee", "on-secondary-fixed-variant": "#1e4c5c", "on-secondary": "#ffffff", "error-container": "#ffdad6", "secondary-fixed-dim": "#a1cde0", "on-primary-container": "#d0f6ff", "secondary-fixed": "#bde9fd", "primary-fixed-dim": "#93d0dd", "surface-tint": "#266772", "surface-bright": "#f8f9ff", "on-primary-fixed-variant": "#004e5a", "inverse-primary": "#93d0dd", "on-secondary-container": "#3d6879", "on-tertiary": "#ffffff", "tertiary-container": "#297683", "tertiary": "#005d69", "on-background": "#151c24", "on-surface-variant": "#40484a", "secondary": "#386475", "error": "#ba1a1a", "on-tertiary-fixed": "#001f24", "surface-container-lowest": "#ffffff", "on-tertiary-fixed-variant": "#004e59", "outline-variant": "#bfc8ca", "surface": "#f8f9ff", "inverse-surface": "#2a313a", "surface-variant": "#dce3ee", "on-surface": "#151c24", "tertiary-fixed": "#a6eefc", "secondary-container": "#bae6fa", "background": "#f8f9ff", "on-tertiary-container": "#cdf6ff", "primary": "#185c68", "on-secondary-fixed": "#001f29" }, "borderRadius": { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" }, "spacing": { "space-lg": "1.25rem", "space-md": "0.875rem", "gutter": "1rem", "space-xl": "2rem", "space-xs": "0.25rem", "margin": "1rem", "space-2xl": "3rem", "space-sm": "0.5rem", "margin-md": "1.5rem", "gutter-lg": "1.5rem", "margin-lg": "2.5rem" }, "fontFamily": { "headline-lg-mobile": [ "Plus Jakarta Sans" ], "headline-md": [ "Plus Jakarta Sans" ], "label-xs": [ "Plus Jakarta Sans" ], "label-md": [ "Plus Jakarta Sans" ], "body-sm": [ "Plus Jakarta Sans" ], "body-md": [ "Plus Jakarta Sans" ], "currency-cell": [ "Plus Jakarta Sans" ], "slip-accent-script": [ "\"Brush Script MT, cursive\"" ], "headline-xl-mobile": [ "Plus Jakarta Sans" ], "currency-display": [ "Plus Jakarta Sans" ], "headline-xl": [ "Plus Jakarta Sans" ], "headline-lg": [ "Plus Jakarta Sans" ], "body-lg": [ "Plus Jakarta Sans" ] }, "fontSize": { "headline-lg-mobile": [ "22px", { "lineHeight": "30px", "letterSpacing": "-0.01em", "fontWeight": "700" } ], "headline-md": [ "20px", { "lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600" } ], "label-xs": [ "10px", { "lineHeight": "14px", "letterSpacing": "0.06em", "fontWeight": "700" } ], "label-md": [ "12px", { "lineHeight": "16px", "letterSpacing": "0.04em", "fontWeight": "600" } ], "body-sm": [ "12px", { "lineHeight": "16px", "fontWeight": "400" } ], "body-md": [ "14px", { "lineHeight": "20px", "fontWeight": "400" } ], "currency-cell": [ "14px", { "lineHeight": "20px", "fontWeight": "600" } ], "slip-accent-script": [ "18px", { "lineHeight": "24px", "fontWeight": "400" } ], "headline-xl-mobile": [ "28px", { "lineHeight": "36px", "letterSpacing": "-0.015em", "fontWeight": "800" } ], "currency-display": [ "32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700" } ], "headline-xl": [ "36px", { "lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "800" } ], "headline-lg": [ "28px", { "lineHeight": "36px", "letterSpacing": "-0.015em", "fontWeight": "700" } ], "body-lg": [ "16px", { "lineHeight": "24px", "fontWeight": "400" } ] } } } };</script></head><body class="bg-[#F4F7F8] font-body-md text-on-surface antialiased"><aside class="fixed left-0 top-0 h-full w-[260px] bg-[#265363] text-on-primary z-50 flex flex-col justify-between overflow-y-auto"><div class="flex flex-col"><div class="p-space-md border-b border-white/10"><div class="flex items-center gap-space-sm mb-space-xs"><div class="w-8 h-8 rounded-xl bg-primary-container flex items-center justify-center shadow-sm"><span class="material-symbols-outlined text-on-primary text-[20px]">receipt_long</span></div><div><span class="font-headline-md text-headline-md tracking-tight font-bold text-white block leading-none">NetSlip</span><span class="font-slip-accent-script text-slip-accent-script text-[#8CD4E0] tracking-normal italic leading-none">Close the sale. Send the slip</span></div></div></div><div class="p-space-sm"><div class="bg-white/5 border border-primary-container rounded-xl p-space-sm mb-space-sm"><div class="flex items-center justify-between mb-space-xs"><span class="font-label-xs text-label-xs uppercase tracking-wider text-secondary-fixed bg-secondary-container/20 px-space-xs py-0.5 rounded">Lagos Atelier</span><span class="material-symbols-outlined text-white/60 text-[16px]">unfold_more</span></div><p class="font-label-md text-label-md font-semibold text-white truncate">Amina Luxury Couture</p><p class="font-body-sm text-body-sm text-white/70 truncate">Business Plus Plan</p></div><nav class="flex flex-col gap-1" data-active-classes="bg-primary-container text-white font-semibold shadow-sm"><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-white/80 hover:bg-white/10 hover:text-white transition-all" data-path="overview-analytics" href="#"><span class="material-symbols-outlined text-[18px]">insights</span><span class="font-label-md text-label-md">Overview &amp; Analytics</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-white/80 hover:bg-white/10 hover:text-white transition-all" data-path="slash-slip-composer" href="#"><span class="material-symbols-outlined text-[18px]">edit_document</span><span class="font-label-md text-label-md">/Slash Slip Composer</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-white/80 hover:bg-white/10 hover:text-white transition-all" data-path="receipts-invoices" href="#"><span class="material-symbols-outlined text-[18px]">receipt</span><span class="font-label-md text-label-md">Receipts &amp; Invoices</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-white/80 hover:bg-white/10 hover:text-white transition-all" data-path="template-gallery" href="#"><span class="material-symbols-outlined text-[18px]">grid_view</span><span class="font-label-md text-label-md">Template Gallery</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-white/80 hover:bg-white/10 hover:text-white transition-all" data-path="customers-debtors" href="#"><span class="material-symbols-outlined text-[18px]">groups</span><span class="font-label-md text-label-md">Customers &amp; Debtors</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-white/80 hover:bg-white/10 hover:text-white transition-all" data-path="inventory-sku" href="#"><span class="material-symbols-outlined text-[18px]">inventory_2</span><span class="font-label-md text-label-md">Inventory (SKU)</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-white/80 hover:bg-white/10 hover:text-white transition-all" data-path="team-staff" href="#"><span class="material-symbols-outlined text-[18px]">badge</span><span class="font-label-md text-label-md">Team &amp; Staff</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-white/80 hover:bg-white/10 hover:text-white transition-all" data-path="bot-channels" href="#"><span class="material-symbols-outlined text-[18px]">smart_toy</span><span class="font-label-md text-label-md">Bot Channels (WA/TG/IG/FB)</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-white/80 hover:bg-white/10 hover:text-white transition-all" data-path="billing-payg-credits" href="#"><span class="material-symbols-outlined text-[18px]">credit_card</span><span class="font-label-md text-label-md">Billing &amp; PAYG Credits</span></a></nav></div></div><div class="p-space-sm border-t border-white/10"><div class="bg-white/5 rounded-xl p-space-sm mb-space-sm border border-white/10"><div class="flex items-center justify-between mb-1"><span class="font-label-xs text-label-xs text-secondary-fixed uppercase tracking-wider font-semibold">Unlimited Plan Active</span><span class="w-2 h-2 rounded-full bg-emerald-400"></span></div><p class="font-body-sm text-body-sm text-white/80 mb-space-xs">50 Non-Expiring PAYG Credits</p><button class="w-full py-1.5 px-space-sm bg-primary-container hover:bg-[#265363] text-white font-label-md text-label-md font-semibold rounded-lg transition-colors flex items-center justify-center gap-1 shadow-sm" type="button">+ Top Up Credits</button></div><div class="flex items-center gap-space-sm px-space-xs py-1"><div class="w-8 h-8 rounded-full bg-secondary-container text-on-secondary-container font-headline-md text-headline-md flex items-center justify-center font-bold text-xs">AL</div><div class="flex-1 min-w-0"><p class="font-label-md text-label-md font-semibold text-white truncate">Amina Luxury</p><p class="font-body-sm text-body-sm text-white/60 truncate">owner@aminaluxury.com</p></div><span class="material-symbols-outlined text-white/60 text-[18px]">settings</span></div></div></aside><div class="pl-[260px]"><header class="fixed top-0 left-[260px] right-0 h-16 bg-surface-container-lowest border-b border-surface-container-highest z-40 px-gutter-lg flex items-center justify-between gap-space-md"><div class="flex-1 max-w-xl"><div class="relative flex items-center"><span class="material-symbols-outlined absolute left-space-md text-outline text-[18px]">search</span><input class="w-full h-[42px] pl-10 pr-12 rounded-xl bg-surface border border-outline-variant font-body-md text-body-md text-on-surface focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/15 transition-all" placeholder="Search RCP-2026-1001, customer name, or type /name = ..." type="text"/><span class="absolute right-space-md px-1.5 py-0.5 text-[10px] font-label-xs text-label-xs text-outline bg-surface-container-high rounded font-mono border border-outline-variant">/</span></div></div><div class="flex items-center gap-space-md"><div class="hidden xl:flex items-center gap-space-xs"><div class="flex items-center gap-1.5 px-space-sm py-1 bg-surface-container-low rounded-full"><span class="w-2 h-2 rounded-full bg-emerald-500"></span><span class="font-label-xs text-label-xs text-on-surface-variant font-medium">WhatsApp Direct</span></div><div class="flex items-center gap-1.5 px-space-sm py-1 bg-surface-container-low rounded-full"><span class="w-2 h-2 rounded-full bg-sky-500"></span><span class="font-label-xs text-label-xs text-on-surface-variant font-medium">Telegram Bot 10.3</span></div><div class="flex items-center gap-1.5 px-space-sm py-1 bg-surface-container-low rounded-full"><span class="w-2 h-2 rounded-full bg-pink-500"></span><span class="font-label-xs text-label-xs text-on-surface-variant font-medium">Instagram DM</span></div><div class="flex items-center gap-1.5 px-space-sm py-1 bg-surface-container-low rounded-full"><span class="w-2 h-2 rounded-full bg-blue-600"></span><span class="font-label-xs text-label-xs text-on-surface-variant font-medium">Facebook</span></div></div><div class="flex items-center gap-space-sm"><button class="h-[42px] px-space-lg bg-primary-container hover:bg-[#265363] text-on-primary font-label-md text-label-md font-semibold rounded-lg transition-all flex items-center gap-space-xs shadow-sm" type="button"><span class="material-symbols-outlined text-[18px]">add</span><span>New Slip</span></button><div class="relative"><button class="w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-surface-container-high transition-colors" type="button"><span class="material-symbols-outlined text-[20px]">notifications</span></button><span class="absolute top-1 right-1 w-2.5 h-2.5 rounded-full bg-error border-2 border-surface-container-lowest"></span></div><div class="w-9 h-9 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center font-bold text-xs border border-outline-variant">AL</div><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida/AEtjO1WLaDa0NCfzEurMqJwwHUoAPx2nzVWD49nSzjicRmv67jrsdvvleKp2fKIsmfUYc_lyDJpEG8Mi6wxCCAjsrLbTtCgFWFtt5yrXHGJ_Lkp1E2zCWak2bNcYJTF2JRphj--b8NMG3fBDXXc2PL2dX6BcIfJVDjcJjJ9MH3UlaShSnu6oD6iLeX_a8Nd8TF-mBO2H-JSdDPs9DgMoFAiKYy1uAKVTfVCRITCjj1fvmDuMDWWTYECZh96pGvFtFWLe7C4joLggZGAu_ss"/></div></div></header><main class="relative pt-16 min-h-screen bg-[#F4F7F8]"><div class="flex flex-col w-full relative">
+<!-- Top Background Ambient Wash Container -->
+<div class="relative w-full px-gutter-lg py-margin-md flex flex-col gap-space-lg">
+<!-- Header Section with Policy Badges -->
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-space-md">
+<div>
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-[28px]">account_balance_wallet</span>
+<h1 class="font-headline-xl text-headline-xl text-primary font-bold tracking-tight">Financial Documents Ledger</h1>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1 flex items-center gap-space-xs">
+<span>Cryptographically signed slips, invoices, and credit notes synced with social sales channels</span>
+<span class="w-1.5 h-1.5 rounded-full bg-outline-variant"></span>
+<span class="font-slip-accent-script text-slip-accent-script text-primary">Close the sale. Send the slip</span>
+</p>
+</div>
+<!-- Mutability Governance & Primary Actions -->
+<div class="flex flex-wrap items-center gap-space-sm">
+<!-- Active Mutable Pill -->
+<div class="flex items-center gap-1.5 px-space-md py-1.5 rounded-xl bg-surface-container-low text-primary shadow-sm" title="Permits authorized field revisions with snapshot hashing">
+<span class="material-symbols-outlined text-[16px] text-primary">edit_note</span>
+<div class="flex flex-col leading-tight">
+<span class="font-label-md text-label-md font-bold text-primary">Mutable Mode Active</span>
+<span class="font-label-xs text-label-xs text-secondary">Audited revisions permitted</span>
+</div>
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse ml-1"></span>
+</div>
+<!-- Strict Ledger Alternative Badge -->
+<div class="flex items-center gap-1 px-space-sm py-1.5 rounded-xl bg-surface-container text-on-surface-variant opacity-85">
+<span class="material-symbols-outlined text-[15px]">lock</span>
+<span class="font-label-xs text-label-xs">Strict Immutable Policy</span>
+</div>
+<button class="h-10 px-space-md bg-surface-container-lowest hover:bg-surface-container text-secondary font-label-md text-label-md font-semibold rounded-lg shadow-sm flex items-center gap-1.5 transition-all" type="button">
+<span class="material-symbols-outlined text-[18px]">table_view</span>
+<span>Export Excel / CSV</span>
+</button>
+<button class="h-10 px-space-lg bg-primary-container hover:bg-primary text-on-primary font-label-md text-label-md font-semibold rounded-lg shadow-sm flex items-center gap-1.5 transition-all" type="button">
+<span class="material-symbols-outlined text-[18px]">receipt_long</span>
+<span>+ New Slip</span>
+</button>
+</div>
+</div>
+<!-- Summary KPI Ribbon -->
+<div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-space-md">
+<!-- Settled -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm relative overflow-hidden">
+<div class="flex items-center justify-between mb-1">
+<span class="font-label-xs text-label-xs uppercase tracking-wider text-on-surface-variant font-semibold">Total Settled Receipts</span>
+<span class="w-7 h-7 rounded-lg bg-secondary-container/50 text-secondary flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">verified</span>
+</span>
+</div>
+<div class="flex items-baseline gap-space-xs">
+<span class="font-currency-display text-currency-display text-on-surface font-bold">₦4,850,000</span>
+<span class="font-label-md text-label-md text-primary font-semibold">.00</span>
+</div>
+<div class="flex items-center justify-between mt-2 pt-2 border-t-0 bg-surface-container-low px-2 py-1 rounded">
+<span class="font-body-sm text-body-sm text-on-surface-variant">94 Slips Cleared</span>
+<span class="font-label-xs text-label-xs text-primary font-bold">+18.4% vs last mo</span>
+</div>
+</div>
+<!-- Receivables -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm relative overflow-hidden">
+<div class="flex items-center justify-between mb-1">
+<span class="font-label-xs text-label-xs uppercase tracking-wider text-on-surface-variant font-semibold">Unsettled Receivables</span>
+<span class="w-7 h-7 rounded-lg bg-surface-container-high text-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">pending_actions</span>
+</span>
+</div>
+<div class="flex items-baseline gap-space-xs">
+<span class="font-currency-display text-currency-display text-on-surface font-bold">₦602,500</span>
+<span class="font-label-md text-label-md text-on-surface-variant font-semibold">.00</span>
+</div>
+<div class="flex items-center justify-between mt-2 pt-2 bg-surface-container-low px-2 py-1 rounded">
+<span class="font-body-sm text-body-sm text-on-surface-variant">30 Active Invoices</span>
+<span class="font-label-xs text-label-xs text-secondary font-bold">6 awaiting WhatsApp ack</span>
+</div>
+</div>
+<!-- Overdue -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm relative overflow-hidden">
+<div class="flex items-center justify-between mb-1">
+<span class="font-label-xs text-label-xs uppercase tracking-wider text-error font-semibold">Overdue Alerts</span>
+<span class="w-7 h-7 rounded-lg bg-error-container text-on-error-container flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">warning</span>
+</span>
+</div>
+<div class="flex items-baseline gap-space-xs">
+<span class="font-currency-display text-currency-display text-error font-bold">₦125,000</span>
+<span class="font-label-md text-label-md text-error font-semibold">.00</span>
+</div>
+<div class="flex items-center justify-between mt-2 pt-2 bg-error-container/30 px-2 py-1 rounded">
+<span class="font-body-sm text-body-sm text-on-error-container">4 Overdue Slips</span>
+<span class="font-label-xs text-label-xs text-error font-bold font-mono">CRITICAL &gt; 48H</span>
+</div>
+</div>
+<!-- Credit Notes / Void -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm relative overflow-hidden">
+<div class="flex items-center justify-between mb-1">
+<span class="font-label-xs text-label-xs uppercase tracking-wider text-on-surface-variant font-semibold">Active Credit Notes</span>
+<span class="w-7 h-7 rounded-lg bg-secondary-container text-on-secondary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">assignment_return</span>
+</span>
+</div>
+<div class="flex items-baseline gap-space-xs">
+<span class="font-currency-display text-currency-display text-secondary font-bold">₦45,000</span>
+<span class="font-label-md text-label-md text-secondary font-semibold">.00</span>
+</div>
+<div class="flex items-center justify-between mt-2 pt-2 bg-surface-container-low px-2 py-1 rounded">
+<span class="font-body-sm text-body-sm text-on-surface-variant">4 Adjustments Voided</span>
+<span class="font-label-xs text-label-xs text-secondary font-bold">100% Tax Indexed</span>
+</div>
+</div>
+</div>
+<!-- Segmented Filter Bar -->
+<div class="bg-surface-container-lowest rounded-xl p-space-sm shadow-sm flex flex-col xl:flex-row xl:items-center justify-between gap-space-sm">
+<!-- Document Type Tabs -->
+<div class="flex items-center gap-1 overflow-x-auto pb-1 xl:pb-0">
+<button class="px-space-md py-2 rounded-lg bg-primary-container text-on-primary font-label-md text-label-md font-semibold whitespace-nowrap shadow-sm" type="button">
+          All Slips (128)
+        </button>
+<button class="px-space-md py-2 rounded-lg text-on-surface-variant hover:bg-surface-container font-label-md text-label-md font-semibold whitespace-nowrap transition-colors" type="button">
+          Receipts (94)
+        </button>
+<button class="px-space-md py-2 rounded-lg text-on-surface-variant hover:bg-surface-container font-label-md text-label-md font-semibold whitespace-nowrap transition-colors" type="button">
+          Invoices (30)
+        </button>
+<button class="px-space-md py-2 rounded-lg text-error hover:bg-error-container/30 font-label-md text-label-md font-semibold whitespace-nowrap transition-colors" type="button">
+          Overdue (4)
+        </button>
+<button class="px-space-md py-2 rounded-lg text-secondary hover:bg-secondary-container/30 font-label-md text-label-md font-semibold whitespace-nowrap transition-colors" type="button">
+          Credit Notes / Void (4)
+        </button>
+</div>
+<!-- Search, Channel, and Date Selectors -->
+<div class="flex flex-wrap items-center gap-space-xs">
+<div class="relative min-w-[240px] flex-1 sm:flex-initial">
+<span class="material-symbols-outlined absolute left-2.5 top-2.5 text-outline text-[18px]">search</span>
+<input class="w-full h-9 pl-9 pr-3 rounded-lg bg-surface text-on-surface font-body-sm text-body-sm focus:outline-none focus:ring-2 focus:ring-primary/20" placeholder="Search slip #, name, phone, hash..." type="text"/>
+</div>
+<div class="h-9 px-space-sm rounded-lg bg-surface flex items-center gap-1.5 text-on-surface font-label-md text-label-md cursor-pointer hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-[16px] text-primary">filter_alt</span>
+<span>All Channels</span>
+<span class="material-symbols-outlined text-[16px] text-outline">expand_more</span>
+</div>
+<div class="h-9 px-space-sm rounded-lg bg-surface flex items-center gap-1.5 text-on-surface font-label-md text-label-md cursor-pointer hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-[16px] text-secondary">calendar_today</span>
+<span>Oct 2026</span>
+<span class="material-symbols-outlined text-[16px] text-outline">arrow_drop_down</span>
+</div>
+</div>
+</div>
+<!-- Ledger Table Card -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden flex flex-col">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low text-on-surface-variant font-label-xs text-label-xs uppercase tracking-wider">
+<th class="py-space-md px-space-md font-bold">Document # &amp; Hash</th>
+<th class="py-space-md px-space-sm font-bold">Type</th>
+<th class="py-space-md px-space-md font-bold">Customer &amp; Dispatch</th>
+<th class="py-space-md px-space-sm font-bold">Channel</th>
+<th class="py-space-md px-space-md font-bold text-right">Grand Total</th>
+<th class="py-space-md px-space-md font-bold text-right">Balance Due</th>
+<th class="py-space-md px-space-sm font-bold text-center">Status</th>
+<th class="py-space-md px-space-sm font-bold">Watermark</th>
+<th class="py-space-md px-space-md font-bold text-center">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-none">
+<!-- ROW 1 (TARGET OF DRAWER - ACTIVE HIGHLIGHTED) -->
+<tr class="bg-secondary-container/20 hover:bg-secondary-container/30 transition-colors">
+<td class="py-space-md px-space-md">
+<div class="flex items-center gap-2">
+<span class="w-2 h-8 rounded-full bg-primary-container"></span>
+<div>
+<div class="flex items-center gap-1.5">
+<span class="font-label-md text-label-md font-bold text-primary">#INV-2026-5001</span>
+<span class="px-1.5 py-0.2 bg-primary-container text-on-primary font-label-xs text-label-xs rounded font-bold">REV 2</span>
+</div>
+<span class="font-label-xs text-label-xs text-outline font-mono block mt-0.5">SHA-256: #NSV-9A84F2</span>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-sm">
+<span class="px-2 py-1 rounded bg-secondary-container text-on-secondary-container font-label-xs text-label-xs font-bold uppercase tracking-wider">Invoice</span>
+</td>
+<td class="py-space-md px-space-md">
+<p class="font-label-md text-label-md font-bold text-on-surface">Chief Emeka Nwosu</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant truncate max-w-[200px]">42 Wuse II Crescent, Abuja</p>
+</td>
+<td class="py-space-md px-space-sm">
+<div class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-surface-container text-secondary font-label-xs text-label-xs">
+<span class="material-symbols-outlined text-[13px] text-primary">send</span>
+<span>Telegram 10.3</span>
+</div>
+</td>
+<td class="py-space-md px-space-md text-right font-currency-cell text-currency-cell font-bold text-on-surface">
+                ₦64,775.00
+              </td>
+<td class="py-space-md px-space-md text-right">
+<span class="font-currency-cell text-currency-cell font-bold text-on-secondary-fixed-variant">₦44,775.00</span>
+<span class="block font-label-xs text-label-xs text-outline">₦20,000 Deposit</span>
+</td>
+<td class="py-space-md px-space-sm text-center">
+<span class="inline-block px-2.5 py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed-variant font-label-xs text-label-xs font-bold uppercase">
+                  Partial Paid
+                </span>
+</td>
+<td class="py-space-md px-space-sm">
+<div class="flex items-center gap-1 text-primary">
+<span class="material-symbols-outlined text-[15px]">verified_user</span>
+<span class="font-label-xs text-label-xs font-semibold">Clean (PAYG)</span>
+</div>
+</td>
+<td class="py-space-md px-space-md text-center">
+<div class="flex items-center justify-center gap-1">
+<button class="w-8 h-8 rounded-lg bg-surface-container-high text-on-surface-variant hover:bg-surface-container flex items-center justify-center" title="Preview Slip" type="button">
+<span class="material-symbols-outlined text-[16px]">visibility</span>
+</button>
+<button class="w-8 h-8 rounded-lg bg-surface-container-high text-on-surface-variant hover:bg-surface-container flex items-center justify-center" title="PDF" type="button">
+<span class="material-symbols-outlined text-[16px]">picture_as_pdf</span>
+</button>
+<button class="px-2.5 h-8 rounded-lg bg-primary-container text-on-primary font-label-xs text-label-xs font-bold flex items-center gap-1 shadow-sm" title="Editing currently open" type="button">
+<span class="material-symbols-outlined text-[15px]">edit</span>
+<span>Editing</span>
+</button>
+<button class="w-8 h-8 rounded-lg bg-surface-container-high text-secondary hover:bg-surface-container flex items-center justify-center" title="Credit Note Adjustment" type="button">
+<span class="material-symbols-outlined text-[16px]">undo</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- ROW 2 -->
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="py-space-md px-space-md">
+<div class="flex items-center gap-2">
+<span class="w-2 h-8 rounded-full bg-transparent"></span>
+<div>
+<span class="font-label-md text-label-md font-bold text-on-surface">#RCP-2026-1042</span>
+<span class="font-label-xs text-label-xs text-outline font-mono block mt-0.5">SHA-256: #NSV-3B192A</span>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-sm">
+<span class="px-2 py-1 rounded bg-surface-container-high text-primary font-label-xs text-label-xs font-bold uppercase tracking-wider">Receipt</span>
+</td>
+<td class="py-space-md px-space-md">
+<p class="font-label-md text-label-md font-bold text-on-surface">Chioma Adeleke</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant truncate max-w-[200px]">Lekki Phase 1, Lagos</p>
+</td>
+<td class="py-space-md px-space-sm">
+<div class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-surface-container text-primary font-label-xs text-label-xs">
+<span class="material-symbols-outlined text-[13px] text-primary">chat</span>
+<span>WhatsApp Direct</span>
+</div>
+</td>
+<td class="py-space-md px-space-md text-right font-currency-cell text-currency-cell font-bold text-on-surface">
+                ₦81,500.00
+              </td>
+<td class="py-space-md px-space-md text-right">
+<span class="font-currency-cell text-currency-cell font-bold text-primary">₦0.00</span>
+<span class="block font-label-xs text-label-xs text-outline">Settled Direct</span>
+</td>
+<td class="py-space-md px-space-sm text-center">
+<span class="inline-block px-2.5 py-1 rounded-full bg-primary-fixed text-on-primary-fixed-variant font-label-xs text-label-xs font-bold uppercase">
+                  Paid · Cleared
+                </span>
+</td>
+<td class="py-space-md px-space-sm">
+<div class="flex items-center gap-1 text-primary">
+<span class="material-symbols-outlined text-[15px]">verified_user</span>
+<span class="font-label-xs text-label-xs font-semibold">Clean (PAYG)</span>
+</div>
+</td>
+<td class="py-space-md px-space-md text-center">
+<div class="flex items-center justify-center gap-1">
+<button class="w-8 h-8 rounded-lg bg-surface-container-high text-on-surface-variant hover:bg-surface-container flex items-center justify-center" type="button">
+<span class="material-symbols-outlined text-[16px]">visibility</span>
+</button>
+<button class="w-8 h-8 rounded-lg bg-surface-container-high text-on-surface-variant hover:bg-surface-container flex items-center justify-center" type="button">
+<span class="material-symbols-outlined text-[16px]">picture_as_pdf</span>
+</button>
+<button class="w-8 h-8 rounded-lg bg-surface-container-high text-on-surface-variant hover:bg-surface-container flex items-center justify-center" title="Edit Slip" type="button">
+<span class="material-symbols-outlined text-[16px]">edit</span>
+</button>
+<button class="w-8 h-8 rounded-lg bg-surface-container-high text-primary hover:bg-surface-container flex items-center justify-center" title="Quick Share" type="button">
+<span class="material-symbols-outlined text-[16px]">share</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- ROW 3 -->
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="py-space-md px-space-md">
+<div class="flex items-center gap-2">
+<span class="w-2 h-8 rounded-full bg-transparent"></span>
+<div>
+<span class="font-label-md text-label-md font-bold text-on-surface">#RCP-2026-1041</span>
+<span class="font-label-xs text-label-xs text-outline font-mono block mt-0.5">SHA-256: #NSV-8C711D</span>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-sm">
+<span class="px-2 py-1 rounded bg-surface-container-high text-primary font-label-xs text-label-xs font-bold uppercase tracking-wider">Receipt</span>
+</td>
+<td class="py-space-md px-space-md">
+<p class="font-label-md text-label-md font-bold text-on-surface">Tunde Bakare</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant truncate max-w-[200px]">Victoria Island, Lagos</p>
+</td>
+<td class="py-space-md px-space-sm">
+<div class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-surface-container text-secondary font-label-xs text-label-xs">
+<span class="material-symbols-outlined text-[13px] text-secondary">photo_camera</span>
+<span>Instagram DM</span>
+</div>
+</td>
+<td class="py-space-md px-space-md text-right font-currency-cell text-currency-cell font-bold text-on-surface">
+                ₦240,000.00
+              </td>
+<td class="py-space-md px-space-md text-right">
+<span class="font-currency-cell text-currency-cell font-bold text-primary">₦0.00</span>
+<span class="block font-label-xs text-label-xs text-outline">Card Payment</span>
+</td>
+<td class="py-space-md px-space-sm text-center">
+<span class="inline-block px-2.5 py-1 rounded-full bg-primary-fixed text-on-primary-fixed-variant font-label-xs text-label-xs font-bold uppercase">
+                  Paid · Cleared
+                </span>
+</td>
+<td class="py-space-md px-space-sm">
+<div class="flex items-center gap-1 text-primary">
+<span class="material-symbols-outlined text-[15px]">verified_user</span>
+<span class="font-label-xs text-label-xs font-semibold">Clean (PAYG)</span>
+</div>
+</td>
+<td class="py-space-md px-space-md text-center">
+<div class="flex items-center justify-center gap-1">
+<button class="w-8 h-8 rounded-lg bg-surface-container-high text-on-surface-variant hover:bg-surface-container flex items-center justify-center" type="button">
+<span class="material-symbols-outlined text-[16px]">visibility</span>
+</button>
+<button class="w-8 h-8 rounded-lg bg-surface-container-high text-on-surface-variant hover:bg-surface-container flex items-center justify-center" type="button">
+<span class="material-symbols-outlined text-[16px]">picture_as_pdf</span>
+</button>
+<button class="w-8 h-8 rounded-lg bg-surface-container-high text-on-surface-variant hover:bg-surface-container flex items-center justify-center" type="button">
+<span class="material-symbols-outlined text-[16px]">edit</span>
+</button>
+<button class="w-8 h-8 rounded-lg bg-surface-container-high text-primary hover:bg-surface-container flex items-center justify-center" type="button">
+<span class="material-symbols-outlined text-[16px]">share</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- ROW 4 (OVERDUE) -->
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="py-space-md px-space-md">
+<div class="flex items-center gap-2">
+<span class="w-2 h-8 rounded-full bg-error"></span>
+<div>
+<span class="font-label-md text-label-md font-bold text-error">#INV-2026-1039</span>
+<span class="font-label-xs text-label-xs text-outline font-mono block mt-0.5">SHA-256: #NSV-6D440E</span>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-sm">
+<span class="px-2 py-1 rounded bg-secondary-container text-on-secondary-container font-label-xs text-label-xs font-bold uppercase tracking-wider">Invoice</span>
+</td>
+<td class="py-space-md px-space-md">
+<p class="font-label-md text-label-md font-bold text-on-surface">Folashade O.</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant truncate max-w-[200px]">GRA Phase 2, Port Harcourt</p>
+</td>
+<td class="py-space-md px-space-sm">
+<div class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-surface-container text-primary font-label-xs text-label-xs">
+<span class="material-symbols-outlined text-[13px] text-primary">chat</span>
+<span>WhatsApp Direct</span>
+</div>
+</td>
+<td class="py-space-md px-space-md text-right font-currency-cell text-currency-cell font-bold text-on-surface">
+                ₦85,000.00
+              </td>
+<td class="py-space-md px-space-md text-right">
+<span class="font-currency-cell text-currency-cell font-bold text-error">₦85,000.00</span>
+<span class="block font-label-xs text-label-xs text-error font-medium">Overdue 24h</span>
+</td>
+<td class="py-space-md px-space-sm text-center">
+<span class="inline-block px-2.5 py-1 rounded-full bg-error-container text-on-error-container font-label-xs text-label-xs font-bold uppercase">
+                  Overdue 24H
+                </span>
+</td>
+<td class="py-space-md px-space-sm">
+<div class="flex items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined text-[15px]">water_drop</span>
+<span class="font-label-xs text-label-xs">Powered NetSlip</span>
+</div>
+</td>
+<td class="py-space-md px-space-md text-center">
+<div class="flex items-center justify-center gap-1">
+<button class="px-2 h-8 rounded-lg bg-error-container text-on-error-container font-label-xs text-label-xs font-bold flex items-center gap-1" title="Nudge WhatsApp" type="button">
+<span class="material-symbols-outlined text-[14px]">notifications_active</span>
+<span>Nudge</span>
+</button>
+<button class="w-8 h-8 rounded-lg bg-surface-container-high text-on-surface-variant hover:bg-surface-container flex items-center justify-center" type="button">
+<span class="material-symbols-outlined text-[16px]">picture_as_pdf</span>
+</button>
+<button class="w-8 h-8 rounded-lg bg-surface-container-high text-on-surface-variant hover:bg-surface-container flex items-center justify-center" type="button">
+<span class="material-symbols-outlined text-[16px]">edit</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- ROW 5 (CREDIT NOTE) -->
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="py-space-md px-space-md">
+<div class="flex items-center gap-2">
+<span class="w-2 h-8 rounded-full bg-secondary"></span>
+<div>
+<span class="font-label-md text-label-md font-bold text-secondary">#CN-2026-004</span>
+<span class="font-label-xs text-label-xs text-outline font-mono block mt-0.5">SHA-256: #NSV-1E993B</span>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-sm">
+<span class="px-2 py-1 rounded bg-secondary-fixed text-on-secondary-fixed font-label-xs text-label-xs font-bold uppercase tracking-wider">Credit Note</span>
+</td>
+<td class="py-space-md px-space-md">
+<p class="font-label-md text-label-md font-bold text-on-surface">Alhaji Garba</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant truncate max-w-[200px]">Nasarawa GRA, Kano City</p>
+</td>
+<td class="py-space-md px-space-sm">
+<div class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-surface-container text-secondary font-label-xs text-label-xs">
+<span class="material-symbols-outlined text-[13px] text-primary">send</span>
+<span>Telegram Bot</span>
+</div>
+</td>
+<td class="py-space-md px-space-md text-right font-currency-cell text-currency-cell font-bold text-error">
+                -₦45,000.00
+              </td>
+<td class="py-space-md px-space-md text-right">
+<span class="font-currency-cell text-currency-cell font-bold text-on-surface-variant">₦0.00</span>
+<span class="block font-label-xs text-label-xs text-outline">Offset Complete</span>
+</td>
+<td class="py-space-md px-space-sm text-center">
+<span class="inline-block px-2.5 py-1 rounded-full bg-surface-container-highest text-on-surface-variant font-label-xs text-label-xs font-bold uppercase">
+                  Adjusted / Void
+                </span>
+</td>
+<td class="py-space-md px-space-sm">
+<div class="flex items-center gap-1 text-primary">
+<span class="material-symbols-outlined text-[15px]">verified_user</span>
+<span class="font-label-xs text-label-xs font-semibold">Clean (PAYG)</span>
+</div>
+</td>
+<td class="py-space-md px-space-md text-center">
+<div class="flex items-center justify-center gap-1">
+<button class="px-2 h-8 rounded-lg bg-surface-container-high text-secondary hover:bg-surface-container font-label-xs text-label-xs font-semibold flex items-center gap-1" type="button">
+<span class="material-symbols-outlined text-[15px]">history</span>
+<span>Audit View</span>
+</button>
+<button class="w-8 h-8 rounded-lg bg-surface-container-high text-on-surface-variant hover:bg-surface-container flex items-center justify-center" type="button">
+<span class="material-symbols-outlined text-[16px]">picture_as_pdf</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Ledger Footer Pagination -->
+<div class="bg-surface-container-low px-space-md py-space-sm flex flex-col sm:flex-row items-center justify-between gap-space-sm">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Showing 1 to 5 of 128 recorded financial transactions</span>
+<div class="flex items-center gap-1">
+<button class="w-8 h-8 rounded-lg bg-surface-container-lowest text-on-surface-variant hover:bg-surface-container flex items-center justify-center shadow-sm disabled:opacity-40" type="button">
+<span class="material-symbols-outlined text-[16px]">chevron_left</span>
+</button>
+<span class="px-2.5 py-1 rounded bg-primary-container text-on-primary font-label-xs text-label-xs font-bold">1</span>
+<button class="px-2.5 py-1 rounded hover:bg-surface-container text-on-surface-variant font-label-xs text-label-xs font-medium" type="button">2</button>
+<button class="px-2.5 py-1 rounded hover:bg-surface-container text-on-surface-variant font-label-xs text-label-xs font-medium" type="button">3</button>
+<span class="text-outline text-xs px-1">...</span>
+<button class="px-2.5 py-1 rounded hover:bg-surface-container text-on-surface-variant font-label-xs text-label-xs font-medium" type="button">26</button>
+<button class="w-8 h-8 rounded-lg bg-surface-container-lowest text-on-surface-variant hover:bg-surface-container flex items-center justify-center shadow-sm" type="button">
+<span class="material-symbols-outlined text-[16px]">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- SLIDE-OVER EDIT DRAWER BACKDROP & DOCKED DRAWER (480px) -->
+<div class="fixed inset-0 top-16 left-[260px] bg-inverse-surface/30 backdrop-blur-[2px] z-50 flex justify-end">
+<!-- Drawer Body -->
+<div class="w-full max-w-[500px] h-full bg-surface-container-lowest shadow-2xl flex flex-col justify-between overflow-y-auto">
+<!-- Drawer Content Wrapper -->
+<div class="flex flex-col">
+<!-- Top Header Band in Solid #265363 (Deep Slate Teal) -->
+<div class="bg-primary p-space-md text-on-primary relative">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-space-xs">
+<div class="w-9 h-9 rounded-lg bg-primary-container flex items-center justify-center shadow-sm">
+<span class="material-symbols-outlined text-on-primary text-[22px]">edit_document</span>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<h2 class="font-headline-md text-headline-md font-bold text-on-primary leading-none">Edit Document</h2>
+<span class="px-1.5 py-0.5 rounded bg-secondary-fixed text-on-secondary-fixed font-label-xs text-label-xs font-bold uppercase">#INV-2026-5001</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-primary/75 mt-1">Revision #2 · Amina Luxury Couture &amp; Kicks</p>
+</div>
+</div>
+<!-- Close Drawer Icon -->
+<button class="w-8 h-8 rounded-full bg-surface-container-lowest/10 hover:bg-surface-container-lowest/20 text-on-primary flex items-center justify-center transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">close</span>
+</button>
+</div>
+<!-- Super-Admin Mutable Authorization Pill -->
+<div class="mt-space-sm pt-space-xs flex items-center justify-between border-t border-white/10">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-secondary-fixed text-[16px]">admin_panel_settings</span>
+<span class="font-label-xs text-label-xs text-secondary-fixed font-bold uppercase tracking-wide">Mutable Mode Authorized by Super-Admin</span>
+</div>
+<span class="font-slip-accent-script text-slip-accent-script text-secondary-fixed text-sm">Audited Revision</span>
+</div>
+</div>
+<div class="p-space-md flex flex-col gap-space-md">
+<!-- Audit Cryptographic Notice Box -->
+<div class="bg-secondary-container/20 rounded-xl p-space-md flex items-start gap-space-sm">
+<span class="material-symbols-outlined text-primary text-[20px] flex-shrink-0 mt-0.5">verified_user</span>
+<div>
+<p class="font-label-md text-label-md font-bold text-primary">Audited Record Revision</p>
+<p class="font-body-sm text-body-sm text-on-surface mt-1 leading-relaxed">
+                Any changes made will create an immutable revision log (<span class="font-semibold">Rev #2</span>). The previous buyer version (<span class="font-mono text-xs">#INV-2026-5001-v1</span>) will remain archived in the ledger history and cryptographic hashes will be recalculated.
+              </p>
+</div>
+</div>
+<!-- Form Fields Container -->
+<div class="flex flex-col gap-space-sm">
+<div class="flex items-center justify-between">
+<span class="font-label-xs text-label-xs uppercase tracking-wider text-on-surface-variant font-bold">1. Customer Dispatch Details</span>
+<span class="font-label-xs text-label-xs text-primary font-semibold">Synced from Telegram Bot</span>
+</div>
+<!-- Customer Full Name -->
+<div class="flex flex-col gap-1">
+<label class="font-label-xs text-label-xs font-bold text-on-surface">Customer Full Name</label>
+<input class="w-full h-10 px-3 rounded-lg bg-surface text-on-surface font-body-md text-body-md focus:outline-none focus:ring-2 focus:ring-primary/20 shadow-sm" type="text" value="Chief Emeka Nwosu"/>
+</div>
+<div class="grid grid-cols-2 gap-space-xs">
+<!-- WhatsApp / Phone -->
+<div class="flex flex-col gap-1">
+<label class="font-label-xs text-label-xs font-bold text-on-surface">WhatsApp / Phone</label>
+<div class="relative">
+<input class="w-full h-10 px-3 rounded-lg bg-surface text-on-surface font-body-md text-body-md focus:outline-none focus:ring-2 focus:ring-primary/20 shadow-sm" type="text" value="+234 803 998 1122"/>
+<span class="material-symbols-outlined absolute right-2.5 top-2.5 text-primary text-[16px]">call</span>
+</div>
+</div>
+<!-- Dispatch Channel -->
+<div class="flex flex-col gap-1">
+<label class="font-label-xs text-label-xs font-bold text-on-surface">Dispatch Channel</label>
+<select class="w-full h-10 px-3 rounded-lg bg-surface text-on-surface font-label-md text-label-md focus:outline-none focus:ring-2 focus:ring-primary/20 shadow-sm cursor-pointer">
+<option selected="">Telegram 10.3 Bot</option>
+<option>WhatsApp Direct</option>
+<option>Instagram DM</option>
+<option>Physical Print</option>
+</select>
+</div>
+</div>
+<!-- Delivery Address -->
+<div class="flex flex-col gap-1">
+<label class="font-label-xs text-label-xs font-bold text-on-surface">Delivery Destination Address</label>
+<input class="w-full h-10 px-3 rounded-lg bg-surface text-on-surface font-body-md text-body-md focus:outline-none focus:ring-2 focus:ring-primary/20 shadow-sm" type="text" value="42 Wuse II Crescent, Abuja"/>
+</div>
+<!-- Editable Line Items Card -->
+<div class="mt-space-xs flex flex-col gap-1.5">
+<div class="flex items-center justify-between">
+<span class="font-label-xs text-label-xs uppercase tracking-wider text-on-surface-variant font-bold">2. Line Items Breakdown</span>
+<button class="text-primary font-label-xs text-label-xs font-bold flex items-center gap-0.5 hover:underline" type="button">
+<span class="material-symbols-outlined text-[14px]">add_circle</span>
+<span>Add Line Item</span>
+</button>
+</div>
+<!-- Item Row Card -->
+<div class="bg-surface-container-low rounded-xl p-space-sm flex flex-col gap-space-xs">
+<div class="flex items-center justify-between gap-space-xs">
+<input class="flex-1 h-9 px-2.5 rounded-lg bg-surface text-on-surface font-label-md text-label-md font-semibold focus:outline-none focus:ring-1 focus:ring-primary" type="text" value="Leather Minimalist Sneakers"/>
+<button class="w-8 h-8 rounded-lg text-error hover:bg-error-container flex items-center justify-center" title="Delete Line Item" type="button">
+<span class="material-symbols-outlined text-[16px]">delete</span>
+</button>
+</div>
+<div class="grid grid-cols-3 gap-space-xs items-center">
+<div class="flex flex-col">
+<span class="font-label-xs text-label-xs text-outline">Qty</span>
+<input class="w-full h-8 px-2 rounded-lg bg-surface text-on-surface font-label-md text-label-md text-center focus:outline-none focus:ring-1 focus:ring-primary" type="number" value="2"/>
+</div>
+<div class="flex flex-col">
+<span class="font-label-xs text-label-xs text-outline">Unit Price</span>
+<input class="w-full h-8 px-2 rounded-lg bg-surface text-on-surface font-currency-cell text-currency-cell text-right focus:outline-none focus:ring-1 focus:ring-primary" type="text" value="₦28,500.00"/>
+</div>
+<div class="flex flex-col">
+<span class="font-label-xs text-label-xs text-outline">Line Subtotal</span>
+<div class="h-8 px-2 rounded-lg bg-surface-container flex items-center justify-end font-currency-cell text-currency-cell font-bold text-on-surface">
+                      ₦57,000.00
+                    </div>
+</div>
+</div>
+</div>
+</div>
+<!-- Financial Adjustments Breakdown -->
+<div class="mt-space-xs bg-surface-container-low rounded-xl p-space-md flex flex-col gap-space-xs">
+<span class="font-label-xs text-label-xs uppercase tracking-wider text-on-surface-variant font-bold mb-1">3. Financial Ledger Rebalancing</span>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-1.5">
+<span class="font-body-sm text-body-sm text-on-surface font-medium">Subtotal</span>
+<span class="font-label-xs text-label-xs text-outline font-mono">1 item / 2 pcs</span>
+</div>
+<span class="font-currency-cell text-currency-cell font-semibold text-on-surface">₦57,000.00</span>
+</div>
+<!-- VAT toggle -->
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-1.5">
+<input checked="" class="w-3.5 h-3.5 rounded text-primary accent-primary" type="checkbox"/>
+<span class="font-body-sm text-body-sm text-on-surface">VAT (7.5% Standard)</span>
+</div>
+<span class="font-currency-cell text-currency-cell text-on-surface font-semibold">₦4,275.00</span>
+</div>
+<!-- Shipping -->
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[15px] text-secondary">local_shipping</span>
+<span class="font-body-sm text-body-sm text-on-surface">Shipping / Delivery (Abuja Hub)</span>
+</div>
+<span class="font-currency-cell text-currency-cell text-on-surface font-semibold">₦3,500.00</span>
+</div>
+<!-- Discount -->
+<div class="flex items-center justify-between">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Merchant Promo Discount</span>
+<span class="font-currency-cell text-currency-cell text-outline font-semibold">-₦0.00</span>
+</div>
+<!-- Grand Total -->
+<div class="flex items-center justify-between pt-1 border-t-0 bg-surface-container-high px-2 py-1 rounded">
+<span class="font-label-md text-label-md font-bold text-primary">Recalculated Grand Total</span>
+<span class="font-currency-cell text-currency-cell font-bold text-primary">₦64,775.00</span>
+</div>
+<!-- Deposit & Balance Due -->
+<div class="flex items-center justify-between mt-1">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[15px] text-primary">payments</span>
+<span class="font-body-sm text-body-sm text-on-surface font-medium">Recorded Deposit / Cleared</span>
+</div>
+<span class="font-currency-cell text-currency-cell font-bold text-primary">₦20,000.00</span>
+</div>
+<!-- Dynamic Highlighted Balance -->
+<div class="mt-1 p-2 rounded-lg bg-error-container text-on-error-container flex items-center justify-between shadow-sm">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[18px]">account_balance</span>
+<span class="font-label-md text-label-md font-bold uppercase tracking-wide">Outstanding Balance Due:</span>
+</div>
+<span class="font-currency-display text-currency-cell font-extrabold text-error">₦44,775.00</span>
+</div>
+</div>
+<!-- MANDATORY AUDIT JUSTIFICATION -->
+<div class="mt-space-xs flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<label class="font-label-xs text-label-xs font-bold text-on-surface flex items-center gap-1">
+<span>Audit Reason for Revision (Required by Policy)</span>
+<span class="text-error font-bold">*</span>
+</label>
+<span class="font-label-xs text-label-xs text-primary font-mono">HASH REV LOG</span>
+</div>
+<textarea class="w-full p-2.5 rounded-lg bg-surface text-on-surface font-body-sm text-body-sm focus:outline-none focus:ring-2 focus:ring-primary/20 shadow-sm" rows="2">Customer amended delivery address from Maitama to 42 Wuse II Crescent Abuja and confirmed courier dispatch timing.</textarea>
+<span class="font-label-xs text-label-xs text-outline">Stored in cryptographically signed audit chain.</span>
+</div>
+<!-- Notification Options -->
+<div class="bg-surface-container-low rounded-xl p-space-sm flex flex-col gap-2 mt-1">
+<label class="flex items-start gap-2 cursor-pointer">
+<input checked="" class="w-4 h-4 rounded text-primary accent-primary mt-0.5" type="checkbox"/>
+<span class="font-body-sm text-body-sm text-on-surface">Auto-dispatch revised PDF slip to customer on <span class="font-bold text-primary">Telegram</span> (+2348039981122)</span>
+</label>
+<label class="flex items-start gap-2 cursor-pointer">
+<input checked="" class="w-4 h-4 rounded text-primary accent-primary mt-0.5" type="checkbox"/>
+<span class="font-body-sm text-body-sm text-on-surface">Deduct 1 PAYG credit for clean re-issue (Remove NetSlip watermark)</span>
+</label>
+</div>
+</div>
+</div>
+</div>
+<!-- Drawer Sticky Footer Actions -->
+<div class="sticky bottom-0 bg-surface-container-lowest p-space-md shadow-xl flex flex-col gap-2">
+<button class="w-full h-11 bg-primary-container hover:bg-primary text-on-primary font-label-md text-label-md font-bold rounded-lg shadow flex items-center justify-center gap-2 transition-transform active:scale-[0.99]" type="button">
+<span class="material-symbols-outlined text-[18px]">lock_reset</span>
+<span>Save Changes &amp; Re-Issue PDF (Rev #2)</span>
+</button>
+<button class="w-full h-9 bg-surface hover:bg-surface-container text-on-surface-variant font-label-md text-label-md font-semibold rounded-lg transition-colors flex items-center justify-center" type="button">
+          Cancel &amp; Discard Edits
+        </button>
+</div>
+</div>
+</div>
+</div></main></div></body></html>

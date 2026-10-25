@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "on-error-container": "#93000a", "surface-container-high": "#e2e9f4", "primary-fixed": "#afecfa", "outline": "#70797b", "on-error": "#ffffff", "surface-container-low": "#eef4ff", "on-primary-fixed": "#001f25", "surface-dim": "#d4dae6", "surface-container": "#e8eefa", "inverse-on-surface": "#eaf1fd", "tertiary-fixed-dim": "#8ad2df", "primary-container": "#377581", "on-primary": "#ffffff", "surface-container-highest": "#dce3ee", "on-secondary-fixed-variant": "#1e4c5c", "on-secondary": "#ffffff", "error-container": "#ffdad6", "secondary-fixed-dim": "#a1cde0", "on-primary-container": "#d0f6ff", "secondary-fixed": "#bde9fd", "primary-fixed-dim": "#93d0dd", "surface-tint": "#266772", "surface-bright": "#f8f9ff", "on-primary-fixed-variant": "#004e5a", "inverse-primary": "#93d0dd", "on-secondary-container": "#3d6879", "on-tertiary": "#ffffff", "tertiary-container": "#297683", "tertiary": "#005d69", "on-background": "#151c24", "on-surface-variant": "#40484a", "secondary": "#386475", "error": "#ba1a1a", "on-tertiary-fixed": "#001f24", "surface-container-lowest": "#ffffff", "on-tertiary-fixed-variant": "#004e59", "outline-variant": "#bfc8ca", "surface": "#f8f9ff", "inverse-surface": "#2a313a", "surface-variant": "#dce3ee", "on-surface": "#151c24", "tertiary-fixed": "#a6eefc", "secondary-container": "#bae6fa", "background": "#f8f9ff", "on-tertiary-container": "#cdf6ff", "primary": "#185c68", "on-secondary-fixed": "#001f29" }, "borderRadius": { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" }, "spacing": { "space-lg": "1.25rem", "space-md": "0.875rem", "gutter": "1rem", "space-xl": "2rem", "space-xs": "0.25rem", "margin": "1rem", "space-2xl": "3rem", "space-sm": "0.5rem", "margin-md": "1.5rem", "gutter-lg": "1.5rem", "margin-lg": "2.5rem" }, "fontFamily": { "headline-lg-mobile": [ "Plus Jakarta Sans" ], "headline-md": [ "Plus Jakarta Sans" ], "label-xs": [ "Plus Jakarta Sans" ], "label-md": [ "Plus Jakarta Sans" ], "body-sm": [ "Plus Jakarta Sans" ], "body-md": [ "Plus Jakarta Sans" ], "currency-cell": [ "Plus Jakarta Sans" ], "slip-accent-script": [ "\"Brush Script MT, cursive\"" ], "headline-xl-mobile": [ "Plus Jakarta Sans" ], "currency-display": [ "Plus Jakarta Sans" ], "headline-xl": [ "Plus Jakarta Sans" ], "headline-lg": [ "Plus Jakarta Sans" ], "body-lg": [ "Plus Jakarta Sans" ] }, "fontSize": { "headline-lg-mobile": [ "22px", { "lineHeight": "30px", "letterSpacing": "-0.01em", "fontWeight": "700" } ], "headline-md": [ "20px", { "lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600" } ], "label-xs": [ "10px", { "lineHeight": "14px", "letterSpacing": "0.06em", "fontWeight": "700" } ], "label-md": [ "12px", { "lineHeight": "16px", "letterSpacing": "0.04em", "fontWeight": "600" } ], "body-sm": [ "12px", { "lineHeight": "16px", "fontWeight": "400" } ], "body-md": [ "14px", { "lineHeight": "20px", "fontWeight": "400" } ], "currency-cell": [ "14px", { "lineHeight": "20px", "fontWeight": "600" } ], "slip-accent-script": [ "18px", { "lineHeight": "24px", "fontWeight": "400" } ], "headline-xl-mobile": [ "28px", { "lineHeight": "36px", "letterSpacing": "-0.015em", "fontWeight": "800" } ], "currency-display": [ "32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700" } ], "headline-xl": [ "36px", { "lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "800" } ], "headline-lg": [ "28px", { "lineHeight": "36px", "letterSpacing": "-0.015em", "fontWeight": "700" } ], "body-lg": [ "16px", { "lineHeight": "24px", "fontWeight": "400" } ] } } } };</script></head><body class="bg-[#F4F7F8] font-body-md text-on-surface antialiased"><aside class="fixed left-0 top-0 h-full w-[260px] bg-[#265363] text-on-primary z-50 flex flex-col justify-between overflow-y-auto"><div class="flex flex-col"><div class="p-space-md border-b border-white/10"><div class="flex items-center gap-space-sm mb-space-xs"><div class="w-8 h-8 rounded-xl bg-primary-container flex items-center justify-center shadow-sm"><span class="material-symbols-outlined text-on-primary text-[20px]">receipt_long</span></div><div><span class="font-headline-md text-headline-md tracking-tight font-bold text-white block leading-none">NetSlip</span><span class="font-slip-accent-script text-slip-accent-script text-[#8CD4E0] tracking-normal italic leading-none">Close the sale. Send the slip</span></div></div></div><div class="p-space-sm"><div class="bg-white/5 border border-primary-container rounded-xl p-space-sm mb-space-sm"><div class="flex items-center justify-between mb-space-xs"><span class="font-label-xs text-label-xs uppercase tracking-wider text-secondary-fixed bg-secondary-container/20 px-space-xs py-0.5 rounded">Lagos Atelier</span><span class="material-symbols-outlined text-white/60 text-[16px]">unfold_more</span></div><p class="font-label-md text-label-md font-semibold text-white truncate">Amina Luxury Couture</p><p class="font-body-sm text-body-sm text-white/70 truncate">Business Plus Plan</p></div><nav class="flex flex-col gap-1" data-active-classes="bg-primary-container text-white font-semibold shadow-sm"><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-white/80 hover:bg-white/10 hover:text-white transition-all" data-path="overview-analytics" href="#"><span class="material-symbols-outlined text-[18px]">insights</span><span class="font-label-md text-label-md">Overview &amp; Analytics</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-white/80 hover:bg-white/10 hover:text-white transition-all" data-path="slash-slip-composer" href="#"><span class="material-symbols-outlined text-[18px]">edit_document</span><span class="font-label-md text-label-md">/Slash Slip Composer</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-white/80 hover:bg-white/10 hover:text-white transition-all" data-path="receipts-invoices" href="#"><span class="material-symbols-outlined text-[18px]">receipt</span><span class="font-label-md text-label-md">Receipts &amp; Invoices</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-white/80 hover:bg-white/10 hover:text-white transition-all" data-path="template-gallery" href="#"><span class="material-symbols-outlined text-[18px]">grid_view</span><span class="font-label-md text-label-md">Template Gallery</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-white/80 hover:bg-white/10 hover:text-white transition-all" data-path="customers-debtors" href="#"><span class="material-symbols-outlined text-[18px]">groups</span><span class="font-label-md text-label-md">Customers &amp; Debtors</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-white/80 hover:bg-white/10 hover:text-white transition-all" data-path="inventory-sku" href="#"><span class="material-symbols-outlined text-[18px]">inventory_2</span><span class="font-label-md text-label-md">Inventory (SKU)</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-white/80 hover:bg-white/10 hover:text-white transition-all" data-path="team-staff" href="#"><span class="material-symbols-outlined text-[18px]">badge</span><span class="font-label-md text-label-md">Team &amp; Staff</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-white/80 hover:bg-white/10 hover:text-white transition-all" data-path="bot-channels" href="#"><span class="material-symbols-outlined text-[18px]">smart_toy</span><span class="font-label-md text-label-md">Bot Channels (WA/TG/IG/FB)</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-white/80 hover:bg-white/10 hover:text-white transition-all" data-path="billing-payg-credits" href="#"><span class="material-symbols-outlined text-[18px]">credit_card</span><span class="font-label-md text-label-md">Billing &amp; PAYG Credits</span></a></nav></div></div><div class="p-space-sm border-t border-white/10"><div class="bg-white/5 rounded-xl p-space-sm mb-space-sm border border-white/10"><div class="flex items-center justify-between mb-1"><span class="font-label-xs text-label-xs text-secondary-fixed uppercase tracking-wider font-semibold">Unlimited Plan Active</span><span class="w-2 h-2 rounded-full bg-emerald-400"></span></div><p class="font-body-sm text-body-sm text-white/80 mb-space-xs">50 Non-Expiring PAYG Credits</p><button class="w-full py-1.5 px-space-sm bg-primary-container hover:bg-[#265363] text-white font-label-md text-label-md font-semibold rounded-lg transition-colors flex items-center justify-center gap-1 shadow-sm" type="button">+ Top Up Credits</button></div><div class="flex items-center gap-space-sm px-space-xs py-1"><div class="w-8 h-8 rounded-full bg-secondary-container text-on-secondary-container font-headline-md text-headline-md flex items-center justify-center font-bold text-xs">AL</div><div class="flex-1 min-w-0"><p class="font-label-md text-label-md font-semibold text-white truncate">Amina Luxury</p><p class="font-body-sm text-body-sm text-white/60 truncate">owner@aminaluxury.com</p></div><span class="material-symbols-outlined text-white/60 text-[18px]">settings</span></div></div></aside><div class="pl-[260px]"><header class="fixed top-0 left-[260px] right-0 h-16 bg-surface-container-lowest border-b border-surface-container-highest z-40 px-gutter-lg flex items-center justify-between gap-space-md"><div class="flex-1 max-w-xl"><div class="relative flex items-center"><span class="material-symbols-outlined absolute left-space-md text-outline text-[18px]">search</span><input class="w-full h-[42px] pl-10 pr-12 rounded-xl bg-surface border border-outline-variant font-body-md text-body-md text-on-surface focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/15 transition-all" placeholder="Search RCP-2026-1001, customer name, or type /name = ..." type="text"/><span class="absolute right-space-md px-1.5 py-0.5 text-[10px] font-label-xs text-label-xs text-outline bg-surface-container-high rounded font-mono border border-outline-variant">/</span></div></div><div class="flex items-center gap-space-md"><div class="hidden xl:flex items-center gap-space-xs"><div class="flex items-center gap-1.5 px-space-sm py-1 bg-surface-container-low rounded-full"><span class="w-2 h-2 rounded-full bg-emerald-500"></span><span class="font-label-xs text-label-xs text-on-surface-variant font-medium">WhatsApp Direct</span></div><div class="flex items-center gap-1.5 px-space-sm py-1 bg-surface-container-low rounded-full"><span class="w-2 h-2 rounded-full bg-sky-500"></span><span class="font-label-xs text-label-xs text-on-surface-variant font-medium">Telegram Bot 10.3</span></div><div class="flex items-center gap-1.5 px-space-sm py-1 bg-surface-container-low rounded-full"><span class="w-2 h-2 rounded-full bg-pink-500"></span><span class="font-label-xs text-label-xs text-on-surface-variant font-medium">Instagram DM</span></div><div class="flex items-center gap-1.5 px-space-sm py-1 bg-surface-container-low rounded-full"><span class="w-2 h-2 rounded-full bg-blue-600"></span><span class="font-label-xs text-label-xs text-on-surface-variant font-medium">Facebook</span></div></div><div class="flex items-center gap-space-sm"><button class="h-[42px] px-space-lg bg-primary-container hover:bg-[#265363] text-on-primary font-label-md text-label-md font-semibold rounded-lg transition-all flex items-center gap-space-xs shadow-sm" type="button"><span class="material-symbols-outlined text-[18px]">add</span><span>New Slip</span></button><div class="relative"><button class="w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-surface-container-high transition-colors" type="button"><span class="material-symbols-outlined text-[20px]">notifications</span></button><span class="absolute top-1 right-1 w-2.5 h-2.5 rounded-full bg-error border-2 border-surface-container-lowest"></span></div><div class="w-9 h-9 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center font-bold text-xs border border-outline-variant">AL</div><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida/AEtjO1WLaDa0NCfzEurMqJwwHUoAPx2nzVWD49nSzjicRmv67jrsdvvleKp2fKIsmfUYc_lyDJpEG8Mi6wxCCAjsrLbTtCgFWFtt5yrXHGJ_Lkp1E2zCWak2bNcYJTF2JRphj--b8NMG3fBDXXc2PL2dX6BcIfJVDjcJjJ9MH3UlaShSnu6oD6iLeX_a8Nd8TF-mBO2H-JSdDPs9DgMoFAiKYy1uAKVTfVCRITCjj1fvmDuMDWWTYECZh96pGvFtFWLe7C4joLggZGAu_ss"/></div></div></header><main class="relative pt-16 min-h-screen bg-[#F4F7F8]"><div class="flex flex-col w-full">
+<div class="px-gutter-lg py-space-xl max-w-7xl mx-auto w-full space-y-space-xl">
+<!-- Top Bar & Active Subscription Banner -->
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-space-lg bg-surface-container-lowest p-space-lg rounded-xl shadow-sm">
+<div class="space-y-space-xs">
+<div class="flex items-center gap-space-xs">
+<span class="font-label-xs text-label-xs uppercase tracking-wider text-primary font-bold">Account &amp; Billing</span>
+<span class="font-label-xs text-label-xs text-outline">/</span>
+<span class="font-label-xs text-label-xs uppercase tracking-wider text-outline font-semibold">Subscriptions &amp; Credits</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Plans, Non-Expiring PAYG Credit Packs &amp; Checkout</h1>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-2xl">
+          Choose an automated monthly subscription or top up non-expiring Pay-As-You-Go credits. All paid plans remove the NetSlip watermark.
+        </p>
+</div>
+<!-- Current Active Plan Pill & Switcher -->
+<div class="flex flex-col sm:flex-row lg:flex-col xl:flex-row items-start sm:items-center lg:items-end xl:items-center gap-space-md self-start lg:self-auto">
+<div class="bg-surface-container-low px-space-md py-space-sm rounded-xl space-y-1">
+<div class="flex items-center gap-space-xs">
+<span class="w-2.5 h-2.5 rounded-full bg-primary-container animate-pulse"></span>
+<span class="font-label-xs text-label-xs uppercase tracking-wider text-primary font-bold">Active: Business Plus Plan</span>
+<span class="font-label-xs text-label-xs text-outline">(Renews in 18 days)</span>
+</div>
+<div class="flex items-center justify-between gap-space-md">
+<span class="font-label-md text-label-md font-semibold text-secondary">50 PAYG Credits Available</span>
+<span class="font-label-xs text-label-xs text-on-primary bg-primary-container px-2 py-0.5 rounded-full font-bold">Current</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Billing Cycle Switcher Toggle -->
+<div class="flex flex-col sm:flex-row items-center justify-between gap-space-md bg-surface-container-low p-space-sm rounded-xl">
+<div class="flex items-center gap-space-xs pl-space-sm">
+<span class="material-symbols-outlined text-primary text-[20px]">sync</span>
+<span class="font-label-md text-label-md font-semibold text-on-surface">Select Billing Cadence:</span>
+</div>
+<div class="inline-flex items-center bg-surface-container-highest p-1 rounded-xl">
+<button class="billing-btn px-space-md py-1.5 rounded-lg font-label-md text-label-md font-semibold transition-all shadow-sm bg-surface-container-lowest text-on-surface" id="toggle-monthly" onclick="switchBillingCycle('monthly')" type="button">
+          Monthly Billing
+        </button>
+<button class="billing-btn px-space-md py-1.5 rounded-lg font-label-md text-label-md font-semibold text-on-surface-variant transition-all hover:text-on-surface flex items-center gap-1.5" id="toggle-annual" onclick="switchBillingCycle('annual')" type="button">
+<span>Annual Billing</span>
+<span class="font-label-xs text-label-xs bg-primary-container text-on-primary px-1.5 py-0.5 rounded font-bold uppercase tracking-wide">Save 20% + 2 Mo Free</span>
+</button>
+</div>
+</div>
+<!-- SECTION 1: 3 Subscription Tier Cards -->
+<div class="space-y-space-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-[22px]">payments</span>
+<h2 class="font-headline-md text-headline-md text-on-surface font-bold">Automated Subscription Plans</h2>
+</div>
+<span class="font-slip-accent-script text-slip-accent-script text-primary hidden md:inline-block">Close the sale. Send the slip</span>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-space-lg items-stretch">
+<!-- CARD 1: Free Plan -->
+<div class="bg-surface-container-lowest rounded-xl p-space-lg flex flex-col justify-between shadow-sm hover:shadow-md transition-shadow relative">
+<div class="space-y-space-md">
+<div>
+<span class="font-label-xs text-label-xs uppercase tracking-wider text-outline font-bold">Tier 01</span>
+<h3 class="font-headline-md text-headline-md text-on-surface font-bold mt-1">Free Plan</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">For new social sellers testing conversational receipts.</p>
+</div>
+<div class="py-space-sm bg-surface-container-low px-space-md rounded-xl">
+<div class="flex items-baseline gap-1">
+<span class="font-currency-display text-currency-display text-on-surface font-extrabold tracking-tight">₦0</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">/ month</span>
+</div>
+<p class="font-label-xs text-label-xs text-outline mt-0.5">Free forever · No credit card required</p>
+</div>
+<div class="space-y-space-sm pt-space-xs">
+<p class="font-label-xs text-label-xs uppercase tracking-wider text-outline font-bold">Plan Capabilities</p>
+<ul class="space-y-2.5 font-body-sm text-body-sm text-on-surface-variant">
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-primary text-[18px] shrink-0">check_circle</span>
+<span><strong>15 receipts or invoices</strong> per month</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-primary text-[18px] shrink-0">check_circle</span>
+<span>WhatsApp &amp; Telegram text-to-receipt /slash parsing</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-primary text-[18px] shrink-0">check_circle</span>
+<span>2 default paper slip templates</span>
+</li>
+<li class="flex items-start gap-2 text-on-surface-variant/80">
+<span class="material-symbols-outlined text-outline text-[18px] shrink-0">info</span>
+<span class="text-xs italic">Carries the "Powered by NetSlip — Close the sale. Send the slip" watermark</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-primary text-[18px] shrink-0">check_circle</span>
+<span>1 merchant admin account</span>
+</li>
+</ul>
+</div>
+</div>
+<div class="pt-space-lg mt-space-md">
+<button class="w-full py-2.5 px-space-md rounded-lg font-label-md text-label-md font-semibold text-secondary bg-surface-container-low hover:bg-surface-container transition-colors" type="button">
+              Downgrade to Free
+            </button>
+</div>
+</div>
+<!-- CARD 2: Pro Merchant Plan (Featured) -->
+<div class="bg-surface-container-lowest rounded-xl p-space-lg flex flex-col justify-between shadow-xl relative overflow-hidden bg-gradient-to-b from-surface-container-low/40 via-surface-container-lowest to-surface-container-lowest">
+<div class="absolute -top-px left-0 right-0 bg-[#265363] text-on-primary py-1 text-center font-label-xs text-label-xs uppercase tracking-widest font-bold shadow-sm">
+            🔥 Most Popular for Instagram &amp; WA Sellers
+          </div>
+<div class="space-y-space-md pt-space-sm">
+<div>
+<div class="flex items-center justify-between">
+<span class="font-label-xs text-label-xs uppercase tracking-wider text-primary font-bold">Tier 02 · Recommended</span>
+<span class="font-label-xs text-label-xs bg-secondary-container text-on-secondary-container px-2 py-0.5 rounded font-semibold">100% Watermark-Free</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface font-bold mt-1">Pro Merchant Plan</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">For active social media vendors closing sales daily.</p>
+</div>
+<div class="py-space-sm bg-surface-container-high px-space-md rounded-xl">
+<div class="flex items-baseline gap-1">
+<span class="font-currency-display text-currency-display text-primary font-extrabold tracking-tight" id="price-pro">₦2,500</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant" id="period-pro">/ month</span>
+</div>
+<p class="font-label-xs text-label-xs text-primary font-semibold mt-0.5" id="sub-pro">Flexible monthly billing · Cancel anytime</p>
+</div>
+<div class="space-y-space-sm pt-space-xs">
+<p class="font-label-xs text-label-xs uppercase tracking-wider text-outline font-bold">Everything in Free, plus</p>
+<ul class="space-y-2.5 font-body-sm text-body-sm text-on-surface">
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-primary text-[18px] shrink-0">verified</span>
+<span><strong>Unlimited</strong> PDF receipts &amp; digital invoices</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-primary text-[18px] shrink-0">verified</span>
+<span><strong>Custom store logo</strong>, brand colors &amp; header watermark</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-primary text-[18px] shrink-0">verified</span>
+<span><strong>100% watermark removal</strong> on all generated slips</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-primary text-[18px] shrink-0">verified</span>
+<span>Automated daily WhatsApp sales digest &amp; debtor reminders</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-primary text-[18px] shrink-0">verified</span>
+<span>Excel &amp; CSV bookkeeping export for accountants</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-primary text-[18px] shrink-0">verified</span>
+<span>High-speed Telegram 10.3 bot sync &amp; multi-channel dispatch</span>
+</li>
+</ul>
+</div>
+</div>
+<div class="pt-space-lg mt-space-md">
+<button class="w-full py-3 px-space-md rounded-lg font-label-md text-label-md font-semibold text-on-primary bg-primary-container hover:bg-[#265363] transition-all shadow-md flex items-center justify-center gap-2 group" onclick="selectCheckoutItem('Pro Merchant Subscription', 2500, 'Monthly Plan Renewal')" type="button">
+<span>Choose Pro Plan</span>
+<span class="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- CARD 3: Business Plus Plan -->
+<div class="bg-surface-container-lowest rounded-xl p-space-lg flex flex-col justify-between shadow-sm relative hover:shadow-md transition-shadow">
+<div class="space-y-space-md">
+<div>
+<div class="flex items-center justify-between">
+<span class="font-label-xs text-label-xs uppercase tracking-wider text-outline font-bold">Tier 03 · Enterprise Power</span>
+<span class="font-label-xs text-label-xs bg-primary-fixed text-on-primary-fixed-variant px-2 py-0.5 rounded font-bold">Active On Account</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface font-bold mt-1">Business Plus Plan</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">For growing ateliers, boutiques &amp; multi-staff teams.</p>
+</div>
+<div class="py-space-sm bg-surface-container-low px-space-md rounded-xl">
+<div class="flex items-baseline gap-1">
+<span class="font-currency-display text-currency-display text-on-surface font-extrabold tracking-tight" id="price-biz">₦6,000</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant" id="period-biz">/ month</span>
+</div>
+<p class="font-label-xs text-label-xs text-outline mt-0.5" id="sub-biz">Renews automatically via Flutterwave</p>
+</div>
+<div class="space-y-space-sm pt-space-xs">
+<p class="font-label-xs text-label-xs uppercase tracking-wider text-outline font-bold">Everything in Pro, plus</p>
+<ul class="space-y-2.5 font-body-sm text-body-sm text-on-surface-variant">
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-primary text-[18px] shrink-0">check_circle</span>
+<span><strong>Multi-user staff access</strong> (RBAC: Cashier, Accountant, Admin)</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-primary text-[18px] shrink-0">check_circle</span>
+<span><strong>Embedded online payment links</strong> (Flutterwave + Polygon USDT/USDC)</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-primary text-[18px] shrink-0">check_circle</span>
+<span>Real-time SKU inventory tracking &amp; auto-deduction</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-primary text-[18px] shrink-0">check_circle</span>
+<span>Automated WhatsApp &amp; SMS overdue debt payment reminders</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-primary text-[18px] shrink-0">check_circle</span>
+<span>Tamper-proof SHA-256 cryptographic verification ledger</span>
+</li>
+</ul>
+</div>
+</div>
+<div class="pt-space-lg mt-space-md">
+<button class="w-full py-2.5 px-space-md rounded-lg font-label-md text-label-md font-semibold text-primary bg-primary-fixed/40 hover:bg-primary-fixed transition-colors flex items-center justify-center gap-1.5" onclick="selectCheckoutItem('Business Plus Annual Extension', 6000, '1-Month Extension')" type="button">
+<span class="material-symbols-outlined text-[18px]">verified</span>
+<span>Current Active Plan (Manage)</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- SECTION 2: Pay-As-You-Go (PAYG) Non-Expiring Credit Packs -->
+<div class="rounded-xl overflow-hidden shadow-md bg-surface-container-lowest">
+<!-- Deep Slate Teal Executive Header Band -->
+<div class="bg-[#265363] text-on-primary p-space-lg flex flex-col md:flex-row md:items-center justify-between gap-space-md">
+<div class="space-y-1">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-secondary-fixed text-[24px]">receipt_long</span>
+<h2 class="font-headline-md text-headline-md font-bold tracking-tight text-white">Pay-As-You-Go (PAYG) Non-Expiring Credit Packs</h2>
+</div>
+<p class="font-body-sm text-body-sm text-white/80 max-w-2xl">
+            Dislike recurring monthly subscriptions? Buy credits once, use them whenever. PAYG credits never expire and automatically remove the NetSlip watermark on every slip!
+          </p>
+</div>
+<div class="self-start md:self-auto bg-white/10 px-space-md py-space-xs rounded-full">
+<span class="font-label-xs text-label-xs text-secondary-fixed uppercase tracking-wider font-bold">🛡️ 1 Credit = 1 Fully Branded, Clean Watermark-Free Slip</span>
+</div>
+</div>
+<!-- 3 Tactile Credit Cards Row -->
+<div class="p-space-lg grid grid-cols-1 md:grid-cols-3 gap-space-lg bg-surface">
+<!-- Pack A -->
+<div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm hover:shadow-md transition-all flex flex-col justify-between relative group">
+<div class="space-y-space-md">
+<div class="flex items-center justify-between">
+<span class="font-label-xs text-label-xs uppercase tracking-wider text-outline font-bold">Starter Pack</span>
+<span class="material-symbols-outlined text-outline text-[20px]">bolt</span>
+</div>
+<div>
+<h4 class="font-headline-md text-headline-md text-on-surface font-extrabold">50 Credits</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Ideal for weekend pop-ups &amp; side sales.</p>
+</div>
+<div class="p-space-sm bg-surface-container-low rounded-lg space-y-0.5">
+<div class="flex items-baseline justify-between">
+<span class="font-currency-display text-currency-display text-on-surface font-bold">₦1,000</span>
+<span class="font-label-xs text-label-xs text-outline font-mono">₦20 / slip</span>
+</div>
+<p class="font-label-xs text-label-xs text-outline">One-off payment · Instant top-up</p>
+</div>
+<ul class="space-y-2 font-body-sm text-body-sm text-on-surface-variant">
+<li class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[16px]">check</span>
+<span>Non-expiring validity forever</span>
+</li>
+<li class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[16px]">check</span>
+<span>100% NetSlip watermark removal</span>
+</li>
+<li class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[16px]">check</span>
+<span>Telegram &amp; WhatsApp direct triggers</span>
+</li>
+</ul>
+</div>
+<div class="pt-space-md mt-space-md">
+<button class="w-full py-2.5 px-space-md rounded-lg font-label-md text-label-md font-semibold text-primary bg-surface-container-low hover:bg-primary-container hover:text-on-primary transition-all shadow-sm" onclick="selectCheckoutItem('50 Non-Expiring PAYG Credits', 1000, 'Starter Pack (₦20/slip)')" type="button">
+              Buy 50 Credits
+            </button>
+</div>
+</div>
+<!-- Pack B (Popular Value) -->
+<div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-lg flex flex-col justify-between relative bg-gradient-to-b from-secondary-container/10 to-surface-container-lowest">
+<div class="absolute -top-3 right-space-md bg-primary-container text-on-primary px- space-sm py-0.5 rounded-full font-label-xs text-label-xs font-bold uppercase tracking-wider shadow-sm">
+            ⭐ Popular Value
+          </div>
+<div class="space-y-space-md">
+<div class="flex items-center justify-between">
+<span class="font-label-xs text-label-xs uppercase tracking-wider text-primary font-bold">Merchant Top Pick</span>
+<span class="material-symbols-outlined text-primary text-[20px]">local_fire_department</span>
+</div>
+<div>
+<div class="flex items-center gap-1.5">
+<h4 class="font-headline-md text-headline-md text-on-surface font-extrabold">150 Credits</h4>
+<span class="font-label-xs text-label-xs bg-emerald-100 text-emerald-800 font-bold px-1.5 py-0.5 rounded">+15 Bonus</span>
+</div>
+<p class="font-body-sm text-body-sm text-primary font-medium">Total 165 Watermark-Free Slips</p>
+</div>
+<div class="p-space-sm bg-surface-container-high rounded-lg space-y-0.5">
+<div class="flex items-baseline justify-between">
+<span class="font-currency-display text-currency-display text-primary font-bold">₦2,500</span>
+<span class="font-label-xs text-label-xs text-primary font-mono font-bold">₦15 / slip</span>
+</div>
+<p class="font-label-xs text-label-xs text-outline">You save ₦800 vs starter pricing</p>
+</div>
+<ul class="space-y-2 font-body-sm text-body-sm text-on-surface">
+<li class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[16px]">verified</span>
+<span>Non-expiring credits (Never lapses)</span>
+</li>
+<li class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[16px]">verified</span>
+<span>Zero NetSlip watermark on customer slips</span>
+</li>
+<li class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[16px]">verified</span>
+<span>Priority WhatsApp bot response queue</span>
+</li>
+<li class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[16px]">verified</span>
+<span>Instant automated receipt to email</span>
+</li>
+</ul>
+</div>
+<div class="pt-space-md mt-space-md">
+<button class="w-full py-3 px-space-md rounded-lg font-label-md text-label-md font-semibold text-on-primary bg-primary-container hover:bg-[#265363] transition-all shadow-md flex items-center justify-center gap-1.5" onclick="selectCheckoutItem('150 + 15 Bonus PAYG Credits', 2500, 'Merchant Top Pick (165 Slips total)')" type="button">
+<span class="material-symbols-outlined text-[18px]">shopping_cart</span>
+<span>Buy 165 Credits (₦2,500)</span>
+</button>
+</div>
+</div>
+<!-- Pack C (Power Vendor) -->
+<div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm hover:shadow-md transition-all flex flex-col justify-between relative group">
+<div class="absolute -top-3 right-space-md bg-secondary text-on-secondary px-space-sm py-0.5 rounded-full font-label-xs text-label-xs font-bold uppercase tracking-wider shadow-sm">
+            💎 Highest Savings
+          </div>
+<div class="space-y-space-md">
+<div class="flex items-center justify-between">
+<span class="font-label-xs text-label-xs uppercase tracking-wider text-outline font-bold">Power Vendor Pack</span>
+<span class="material-symbols-outlined text-outline text-[20px]">diamond</span>
+</div>
+<div>
+<div class="flex items-center gap-1.5">
+<h4 class="font-headline-md text-headline-md text-on-surface font-extrabold">350 Credits</h4>
+<span class="font-label-xs text-label-xs bg-emerald-100 text-emerald-800 font-bold px-1.5 py-0.5 rounded">+50 Bonus</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Total 400 Watermark-Free Slips</p>
+</div>
+<div class="p-space-sm bg-surface-container-low rounded-lg space-y-0.5">
+<div class="flex items-baseline justify-between">
+<span class="font-currency-display text-currency-display text-on-surface font-bold">₦5,000</span>
+<span class="font-label-xs text-label-xs text-outline font-mono">₦12.50 / slip</span>
+</div>
+<p class="font-label-xs text-label-xs text-outline">Maximum value per slip generated</p>
+</div>
+<ul class="space-y-2 font-body-sm text-body-sm text-on-surface-variant">
+<li class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[16px]">check</span>
+<span>Non-expiring bulk credit balance</span>
+</li>
+<li class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[16px]">check</span>
+<span>Custom QR slip verification URL</span>
+</li>
+<li class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[16px]">check</span>
+<span>Bulk CSV customer import &amp; invoices</span>
+</li>
+</ul>
+</div>
+<div class="pt-space-md mt-space-md">
+<button class="w-full py-2.5 px-space-md rounded-lg font-label-md text-label-md font-semibold text-primary bg-surface-container-low hover:bg-primary-container hover:text-on-primary transition-all shadow-sm" onclick="selectCheckoutItem('350 + 50 Bonus PAYG Credits', 5000, 'Power Vendor Pack (400 Slips total)')" type="button">
+              Buy 400 Credits
+            </button>
+</div>
+</div>
+</div>
+</div>
+<!-- SECTION 3: Integrated Checkout & Payment Drawer / Card -->
+<div class="bg-surface-container-lowest rounded-xl shadow-lg overflow-hidden" id="checkout-section">
+<div class="p-space-lg bg-surface-container-low flex items-center justify-between flex-wrap gap-space-sm">
+<div class="flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded-lg bg-primary-container flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined text-[20px]">lock</span>
+</div>
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface font-bold">Integrated Fast Checkout</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Instant activation upon payment confirmation. 256-bit encrypted checkout.</p>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<span class="font-label-xs text-label-xs text-outline">Supported Settlement:</span>
+<span class="font-label-xs text-label-xs bg-surface-container-highest px-2 py-1 rounded font-bold text-on-surface">NGN Naira (₦)</span>
+<span class="font-label-xs text-label-xs bg-surface-container-highest px-2 py-1 rounded font-bold text-on-surface">USDT / USDC</span>
+</div>
+</div>
+<div class="p-space-lg grid grid-cols-1 lg:grid-cols-12 gap-space-xl">
+<!-- Left Column: Order Summary & Slip Preview (5 Cols) -->
+<div class="lg:col-span-5 space-y-space-md">
+<div class="bg-surface p-space-md rounded-xl space-y-space-sm">
+<div class="flex items-center justify-between pb-space-xs">
+<span class="font-label-xs text-label-xs uppercase tracking-wider text-outline font-bold">Selected Item</span>
+<span class="font-label-xs text-label-xs text-primary font-semibold">Immediate Fulfillment</span>
+</div>
+<div class="space-y-1">
+<p class="font-headline-md text-headline-md font-bold text-on-surface" id="checkout-item-title">150 + 15 Bonus Credits Pack</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant" id="checkout-item-desc">Merchant Top Pick (165 Slips total · Non-Expiring)</p>
+</div>
+<!-- Perforated Seam Divider -->
+<div class="relative py-2">
+<div class="border-t border-dashed border-outline-variant"></div>
+</div>
+<!-- Breakdown rows -->
+<div class="space-y-1.5 font-body-sm text-body-sm">
+<div class="flex justify-between text-on-surface-variant">
+<span>Subtotal</span>
+<span class="font-currency-cell text-currency-cell text-on-surface font-mono" id="checkout-subtotal">₦2,500.00</span>
+</div>
+<div class="flex justify-between text-on-surface-variant">
+<span>Value Added Tax (VAT 0%)</span>
+<span class="font-currency-cell text-currency-cell text-on-surface font-mono">₦0.00</span>
+</div>
+<div class="flex justify-between text-on-surface-variant">
+<span>Platform Processing Fee</span>
+<span class="font-currency-cell text-currency-cell text-emerald-600 font-mono font-semibold">Waived (₦0.00)</span>
+</div>
+</div>
+<!-- Total Bar -->
+<div class="bg-[#151c24] text-white p-space-md rounded-lg flex items-center justify-between mt-space-sm">
+<div>
+<span class="font-label-xs text-label-xs text-secondary-fixed uppercase tracking-wider block">Total Due Now</span>
+<span class="font-label-xs text-label-xs text-white/60">Instant Wallet Credit</span>
+</div>
+<span class="font-currency-display text-currency-display text-white font-extrabold tracking-tight" id="checkout-total">₦2,500.00</span>
+</div>
+<div class="p-space-xs text-center">
+<p class="font-slip-accent-script text-slip-accent-script text-primary">Thank you for powering your sales with NetSlip!</p>
+</div>
+</div>
+<!-- Merchant Guarantee Card -->
+<div class="bg-surface-container-low p-space-sm rounded-xl space-y-1">
+<div class="flex items-center gap-1.5 text-primary">
+<span class="material-symbols-outlined text-[18px]">verified_user</span>
+<span class="font-label-md text-label-md font-bold">NetSlip Guarantee</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+              100% instant credit loading into your Telegram and WhatsApp bots. Official audit-ready tax receipt automatically emailed.
+            </p>
+</div>
+</div>
+<!-- Right Column: Dual-Tab Payment Gateway Selector (7 Cols) -->
+<div class="lg:col-span-7 space-y-space-md">
+<!-- Gateway Tabs -->
+<div class="grid grid-cols-2 gap-space-xs bg-surface-container-high p-1 rounded-xl">
+<button class="gateway-tab-btn py-2.5 px-space-sm rounded-lg font-label-md text-label-md font-semibold text-center transition-all bg-surface-container-lowest text-on-surface shadow-sm flex items-center justify-center gap-2" id="tab-fiat" onclick="switchGatewayTab('fiat')" type="button">
+<span class="material-symbols-outlined text-primary text-[18px]">credit_card</span>
+<span>Flutterwave (Naira ₦)</span>
+</button>
+<button class="gateway-tab-btn py-2.5 px-space-sm rounded-lg font-label-md text-label-md font-semibold text-center transition-all text-on-surface-variant hover:text-on-surface flex items-center justify-center gap-2" id="tab-crypto" onclick="switchGatewayTab('crypto')" type="button">
+<span class="material-symbols-outlined text-secondary text-[18px]">currency_bitcoin</span>
+<span>Cryptocurrency (USDT/USDC)</span>
+</button>
+</div>
+<!-- Gateway Content 1: Flutterwave Fiat -->
+<div class="space-y-space-md" id="content-fiat">
+<div class="space-y-space-xs">
+<span class="font-label-xs text-label-xs uppercase tracking-wider text-outline font-bold">Select Nigerian Payment Channel</span>
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-space-xs">
+<label class="cursor-pointer">
+<input checked="" class="peer sr-only" name="fiat_method" type="radio" value="card"/>
+<div class="p-space-sm rounded-xl bg-surface-container-low peer-checked:bg-primary-container peer-checked:text-on-primary transition-all text-center space-y-1">
+<span class="material-symbols-outlined text-[20px] block mx-auto">credit_card</span>
+<span class="font-label-xs text-label-xs font-semibold block">Debit Card</span>
+<span class="text-[9px] opacity-80 block">Mastercard/Visa</span>
+</div>
+</label>
+<label class="cursor-pointer">
+<input class="peer sr-only" name="fiat_method" type="radio" value="transfer"/>
+<div class="p-space-sm rounded-xl bg-surface-container-low peer-checked:bg-primary-container peer-checked:text-on-primary transition-all text-center space-y-1">
+<span class="material-symbols-outlined text-[20px] block mx-auto">account_balance</span>
+<span class="font-label-xs text-label-xs font-semibold block">Bank Transfer</span>
+<span class="text-[9px] opacity-80 block">Instant Virtual Acct</span>
+</div>
+</label>
+<label class="cursor-pointer">
+<input class="peer sr-only" name="fiat_method" type="radio" value="ussd"/>
+<div class="p-space-sm rounded-xl bg-surface-container-low peer-checked:bg-primary-container peer-checked:text-on-primary transition-all text-center space-y-1">
+<span class="material-symbols-outlined text-[20px] block mx-auto">dialpad</span>
+<span class="font-label-xs text-label-xs font-semibold block">USSD Banking</span>
+<span class="text-[9px] opacity-80 block">*737#, *894#, etc.</span>
+</div>
+</label>
+<label class="cursor-pointer">
+<input class="peer sr-only" name="fiat_method" type="radio" value="fintech"/>
+<div class="p-space-sm rounded-xl bg-surface-container-low peer-checked:bg-primary-container peer-checked:text-on-primary transition-all text-center space-y-1">
+<span class="material-symbols-outlined text-[20px] block mx-auto">point_of_sale</span>
+<span class="font-label-xs text-label-xs font-semibold block">Moniepoint/OPay</span>
+<span class="text-[9px] opacity-80 block">Direct Wallet Transfer</span>
+</div>
+</label>
+</div>
+</div>
+<!-- Customer Billing Info Inputs -->
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-space-sm">
+<div class="space-y-1">
+<label class="font-label-xs text-label-xs uppercase tracking-wider text-outline font-bold">Billing Email</label>
+<input class="w-full h-[42px] px-space-md rounded-lg bg-surface text-on-surface font-body-md text-body-md focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all" type="email" value="owner@aminaluxury.com"/>
+</div>
+<div class="space-y-1">
+<label class="font-label-xs text-label-xs uppercase tracking-wider text-outline font-bold">WhatsApp Number</label>
+<input class="w-full h-[42px] px-space-md rounded-lg bg-surface text-on-surface font-body-md text-body-md focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all" type="tel" value="+234 812 490 8821"/>
+</div>
+</div>
+<!-- Gateway Trust Footer -->
+<div class="flex items-center justify-between text-outline text-xs pt-1">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px] text-emerald-600">lock</span>
+<span class="font-label-xs text-label-xs">Secured by Flutterwave 256-bit PCI-DSS certified gateway</span>
+</div>
+<span class="font-label-xs text-label-xs font-mono">ID: FLW-CHK-8831</span>
+</div>
+<!-- Action Button -->
+<button class="w-full py-3.5 px-space-md bg-primary-container hover:bg-[#265363] text-on-primary font-headline-md text-headline-md font-bold rounded-lg transition-all shadow-md flex items-center justify-center gap-2" id="pay-btn-fiat" type="button">
+<span class="material-symbols-outlined text-[20px]">shield</span>
+<span id="fiat-cta-text">Proceed to Pay ₦2,500.00 via Flutterwave</span>
+</button>
+</div>
+<!-- Gateway Content 2: Crypto NOWPayments (Initially Hidden) -->
+<div class="space-y-space-md hidden" id="content-crypto">
+<div class="p-space-md bg-surface-container-low rounded-xl space-y-space-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></span>
+<span class="font-label-xs text-label-xs uppercase tracking-wider font-bold text-primary">Live Rate Locked: 30:00 Mins</span>
+</div>
+<span class="font-label-xs text-label-xs font-mono font-bold text-secondary">1 USDT = ₦1,680.00</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                Select your preferred blockchain token. Zero hidden gas fee deductions.
+              </p>
+<!-- Crypto Token Selector -->
+<div class="grid grid-cols-3 gap-space-xs">
+<button class="p-2 bg-surface-container-lowest rounded-lg font-label-md text-label-md font-semibold text-primary shadow-sm flex items-center justify-center gap-1" type="button">
+<span>USDT (TRC20)</span>
+</button>
+<button class="p-2 bg-surface-container-lowest rounded-lg font-label-md text-label-md font-semibold text-on-surface-variant hover:text-primary transition-colors flex items-center justify-center gap-1" type="button">
+<span>USDT (Polygon)</span>
+</button>
+<button class="p-2 bg-surface-container-lowest rounded-lg font-label-md text-label-md font-semibold text-on-surface-variant hover:text-primary transition-colors flex items-center justify-center gap-1" type="button">
+<span>USDC (Solana)</span>
+</button>
+</div>
+</div>
+<!-- Simulated QR & Address Box -->
+<div class="p-space-md bg-surface rounded-xl flex flex-col sm:flex-row items-center gap-space-md">
+<div class="w-28 h-28 bg-surface-container-lowest p-1.5 rounded-lg shrink-0 shadow-sm flex items-center justify-center">
+<!-- Inline SVG QR Code Pattern -->
+<svg class="w-full h-full text-on-surface" fill="currentColor" viewbox="0 0 100 100">
+<path d="M0,0 h30 v30 h-30 z M10,10 h10 v10 h-10 z M70,0 h30 v30 h-30 z M80,10 h10 v10 h-10 z M0,70 h30 v30 h-30 z M10,80 h10 v10 h-10 z M40,10 h10 v10 h-10 z M55,10 h10 v10 h-10 z M40,40 h20 v20 h-20 z M70,40 h10 v10 h-10 z M85,40 h15 v10 h-15 z M70,55 h15 v15 h-15 z M40,70 h10 v20 h-10 z M55,80 h20 v10 h-20 z M80,80 h20 v20 h-20 z"></path>
+</svg>
+</div>
+<div class="space-y-1.5 flex-1 min-w-0">
+<span class="font-label-xs text-label-xs uppercase tracking-wider text-outline font-bold">Deposit Address (TRON TRC-20)</span>
+<p class="font-mono text-xs text-on-surface break-all bg-surface-container-low p-2 rounded">
+                  TXk9w8Q2R8qBvJz8mK7pLsNxV9yTeLmF4a
+                </p>
+<div class="flex items-center justify-between text-xs">
+<span class="text-on-surface-variant">Amount to Transfer:</span>
+<span class="font-bold text-primary font-mono">1.49 USDT</span>
+</div>
+</div>
+</div>
+<button class="w-full py-3.5 px-space-md bg-secondary hover:bg-on-secondary-fixed-variant text-on-secondary font-headline-md text-headline-md font-bold rounded-lg transition-all shadow-md flex items-center justify-center gap-2" type="button">
+<span class="material-symbols-outlined text-[20px]">qr_code_scanner</span>
+<span>Verify Crypto Deposit &amp; Activate</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- FAQ & Watermark Policy Accordion Bar -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-lg pt-space-sm">
+<div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm space-y-space-xs">
+<div class="flex items-center gap-2 text-primary">
+<span class="material-symbols-outlined text-[20px]">help</span>
+<h4 class="font-headline-md text-headline-md font-bold text-on-surface">How do PAYG Credits work?</h4>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+          PAYG credits never expire. If you purchase 150 credits today, you can generate 10 slips this week and 140 six months from now. Every credit spent outputs a completely unbranded, 100% white-labeled digital invoice for your customers.
+        </p>
+</div>
+<div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm space-y-space-xs">
+<div class="flex items-center gap-2 text-primary">
+<span class="material-symbols-outlined text-[20px]">verified</span>
+<h4 class="font-headline-md text-headline-md font-bold text-on-surface">Instant WhatsApp &amp; Telegram Bot Sync</h4>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+          Your active balance instantly reflects across all connected merchant channels. Simply type <code class="bg-surface-container px-1 py-0.5 rounded text-primary font-mono text-xs">/balance</code> in your private Telegram or WhatsApp bot to view remaining slip credits in real time.
+        </p>
+</div>
+</div>
+</div>
+</div>
+<script>
+  function switchBillingCycle(cycle) {
+    const monthlyBtn = document.getElementById('toggle-monthly');
+    const annualBtn = document.getElementById('toggle-annual');
+    const pricePro = document.getElementById('price-pro');
+    const periodPro = document.getElementById('period-pro');
+    const subPro = document.getElementById('sub-pro');
+    const priceBiz = document.getElementById('price-biz');
+    const periodBiz = document.getElementById('period-biz');
+    const subBiz = document.getElementById('sub-biz');
+
+    if (cycle === 'annual') {
+      monthlyBtn.className = 'billing-btn px-space-md py-1.5 rounded-lg font-label-md text-label-md font-semibold text-on-surface-variant transition-all hover:text-on-surface';
+      annualBtn.className = 'billing-btn px-space-md py-1.5 rounded-lg font-label-md text-label-md font-semibold transition-all shadow-sm bg-surface-container-lowest text-on-surface flex items-center gap-1.5';
+      
+      pricePro.textContent = '₦24,000';
+      periodPro.textContent = '/ year';
+      subPro.textContent = '₦2,000/mo equivalent · 2 months free!';
+      
+      priceBiz.textContent = '₦60,000';
+      periodBiz.textContent = '/ year';
+      subBiz.textContent = '₦5,000/mo equivalent · Billed annually';
+    } else {
+      annualBtn.className = 'billing-btn px-space-md py-1.5 rounded-lg font-label-md text-label-md font-semibold text-on-surface-variant transition-all hover:text-on-surface flex items-center gap-1.5';
+      monthlyBtn.className = 'billing-btn px-space-md py-1.5 rounded-lg font-label-md text-label-md font-semibold transition-all shadow-sm bg-surface-container-lowest text-on-surface';
+      
+      pricePro.textContent = '₦2,500';
+      periodPro.textContent = '/ month';
+      subPro.textContent = 'Flexible monthly billing · Cancel anytime';
+      
+      priceBiz.textContent = '₦6,000';
+      periodBiz.textContent = '/ month';
+      subBiz.textContent = 'Renews automatically via Flutterwave';
+    }
+  }
+
+  function selectCheckoutItem(title, priceNgn, desc) {
+    document.getElementById('checkout-item-title').textContent = title;
+    document.getElementById('checkout-item-desc').textContent = desc;
+    const formattedPrice = '₦' + Number(priceNgn).toLocaleString('en-NG') + '.00';
+    document.getElementById('checkout-subtotal').textContent = formattedPrice;
+    document.getElementById('checkout-total').textContent = formattedPrice;
+    document.getElementById('fiat-cta-text').textContent = 'Proceed to Pay ' + formattedPrice + ' via Flutterwave';
+
+    const checkoutEl = document.getElementById('checkout-section');
+    if (checkoutEl) {
+      checkoutEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
+
+  function switchGatewayTab(type) {
+    const tabFiat = document.getElementById('tab-fiat');
+    const tabCrypto = document.getElementById('tab-crypto');
+    const contentFiat = document.getElementById('content-fiat');
+    const contentCrypto = document.getElementById('content-crypto');
+
+    if (type === 'crypto') {
+      tabCrypto.className = 'gateway-tab-btn py-2.5 px-space-sm rounded-lg font-label-md text-label-md font-semibold text-center transition-all bg-surface-container-lowest text-on-surface shadow-sm flex items-center justify-center gap-2';
+      tabFiat.className = 'gateway-tab-btn py-2.5 px-space-sm rounded-lg font-label-md text-label-md font-semibold text-center transition-all text-on-surface-variant hover:text-on-surface flex items-center justify-center gap-2';
+      contentFiat.classList.add('hidden');
+      contentCrypto.classList.remove('hidden');
+    } else {
+      tabFiat.className = 'gateway-tab-btn py-2.5 px-space-sm rounded-lg font-label-md text-label-md font-semibold text-center transition-all bg-surface-container-lowest text-on-surface shadow-sm flex items-center justify-center gap-2';
+      tabCrypto.className = 'gateway-tab-btn py-2.5 px-space-sm rounded-lg font-label-md text-label-md font-semibold text-center transition-all text-on-surface-variant hover:text-on-surface flex items-center justify-center gap-2';
+      contentCrypto.classList.add('hidden');
+      contentFiat.classList.remove('hidden');
+    }
+  }
+</script></main></div></body></html>

@@ -1,0 +1,56 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../views/**/*.blade.php';
+
+/* ── NetSlip brand fonts (mirrors Frontend/src/index.css) ─────────────────────
+   Lupio is the Fontspring DEMO cut: it is subset to letters only, because the demo
+   replaces digits like "4" and most punctuation with a "DEMO" stamp. Digits and
+   punctuation fall back to Inter. Drop in the licensed Lupio files to use it fully. */
+@font-face { font-family: 'Lupio'; font-weight: 300; font-display: swap; src: url('/assets/fonts/lupio-300.woff2') format('woff2'); }
+@font-face { font-family: 'Lupio'; font-weight: 400; font-display: swap; src: url('/assets/fonts/lupio-400.woff2') format('woff2'); }
+@font-face { font-family: 'Lupio'; font-weight: 500; font-display: swap; src: url('/assets/fonts/lupio-500.woff2') format('woff2'); }
+@font-face { font-family: 'Lupio'; font-weight: 600; font-display: swap; src: url('/assets/fonts/lupio-600.woff2') format('woff2'); }
+@font-face { font-family: 'Lupio'; font-weight: 700; font-display: swap; src: url('/assets/fonts/lupio-700.woff2') format('woff2'); }
+@font-face { font-family: 'Lupio'; font-weight: 800; font-display: swap; src: url('/assets/fonts/lupio-800.woff2') format('woff2'); }
+@font-face { font-family: 'Lupio'; font-weight: 900; font-display: swap; src: url('/assets/fonts/lupio-900.woff2') format('woff2'); }
+@font-face { font-family: 'Inter'; font-weight: 400; font-display: swap; src: url('/assets/fonts/inter-400.woff2') format('woff2'); }
+@font-face { font-family: 'Inter'; font-weight: 500; font-display: swap; src: url('/assets/fonts/inter-500.woff2') format('woff2'); }
+@font-face { font-family: 'Inter'; font-weight: 600; font-display: swap; src: url('/assets/fonts/inter-600.woff2') format('woff2'); }
+@font-face { font-family: 'Inter'; font-weight: 700; font-display: swap; src: url('/assets/fonts/inter-700.woff2') format('woff2'); }
+@font-face { font-family: 'Inter'; font-weight: 800; font-display: swap; src: url('/assets/fonts/inter-800.woff2') format('woff2'); }
+@font-face { font-family: 'Inter'; font-weight: 900; font-display: swap; src: url('/assets/fonts/inter-900.woff2') format('woff2'); }
+@font-face { font-family: 'Brush Script MT'; font-weight: 400; font-display: swap; src: url('/assets/fonts/brush-script.woff2') format('woff2'); }
+
+@theme {
+    --font-sans: 'Lupio', 'Inter', ui-sans-serif, system-ui, sans-serif;
+    --font-script: 'Brush Script MT', cursive;
+    --font-mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+    --font-figures: 'Inter', ui-sans-serif, system-ui, sans-serif;
+
+    --color-netslip-primary: #377581;
+    --color-netslip-primary-hover: #2e636e;
+    --color-netslip-tint: #eaf2f4;
+    --color-netslip-deep: #265363;
+    --color-netslip-obsidian: #163540;
+
+    --color-surface-canvas: #f8fafc;
+    --color-surface-card: #ffffff;
+    --color-surface-subtle: #f1f5f9;
+
+    --color-ink-primary: #0f172a;
+    --color-ink-secondary: #475569;
+    --color-ink-muted: #94a3b8;
+
+    --color-border-subtle: #e2e8f0;
+    --color-border-focus: #377581;
+}
+
+@layer base {
+    html { -webkit-font-smoothing: antialiased; }
+    body { @apply bg-surface-canvas text-ink-primary font-sans; }
+    :focus-visible { outline: 2px solid var(--color-netslip-primary); outline-offset: 2px; }
+}
+
+@utility tabular { font-family: var(--font-figures); font-variant-numeric: tabular-nums; }
