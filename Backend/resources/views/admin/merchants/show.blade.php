@@ -122,8 +122,8 @@
                                                     ? \App\Support\Money::format($v, $doc->currency)
                                                     : (is_scalar($v) || $v === null ? (string) json_encode($v) : (string) json_encode($v, JSON_UNESCAPED_UNICODE));
                                             @endphp
-                                            <td class="py-1.5 pr-2 text-rose-700 line-through decoration-rose-300">{{ $show($change['before']) }}</td>
-                                            <td class="py-1.5 text-emerald-700">{{ $show($change['after']) }}</td>
+                                            <td class="py-1.5 pr-2 text-[#a5341f] line-through decoration-[#a5341f]/40">{{ $show($change['before']) }}</td>
+                                            <td class="py-1.5 text-[#1d6b52]">{{ $show($change['after']) }}</td>
                                         </tr>
                                     @endforeach
                                 </tbody>

@@ -22,7 +22,7 @@ export function PaperSlipPreview({ slip, compact = false, className }: { slip: S
         )}
         {slip.status === 'VOID' && (
           <div className="pointer-events-none absolute inset-0 flex items-center justify-center" aria-hidden>
-            <span className="-rotate-[24deg] text-6xl font-black tracking-[0.3em] text-rose-600/20">VOID</span>
+            <span className="-rotate-[24deg] text-6xl font-black tracking-[0.3em] text-tone-open/20">VOID</span>
           </div>
         )}
 
@@ -105,8 +105,8 @@ export function PaperSlipPreview({ slip, compact = false, className }: { slip: S
           </div>
           {slip.balance > 0 && (
             <dl className="tabular mt-2 space-y-1 px-2 text-xs">
-              {slip.paid > 0 && <div className="flex justify-between text-emerald-700"><dt>Paid</dt><dd>-{m(slip.paid)}</dd></div>}
-              <div className="flex justify-between font-bold text-rose-700"><dt>Balance due</dt><dd>{m(slip.balance)}</dd></div>
+              {slip.paid > 0 && <div className="flex justify-between text-tone-settled"><dt>Paid</dt><dd>-{m(slip.paid)}</dd></div>}
+              <div className="flex justify-between font-bold text-tone-open"><dt>Balance due</dt><dd>{m(slip.balance)}</dd></div>
             </dl>
           )}
 

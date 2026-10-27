@@ -1,9 +1,9 @@
 import type { ReactNode } from 'react'
+import { photos, slips } from '@/assets'
+import { Photo } from '@/components/media/Photo'
 import { Logo, Tagline } from '@/components/ui'
-import { PaperSlipPreview } from '@/components/slip/PaperSlipPreview'
-import { SAMPLE_SLIP } from '@/components/slip/sample'
 
-/** Split screen: form left, deep-teal brand panel with a live slip right. */
+/** Split screen: form left; NetSlip's own office photography and a real slip right. */
 export function AuthLayout({ title, subtitle, children, footer }: { title: string; subtitle?: ReactNode; children: ReactNode; footer?: ReactNode }) {
   return (
     <div className="grid min-h-dvh lg:grid-cols-2">
@@ -18,12 +18,13 @@ export function AuthLayout({ title, subtitle, children, footer }: { title: strin
           </div>
         </div>
       </div>
-      <div className="relative hidden overflow-hidden bg-netslip-deep lg:flex lg:flex-col lg:items-center lg:justify-center">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_10%,rgba(255,255,255,0.10),transparent_50%),radial-gradient(circle_at_90%_90%,rgba(55,117,129,0.6),transparent_45%)]" aria-hidden />
-        <div className="relative w-[340px] rotate-[-2deg]">
-          <PaperSlipPreview slip={SAMPLE_SLIP} compact />
+      <div className="relative isolate hidden overflow-hidden lg:flex lg:flex-col lg:items-center lg:justify-center">
+        <Photo image={photos.wallDark} alt="" sizes="50vw" eager className="absolute inset-0 -z-10 h-full w-full object-cover" />
+        <div className="absolute inset-0 -z-10 bg-[linear-gradient(180deg,rgba(22,53,64,0.55)_0%,rgba(22,53,64,0.88)_100%)]" aria-hidden />
+        <div className="w-[min(360px,70%)] rotate-[-2deg] drop-shadow-[0_30px_40px_rgba(0,0,0,0.45)]">
+          <Photo image={slips.receiptMinimal} alt="A NetSlip receipt" sizes="360px" eager className="rounded-t-md" />
         </div>
-        <Tagline className="relative mt-10 text-4xl text-white" />
+        <Tagline className="mt-10 text-4xl text-white" />
       </div>
     </div>
   )

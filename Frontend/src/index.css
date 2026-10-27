@@ -47,6 +47,18 @@
   --color-border-subtle: #e2e8f0;
   --color-border-focus: #377581;
 
+  /* NetSlip status tones (see .ns-tag below). Tailwind's stock palette is not used for status. */
+  --color-tone-settled: #1d6b52;
+  --color-tone-settled-light: #8fd3b6;
+  --color-tone-open: #a5341f;
+  --color-tone-open-light: #f2a596;
+  --color-tone-partial: #94600f;
+  --color-tone-partial-light: #f0c77d;
+  --color-tone-whatsapp: #1c7d55;
+  --color-tone-telegram: #2a72a8;
+  --color-tone-instagram: #a8336a;
+  --color-tone-facebook: #33539c;
+
   --animate-slip-in: slip-in 420ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
   --animate-fade-up: fade-up 360ms ease-out both;
 
@@ -87,3 +99,108 @@
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }
+
+/* ── Status "ledger tags" ──────────────────────────────────────────────────────
+   Not pastel pills: a crisp tag on white, a thin border in the tone, small caps and a
+   diamond punch mark — filled when settled, hollow when still open. Tones are NetSlip's
+   own palette (tuned to the teal brand), not Tailwind defaults. Mirrored in Backend/resources/css/app.css. */
+:root {
+    --tone-settled: #1d6b52;
+    --tone-open: #a5341f;
+    --tone-partial: #94600f;
+    --tone-neutral: #5d6f77;
+    --tone-brand: #2e636e;
+    --tone-info: #2b5d84;
+    --tone-whatsapp: #1c7d55;
+    --tone-telegram: #2a72a8;
+    --tone-instagram: #a8336a;
+    --tone-facebook: #33539c;
+}
+
+@layer components {
+    .ns-tag {
+        --t: var(--tone-neutral);
+        display: inline-flex; align-items: center; gap: 0.45rem; white-space: nowrap;
+        padding: 0.2rem 0.55rem 0.2rem 0.5rem; border-radius: 3px;
+        border: 1px solid color-mix(in srgb, var(--t) 42%, transparent);
+        background: #fff; color: var(--t);
+        font-family: var(--font-figures); font-size: 10.5px; font-weight: 700; line-height: 1.35;
+        letter-spacing: 0.07em; text-transform: uppercase;
+    }
+    .ns-tag--sm { font-size: 9.5px; padding: 0.12rem 0.45rem 0.12rem 0.4rem; gap: 0.4rem; }
+    .ns-tag__mark { width: 6px; height: 6px; flex: none; transform: rotate(45deg); border: 1.5px solid currentColor; border-radius: 1px; }
+    .ns-tag[data-fill='solid'] .ns-tag__mark { background: currentColor; }
+    .ns-tag[data-pulse] .ns-tag__mark { animation: ns-tag-pulse 1.8s ease-in-out infinite; }
+    .ns-tag--inverse { background: var(--t); color: #fff; border-color: var(--t); }
+    .ns-tag--settled { --t: var(--tone-settled); }
+    .ns-tag--open { --t: var(--tone-open); }
+    .ns-tag--partial { --t: var(--tone-partial); }
+    .ns-tag--neutral { --t: var(--tone-neutral); }
+    .ns-tag--brand { --t: var(--tone-brand); }
+    .ns-tag--info { --t: var(--tone-info); }
+    .ns-tag--whatsapp { --t: var(--tone-whatsapp); }
+    .ns-tag--telegram { --t: var(--tone-telegram); }
+    .ns-tag--instagram { --t: var(--tone-instagram); }
+    .ns-tag--facebook { --t: var(--tone-facebook); }
+
+    /* Inline notices: white card, tone rule on the left, no tinted fill. */
+    .ns-note {
+        --t: var(--tone-brand);
+        display: flex; align-items: flex-start; gap: 0.75rem;
+        border: 1px solid var(--color-border-subtle); border-left: 3px solid var(--t);
+        border-radius: 0.6rem; background: #fff; padding: 0.75rem 1rem;
+        font-size: 0.875rem; color: var(--color-ink-primary);
+    }
+    .ns-note > svg { color: var(--t); }
+
+    /* Floating toasts */
+    .ns-toasts {
+        position: fixed; z-index: 70; top: 1rem; left: 1rem; right: 1rem;
+        display: flex; flex-direction: column; align-items: stretch; gap: 0.6rem; pointer-events: none;
+    }
+    @media (min-width: 640px) { .ns-toasts { left: auto; right: 1.5rem; top: 1.25rem; width: 24rem; } }
+    .ns-toast {
+        --t: var(--tone-brand);
+        position: relative; overflow: hidden; pointer-events: auto;
+        display: grid; grid-template-columns: auto 1fr auto; align-items: start; gap: 0.75rem;
+        padding: 0.85rem 0.85rem 0.95rem 0.9rem; border-radius: 0.85rem;
+        background: var(--color-netslip-obsidian); color: #fff;
+        box-shadow: 0 18px 40px -14px rgb(22 53 64 / 0.55), 0 2px 6px rgb(22 53 64 / 0.25);
+        animation: ns-toast-in 380ms cubic-bezier(0.2, 0.9, 0.25, 1.15) both;
+    }
+    .ns-toast[data-leaving] { animation: ns-toast-out 260ms ease-in forwards; }
+    .ns-toast__icon {
+        display: grid; place-items: center; width: 1.9rem; height: 1.9rem; border-radius: 0.55rem;
+        background: color-mix(in srgb, var(--t) 85%, #fff 15%); color: #fff;
+    }
+    .ns-toast__title { font-size: 0.8rem; font-weight: 700; letter-spacing: 0.02em; color: color-mix(in srgb, var(--t) 35%, #fff 65%); }
+    .ns-toast__body { margin-top: 0.1rem; font-size: 0.875rem; line-height: 1.45; color: #e8f1f3; }
+    .ns-toast__close { border-radius: 0.4rem; padding: 0.2rem; color: #9fb9c0; }
+    .ns-toast__close:hover { color: #fff; background: rgb(255 255 255 / 0.08); }
+    .ns-toast__timer {
+        position: absolute; left: 0; bottom: 0; height: 3px; width: 100%;
+        background: color-mix(in srgb, var(--t) 70%, #fff 30%); transform-origin: left;
+        animation: ns-toast-timer var(--ns-toast-ms, 5200ms) linear forwards;
+    }
+    .ns-toast:hover .ns-toast__timer { animation-play-state: paused; }
+    .ns-toast--success { --t: #2f8f6c; }
+    .ns-toast--error { --t: #c2412b; }
+    .ns-toast--warning { --t: #b7801f; }
+    .ns-toast--info { --t: #3d86a0; }
+}
+
+@keyframes ns-tag-pulse { 50% { opacity: 0.35; } }
+@keyframes ns-toast-in { from { opacity: 0; transform: translateY(-10px) scale(0.97); } to { opacity: 1; transform: none; } }
+@keyframes ns-toast-out { to { opacity: 0; transform: translateX(24px) scale(0.98); } }
+@keyframes ns-toast-timer { from { transform: scaleX(1); } to { transform: scaleX(0); } }
+@media (prefers-reduced-motion: reduce) {
+    .ns-toast, .ns-toast[data-leaving] { animation: none; }
+    .ns-tag[data-pulse] .ns-tag__mark { animation: none; }
+}
+
+/* Hero demo: click ripple and the "issued" stamp */
+.ns-ripple { animation: ns-ripple 520ms ease-out forwards; }
+.ns-stamp { animation: ns-stamp 420ms cubic-bezier(0.2, 1.4, 0.35, 1) both; background: rgba(255, 255, 255, 0.78); }
+@keyframes ns-ripple { from { opacity: 0.85; transform: scale(0.4); } to { opacity: 0; transform: scale(1.6); } }
+@keyframes ns-stamp { from { opacity: 0; transform: rotate(-10deg) scale(1.8); } to { opacity: 1; transform: rotate(-10deg) scale(1); } }
+@media (prefers-reduced-motion: reduce) { .ns-ripple, .ns-stamp { animation: none; } }

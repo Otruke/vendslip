@@ -17,7 +17,7 @@ export function PricingCards({ className, ctaTo = '/register', onSelect }: { cla
   return (
     <div className={className}>
       <div className="flex justify-center">
-        <SegmentedTabs value={cycle} onChange={setCycle} options={[{ value: 'MONTHLY', label: 'Monthly' }, { value: 'YEARLY', label: <span>Yearly <span className="ml-1 rounded-full bg-emerald-100 px-1.5 text-[11px] text-emerald-700">{data.yearly_discount_label ?? 'Save'}</span></span> }]} />
+        <SegmentedTabs value={cycle} onChange={setCycle} options={[{ value: 'MONTHLY', label: 'Monthly' }, { value: 'YEARLY', label: <span>Yearly <span className="ns-tag ns-tag--settled ns-tag--sm ml-1.5" data-fill="solid"><span className="ns-tag__mark" aria-hidden />{data.yearly_discount_label ?? 'Save'}</span></span> }]} />
       </div>
       <div className="mt-8 grid gap-5 md:grid-cols-3">
         {data.plans.map((plan) => {
@@ -38,7 +38,7 @@ export function PricingCards({ className, ctaTo = '/register', onSelect }: { cla
               <ul className="mt-6 flex-1 space-y-3">
                 {plan.highlights.slice(0, 6).map((h) => (
                   <li key={h} className={cn('flex gap-2.5 text-sm', featured ? 'text-white/90' : 'text-ink-secondary')}>
-                    <Check className={cn('mt-0.5 size-4 shrink-0', featured ? 'text-emerald-300' : 'text-netslip-primary')} />{h}
+                    <Check className={cn('mt-0.5 size-4 shrink-0', featured ? 'text-tone-settled-light' : 'text-netslip-primary')} />{h}
                   </li>
                 ))}
               </ul>

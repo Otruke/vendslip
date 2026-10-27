@@ -50,3 +50,38 @@ document.addEventListener('submit', (event) => {
         });
     }
 });
+
+// ── Floating toasts ────────────────────────────────────────────────────────────
+// Auto-dismiss after data-toast-ms; hovering or focusing a toast pauses the countdown.
+function dismissToast(toast) {
+    if (!(toast instanceof HTMLElement) || toast.hasAttribute('data-leaving')) return;
+    toast.setAttribute('data-leaving', '');
+    const remove = () => toast.remove();
+    toast.addEventListener('animationend', remove, { once: true });
+    setTimeout(remove, 400); // fallback when animations are disabled
+}
+
+function armToast(toast) {
+    let remaining = Number(toast.getAttribute('data-toast-ms')) || 5200;
+    let startedAt = Date.now();
+    let timer = setTimeout(() => dismissToast(toast), remaining);
+    const pause = () => { clearTimeout(timer); remaining -= Date.now() - startedAt; };
+    const resume = () => { startedAt = Date.now(); clearTimeout(timer); timer = setTimeout(() => dismissToast(toast), Math.max(remaining, 600)); };
+    toast.addEventListener('mouseenter', pause);
+    toast.addEventListener('mouseleave', resume);
+    toast.addEventListener('focusin', pause);
+    toast.addEventListener('focusout', resume);
+}
+
+document.querySelectorAll('[data-toast]').forEach(armToast);
+
+document.addEventListener('click', (event) => {
+    const close = event.target instanceof Element ? event.target.closest('[data-toast-close]') : null;
+    if (close) dismissToast(close.closest('[data-toast]'));
+});
+
+document.addEventListener('keydown', (event) => {
+    if (event.key !== 'Escape' || document.querySelector('dialog[open]')) return;
+    const toasts = document.querySelectorAll('[data-toast]:not([data-leaving])');
+    if (toasts.length) dismissToast(toasts[toasts.length - 1]);
+});

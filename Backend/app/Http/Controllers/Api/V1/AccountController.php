@@ -7,11 +7,11 @@ namespace App\Http\Controllers\Api\V1;
 use App\Enums\AuditSeverity;
 use App\Services\Pdf\QrCodeService;
 use App\Services\Security\AuditLogger;
+use App\Services\Security\PasswordChanger;
 use App\Services\Security\TotpService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rules\Password;
 use Illuminate\Validation\ValidationException;
 
 final class AccountController extends ApiController
@@ -34,17 +34,11 @@ final class AccountController extends ApiController
         return response()->json(['ok' => true]);
     }
 
-    public function updatePassword(Request $request): JsonResponse
+    public function updatePassword(Request $request, PasswordChanger $passwords): JsonResponse
     {
-        $user = $this->user($request);
-        $request->validate([
-            'current_password' => ['required', 'current_password:web'],
-            'password' => ['required', 'confirmed', Password::defaults()],
-        ]);
-        $user->update(['password' => $request->input('password')]);
-        $this->audit->log('account.password_changed', $user);
+        $ended = $passwords->change($request, $this->user($request));
 
-        return response()->json(['ok' => true]);
+        return response()->json(['ok' => true, 'other_sessions_ended' => $ended]);
     }
 
     /** Step 1: generate a secret and return the otpauth URI + QR (not active until confirmed). */

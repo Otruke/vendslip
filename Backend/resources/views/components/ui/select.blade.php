@@ -12,5 +12,5 @@
             <option value="{{ $optionValue }}" @selected($current === (string) $optionValue)>{{ $optionLabel }}</option>
         @endforeach
     </select>
-    @if ($error)<p class="mt-1 text-xs text-rose-600">{{ $error }}</p>@endif
+    @if ($error)<p class="mt-1 text-xs text-[#a5341f]">{{ $error }}</p>@endif
 </div>

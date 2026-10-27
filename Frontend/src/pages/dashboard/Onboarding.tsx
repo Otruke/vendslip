@@ -54,7 +54,7 @@ export default function Onboarding() {
         {STEPS.map((s, i) => (
           <li key={s.key}>
             <button type="button" onClick={() => setStep(i)} className={cn('flex w-full items-center gap-2 rounded-xl border px-3 py-2.5 text-left text-sm font-medium transition', i === step ? 'border-netslip-primary bg-netslip-tint text-netslip-deep' : i < step ? 'border-border-subtle bg-white text-ink-primary' : 'border-border-subtle bg-white text-ink-muted')}>
-              <span className={cn('inline-flex size-6 shrink-0 items-center justify-center rounded-full text-xs [&>svg]:size-3.5', i < step ? 'bg-emerald-500 text-white' : i === step ? 'bg-netslip-deep text-white' : 'bg-surface-subtle')}>{i < step ? <Check /> : i + 1}</span>
+              <span className={cn('inline-flex size-6 shrink-0 items-center justify-center rounded-full text-xs [&>svg]:size-3.5', i < step ? 'bg-tone-settled text-white' : i === step ? 'bg-netslip-deep text-white' : 'bg-surface-subtle')}>{i < step ? <Check /> : i + 1}</span>
               <span className="truncate">{s.title}</span>
             </button>
           </li>

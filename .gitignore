@@ -1,0 +1,511 @@
+
+# ============================================================
+# LARAVEL / PHP
+# ============================================================
+
+# Laravel environment files
+.env
+.env.*
+!.env.example
+!.env.testing.example
+!.env.production.example
+
+# Laravel application key
+# Never commit actual application secrets
+
+# Laravel storage
+/storage/*.key
+/storage/app/*
+/storage/framework/cache/*
+/storage/framework/sessions/*
+/storage/framework/testing/*
+/storage/framework/views/*
+/storage/logs/*
+
+# Preserve required Laravel storage directories
+!/storage/app/.gitignore
+!/storage/framework/.gitignore
+!/storage/framework/cache/.gitignore
+!/storage/framework/sessions/.gitignore
+!/storage/framework/testing/.gitignore
+!/storage/framework/views/.gitignore
+!/storage/logs/.gitignore
+
+# Laravel bootstrap cache
+/bootstrap/cache/*
+!/bootstrap/cache/.gitignore
+
+# Laravel generated files
+/public/storage
+/public/hot
+
+# Laravel Passport keys
+/storage/oauth-*.key
+
+# PHPUnit / Pest
+.phpunit.cache
+.phpunit.result.cache
+.phpunit-watcher.yml
+.phpunit-watcher.yml.dist
+.phpunit-watcher.yml.local
+
+# PHPStan
+.phpstan
+.phpstan.cache
+phpstan.neon
+phpstan.neon.local
+
+# Psalm
+.psalm/
+psalm.xml
+psalm.xml.local
+
+# Infection
+.infection/
+infection.log
+
+# PHP-CS-Fixer
+.php-cs-fixer.cache
+.php-cs-fixer.php
+
+# Composer
+/vendor/
+/composer.phar
+composer.lock.backup
+
+# PHP error logs
+*.php.log
+php_errors.log
+
+
+# ============================================================
+# JAVASCRIPT / TYPESCRIPT / NODE.JS
+# ============================================================
+
+# Node dependencies
+/node_modules/
+/jspm_packages/
+
+# Package manager caches
+.npm/
+.pnpm-store/
+.yarn/cache/
+.yarn/unplugged/
+.yarn/build-state.yml
+.yarn/install-state.gz
+
+# Yarn PnP
+.pnp.*
+!.pnp.cjs
+
+# npm logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Node diagnostic reports
+report.*.json
+
+# TypeScript
+*.tsbuildinfo
+/tsconfig.tsbuildinfo
+
+# JavaScript build output
+/dist/
+/build/
+/out/
+/.next/
+/.nuxt/
+/.output/
+/.vercel/
+/.netlify/
+/.svelte-kit/
+/astro/
+/angular/
+/coverage/
+/.nyc_output/
+
+# Vite
+/vite.config.js.timestamp-*
+/vite.config.ts.timestamp-*
+/vite.config.mjs.timestamp-*
+/vite.config.mts.timestamp-*
+
+# React Native / Expo
+.expo/
+.expo-shared/
+web-build/
+android/.gradle/
+android/app/build/
+ios/build/
+ios/Pods/
+
+# Next.js
+.next/
+out/
+
+# Vue / Nuxt
+.nuxt/
+.output/
+
+# Angular
+.angular/
+dist/
+
+# Svelte
+.svelte-kit/
+
+# Storybook
+storybook-static/
+
+# Cypress
+/cypress/videos/
+/cypress/screenshots/
+
+# Playwright
+/playwright-report/
+/playwright/.cache/
+/test-results/
+
+# Jest
+/coverage/
+
+# ESLint cache
+.eslintcache
+
+# Prettier
+.prettier-cache
+
+# Turbo / Nx
+.turbo/
+.nx/
+.cache/
+
+
+# ============================================================
+# ENVIRONMENT VARIABLES / SECRETS
+# ============================================================
+
+.env
+.env.*
+!.env.example
+!.env.testing.example
+!.env.production.example
+
+# Local environment overrides
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Private keys and certificates
+*.pem
+*.key
+*.p12
+*.pfx
+*.crt
+*.cer
+*.der
+*.jks
+*.keystore
+
+# SSH private keys
+id_rsa
+id_dsa
+id_ecdsa
+id_ed25519
+
+# Cloud credentials
+.aws/
+.azure/
+.gcloud/
+.google/
+.firebase/
+
+# Service account credentials
+service-account*.json
+credentials*.json
+
+# Terraform secrets
+*.tfstate
+*.tfstate.*
+.terraform/
+
+
+# ============================================================
+# IDE / EDITORS
+# ============================================================
+
+# Visual Studio Code
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+!.vscode/launch.json
+!.vscode/tasks.json
+
+# JetBrains IDEs
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Visual Studio
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Sublime Text
+*.sublime-workspace
+
+# Vim
+*.swp
+*.swo
+*.swn
+*~
+
+# Emacs
+*~
+\#*\#
+.#*
+
+# Cursor
+.cursor/
+.cursorignore
+
+# Windsurf
+.windsurf/
+
+
+# ============================================================
+# OPERATING SYSTEM FILES
+# ============================================================
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100/
+.Trashes/
+.fseventsd/
+.VolumeIcon.icns
+
+# Linux
+.directory
+.Trash-*
+.nfs*
+.fuse_hidden*
+.gvfs/
+lost+found/
+
+# Linux file manager thumbnails
+.cache/thumbnails/
+.thumbnails/
+
+
+# ============================================================
+# ARCHIVES / ZIP / LINUX ZIP FILES
+# ============================================================
+
+# ZIP archives (Windows, Linux, macOS)
+*.zip
+*.ZIP
+*.Zip
+*.zipx
+*.ZIPX
+
+# ZIP temporary / split archive files
+*.zip.*
+*.z01
+*.z02
+*.z03
+*.z04
+*.z05
+*.z06
+*.z07
+*.z08
+*.z09
+*.z10
+*.z11
+*.z12
+*.z13
+*.z14
+*.z15
+*.z16
+*.z17
+*.z18
+*.z19
+*.z20
+
+# Linux archive formats
+*.tar
+*.tar.gz
+*.tgz
+*.tar.bz2
+*.tbz2
+*.tar.xz
+*.txz
+*.tar.zst
+*.tzst
+*.tar.lz
+*.tar.lzma
+
+# Other archive formats
+*.7z
+*.rar
+*.RAR
+*.gz
+*.bz2
+*.xz
+*.zst
+*.lz
+*.lzma
+*.cab
+*.ar
+*.deb
+*.rpm
+*.iso
+*.dmg
+*.img
+
+# Backup archives
+*.bak.zip
+*.backup.zip
+*.old.zip
+*.tmp.zip
+
+
+# ============================================================
+# DATABASES / LOCAL DATA
+# ============================================================
+
+# SQLite databases
+*.sqlite
+*.sqlite3
+*.db
+*.db-journal
+*.sqlite-journal
+
+# Database backups
+*.sql.gz
+*.sql.zip
+*.dump
+*.dump.gz
+*.backup
+*.bak
+*.bkp
+
+# MySQL / PostgreSQL local dumps
+dump.sql
+database.sql
+database_dump.sql
+
+# Redis
+dump.rdb
+appendonly.aof
+
+
+# ============================================================
+# LOGS / TEMPORARY FILES
+# ============================================================
+
+# General logs
+*.log
+logs/
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+*.orig
+*.rej
+*.old
+*.backup
+
+# Lock files created by editors
+*.lock~
+
+# Crash dumps
+*.dmp
+*.core
+
+# Debug output
+debug.log
+error.log
+*.stackdump
+
+
+# ============================================================
+# BUILD / DEPLOYMENT / INFRASTRUCTURE
+# ============================================================
+
+# Docker local overrides
+docker-compose.override.yml
+docker-compose.local.yml
+
+# Kubernetes local configuration
+.kube/
+
+# Serverless
+.serverless/
+
+# Deployment artifacts
+/release/
+/releases/
+/artifacts/
+/deployments/
+
+# Generated documentation
+/docs/generated/
+
+# Local testing artifacts
+/.test-results/
+/.test-output/
+
+# Temporary local scripts
+.local/
+.local-scripts/
+
+
+# ============================================================
+# PROJECT-SPECIFIC LOCAL FILES
+# ============================================================
+
+# Local development configuration
+local.php
+local.config.php
+config.local.php
+settings.local.php
+
+# Local IDE and tooling configuration
+*.local.json
+*.local.yaml
+*.local.yml
+
+# Generated API clients
+/generated/
+/api/generated/
+
+# Local certificates
+/certs/
+/certificates/
+
+# Local uploads
+/uploads/
+/public/uploads/
+
+# Local backups
+/backups/

@@ -9,7 +9,7 @@ import { formatMoney, formatMoneyCompact } from '@/lib/money'
 import { useAuthStore } from '@/stores/auth'
 import type { Doc } from '@/types/api'
 
-const CHANNEL_COLORS: Record<string, string> = { WHATSAPP: '#10b981', TELEGRAM: '#0ea5e9', INSTAGRAM: '#ec4899', FACEBOOK: '#2563eb', WEB: '#94a3b8' }
+const CHANNEL_COLORS: Record<string, string> = { WHATSAPP: '#1c7d55', TELEGRAM: '#2a72a8', INSTAGRAM: '#a8336a', FACEBOOK: '#33539c', WEB: '#8a9aa2' }
 
 export default function Overview() {
   const [range, setRange] = useState<'7d' | '30d' | '90d' | '12m'>('30d')
@@ -34,7 +34,7 @@ export default function Overview() {
         {isLoading || !k ? Array.from({ length: 4 }, (_, i) => <Skeleton key={i} className="h-[132px] rounded-xl" />) : (
           <>
             <StatCard variant="deep" title="Settled revenue" value={formatMoney(k.settled_revenue_minor, currency)} trend={k.settled_revenue_change_pct} hint="vs previous period" icon={<Wallet />} />
-            <StatCard title="Unpaid receivables" value={formatMoney(k.receivables_minor, currency)} hint={k.overdue_count > 0 ? <span className="font-semibold text-rose-600">{k.overdue_count} overdue</span> : 'Nothing overdue'} icon={<TriangleAlert />} />
+            <StatCard title="Unpaid receivables" value={formatMoney(k.receivables_minor, currency)} hint={k.overdue_count > 0 ? <span className="font-semibold text-tone-open">{k.overdue_count} overdue</span> : 'Nothing overdue'} icon={<TriangleAlert />} />
             <StatCard title={k.monthly_quota === null ? 'Plan' : 'Free slips left'} value={k.monthly_quota === null ? 'Unlimited' : `${k.free_remaining} / ${k.monthly_quota}`} hint={`${k.paid_credits} non-expiring credits`} icon={<Coins />} />
             <StatCard title="Messaging calls saved" value={k.api_calls_saved.toLocaleString()} hint={`${k.slips_issued} slips issued`} icon={<MessageCircle />} />
           </>
@@ -47,7 +47,7 @@ export default function Overview() {
             <h2 className="font-semibold">Revenue vs. invoiced</h2>
             <div className="flex gap-4 text-xs text-ink-secondary">
               <span className="inline-flex items-center gap-1.5"><span className="size-2 rounded-full bg-netslip-primary" />Cash received</span>
-              <span className="inline-flex items-center gap-1.5"><span className="size-2 rounded-full bg-amber-400" />Invoiced</span>
+              <span className="inline-flex items-center gap-1.5"><span className="size-2 rounded-full bg-tone-partial" />Invoiced</span>
             </div>
           </div>
           <div className="mt-4 h-72">
@@ -56,7 +56,7 @@ export default function Overview() {
                 <AreaChart data={data.series} margin={{ left: 4, right: 8, top: 8, bottom: 0 }}>
                   <defs>
                     <linearGradient id="rev" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#377581" stopOpacity={0.35} /><stop offset="100%" stopColor="#377581" stopOpacity={0} /></linearGradient>
-                    <linearGradient id="inv" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#fbbf24" stopOpacity={0.25} /><stop offset="100%" stopColor="#fbbf24" stopOpacity={0} /></linearGradient>
+                    <linearGradient id="inv" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#c08a2e" stopOpacity={0.25} /><stop offset="100%" stopColor="#c08a2e" stopOpacity={0} /></linearGradient>
                   </defs>
                   <CartesianGrid stroke="#e2e8f0" strokeDasharray="3 3" vertical={false} />
                   <XAxis dataKey="bucket" tickFormatter={(v: string) => formatDate(v, range === '12m' ? { month: 'short' } : { day: 'numeric', month: 'short' })} tick={{ fontSize: 11, fill: '#94a3b8' }} axisLine={false} tickLine={false} minTickGap={24} />
@@ -66,7 +66,7 @@ export default function Overview() {
                     labelFormatter={(label) => formatDate(String(label))}
                     contentStyle={{ borderRadius: 12, border: '1px solid #e2e8f0', fontSize: 12 }}
                   />
-                  <Area type="monotone" dataKey="invoiced_minor" stroke="#f59e0b" strokeWidth={2} fill="url(#inv)" />
+                  <Area type="monotone" dataKey="invoiced_minor" stroke="#b07a22" strokeWidth={2} fill="url(#inv)" />
                   <Area type="monotone" dataKey="revenue_minor" stroke="#377581" strokeWidth={2.5} fill="url(#rev)" />
                 </AreaChart>
               </ResponsiveContainer>
@@ -141,15 +141,15 @@ export default function Overview() {
                 {data.debtors.map((d) => (
                   <li key={`${d.customer_name}${d.customer_phone}`} className="flex items-center justify-between gap-3 py-2.5">
                     <div className="min-w-0"><p className="truncate text-sm font-medium">{d.customer_name}</p><p className="text-xs text-ink-muted">{d.invoices} invoice(s)</p></div>
-                    <Money amountMinor={d.outstanding_minor} currency={currency} size="sm" className="font-semibold text-rose-600" />
+                    <Money amountMinor={d.outstanding_minor} currency={currency} size="sm" className="font-semibold text-tone-open" />
                   </li>
                 ))}
               </ul>
-            ) : <p className="mt-3 text-sm text-ink-muted">Nobody owes you. 🎉</p>}
+            ) : <p className="mt-3 text-sm text-ink-muted">Nobody owes you. Every invoice is settled.</p>}
           </Card>
           {data && data.low_stock.length > 0 && (
             <Card>
-              <h2 className="flex items-center gap-2 font-semibold"><Package className="size-4 text-amber-500" />Low stock</h2>
+              <h2 className="flex items-center gap-2 font-semibold"><Package className="size-4 text-tone-partial" />Low stock</h2>
               <ul className="mt-3 space-y-2">
                 {data.low_stock.map((s) => (
                   <li key={s.id} className="flex items-center justify-between text-sm"><span className="truncate">{s.name}</span><StatusBadge status="PARTIAL" label={`${s.stock_quantity} left`} size="sm" /></li>

@@ -108,10 +108,15 @@ class Document extends Model
         return $this->belongsTo(Customer::class);
     }
 
-    /** @return BelongsTo<Template, $this> */
+    /**
+     * The design the slip was issued with. Includes soft-deleted custom templates, so a slip
+     * keeps its original look even after a Super-Admin deletes that template.
+     *
+     * @return BelongsTo<Template, $this>
+     */
     public function template(): BelongsTo
     {
-        return $this->belongsTo(Template::class);
+        return $this->belongsTo(Template::class)->withTrashed();
     }
 
     /** @return BelongsTo<User, $this> */

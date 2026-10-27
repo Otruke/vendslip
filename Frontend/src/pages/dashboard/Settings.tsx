@@ -1,8 +1,8 @@
-import { Building2, CreditCard, ImageUp, KeyRound, Palette, ShieldCheck, Trash2 } from 'lucide-react'
+import { Building2, CreditCard, ImageUp, Palette, Trash2 } from 'lucide-react'
 import { useRef, useState, type ReactNode } from 'react'
-import { useSearchParams } from 'react-router-dom'
-import { Alert, Button, Card, Input, Modal, PageHeader, SegmentedTabs, Select, StatusBadge, Textarea, ToggleSwitch } from '@/components/ui'
-import { apiDelete, apiPost, apiPut, useRefreshSession } from '@/hooks/queries'
+import { Link, Navigate, useSearchParams } from 'react-router-dom'
+import { Alert, Button, Card, Input, PageHeader, SegmentedTabs, Select, StatusBadge, Textarea, ToggleSwitch } from '@/components/ui'
+import { apiDelete, apiPut, useRefreshSession } from '@/hooks/queries'
 import { api, errorMessage } from '@/lib/api'
 import { bpsToPercentLabel, percentToBps } from '@/lib/money'
 import { useAuthStore, useCan, useEntitlement } from '@/stores/auth'
@@ -10,7 +10,7 @@ import { toast } from '@/stores/ui'
 import type { Merchant } from '@/types/api'
 import { FeatureGate } from './FeatureGate'
 
-type Tab = 'business' | 'branding' | 'payments' | 'security'
+type Tab = 'business' | 'branding' | 'payments'
 
 function Section({ title, description, children, footer }: { title: string; description?: string; children: ReactNode; footer?: ReactNode }) {
   return (
@@ -24,21 +24,23 @@ function Section({ title, description, children, footer }: { title: string; desc
 
 export default function Settings() {
   const [params, setParams] = useSearchParams()
-  const tab = (params.get('tab') as Tab | null) ?? 'business'
+  const requested = params.get('tab')
+  // Personal security moved to "My profile"; keep old ?tab=security links working.
+  if (requested === 'security') return <Navigate to="/dashboard/profile#two-factor" replace />
+  const tab = (['business', 'branding', 'payments'].includes(requested ?? '') ? requested : 'business') as Tab
   return (
     <div className="space-y-6">
-      <PageHeader title="Settings" subtitle="Your business details, brand and security." />
+      <PageHeader title="Settings" subtitle="Your business details, brand and payment links." />
       <SegmentedTabs<Tab> value={tab} onChange={(v) => setParams({ tab: v })} options={[
         { value: 'business', label: 'Business', icon: <Building2 /> },
         { value: 'branding', label: 'Branding', icon: <Palette /> },
         { value: 'payments', label: 'Payment links', icon: <CreditCard /> },
-        { value: 'security', label: 'Security', icon: <ShieldCheck /> },
       ]} />
+      <p className="text-sm text-ink-secondary">Your own name, password and two-factor live in <Link to="/dashboard/profile" className="font-semibold text-netslip-primary hover:underline">My profile</Link>.</p>
       <div className="max-w-3xl">
         {tab === 'business' && <BusinessSettings />}
         {tab === 'branding' && <BrandingSettings />}
         {tab === 'payments' && <PaymentSettings />}
-        {tab === 'security' && <SecuritySettings />}
       </div>
     </div>
   )
@@ -134,7 +136,7 @@ export function BrandingSettings() {
           <div className="flex gap-2">
             <input ref={fileRef} type="file" accept="image/png,image/jpeg,image/webp" className="sr-only" onChange={(e) => { const f = e.target.files?.[0]; if (f) void upload(f); e.target.value = '' }} />
             <Button variant="outline" leftIcon={<ImageUp className="size-4" />} onClick={() => fileRef.current?.click()}>Upload</Button>
-            {merchant.logo_url && <Button variant="ghost" className="text-rose-600" leftIcon={<Trash2 className="size-4" />} onClick={removeLogo}>Remove</Button>}
+            {merchant.logo_url && <Button variant="ghost" className="text-tone-open" leftIcon={<Trash2 className="size-4" />} onClick={removeLogo}>Remove</Button>}
           </div>
         </div>
       </Section>
@@ -178,84 +180,18 @@ function PaymentSettings() {
   return (
     <div className="space-y-6">
       {error && <Alert tone="danger">{error}</Alert>}
-      <Section title="Flutterwave" description="Card, bank transfer and USSD. Money settles to your Flutterwave account." footer={<>{merchant.gateways.flutterwave && <Button variant="ghost" className="text-rose-600" onClick={() => save('flutterwave')}>Disconnect</Button>}<Button isLoading={busy} onClick={() => save()}>Save</Button></>}>
+      <Section title="Flutterwave" description="Card, bank transfer and USSD. Money settles to your Flutterwave account." footer={<>{merchant.gateways.flutterwave && <Button variant="ghost" className="text-tone-open" onClick={() => save('flutterwave')}>Disconnect</Button>}<Button isLoading={busy} onClick={() => save()}>Save</Button></>}>
         <StatusBadge status={merchant.gateways.flutterwave ? 'ACTIVE' : 'DRAFT'} label={merchant.gateways.flutterwave ? 'Connected' : 'Not connected'} />
         <Input label="Public key" value={form.flutterwave_public_key} onChange={(e) => setForm({ ...form, flutterwave_public_key: e.target.value })} placeholder="FLWPUBK-…" className="font-mono text-xs" />
         <Input label="Secret key" type="password" autoComplete="off" value={form.flutterwave_secret_key} onChange={(e) => setForm({ ...form, flutterwave_secret_key: e.target.value })} placeholder={merchant.gateways.flutterwave ? '•••••••• saved' : 'FLWSECK-…'} className="font-mono text-xs" />
         <Input label="Webhook secret hash" type="password" autoComplete="off" value={form.flutterwave_secret_hash} onChange={(e) => setForm({ ...form, flutterwave_secret_hash: e.target.value })} helperText={`Set the same hash in Flutterwave → Settings → Webhooks, URL: ${webhookBase}/flutterwave/merchants/${merchant.id}`} />
       </Section>
-      <Section title="Crypto (NOWPayments)" description="USDT, USDC, BTC, TON and more." footer={<>{merchant.gateways.nowpayments && <Button variant="ghost" className="text-rose-600" onClick={() => save('nowpayments')}>Disconnect</Button>}<Button isLoading={busy} onClick={() => save()}>Save</Button></>}>
+      <Section title="Crypto (NOWPayments)" description="USDT, USDC, BTC, TON and more." footer={<>{merchant.gateways.nowpayments && <Button variant="ghost" className="text-tone-open" onClick={() => save('nowpayments')}>Disconnect</Button>}<Button isLoading={busy} onClick={() => save()}>Save</Button></>}>
         <StatusBadge status={merchant.gateways.nowpayments ? 'ACTIVE' : 'DRAFT'} label={merchant.gateways.nowpayments ? 'Connected' : 'Not connected'} />
         <Input label="API key" type="password" autoComplete="off" value={form.nowpayments_api_key} onChange={(e) => setForm({ ...form, nowpayments_api_key: e.target.value })} placeholder={merchant.gateways.nowpayments ? '•••••••• saved' : ''} />
         <Input label="IPN secret" type="password" autoComplete="off" value={form.nowpayments_ipn_secret} onChange={(e) => setForm({ ...form, nowpayments_ipn_secret: e.target.value })} helperText={`IPN callback URL: ${webhookBase}/nowpayments/merchants/${merchant.id}`} />
       </Section>
       <p className="text-xs text-ink-muted">Keys are encrypted at rest and never shown again after saving.</p>
-    </div>
-  )
-}
-
-function SecuritySettings() {
-  const user = useAuthStore((s) => s.session?.user)
-  const refresh = useRefreshSession()
-  const [profile, setProfile] = useState({ name: user?.name ?? '', phone: user?.phone ?? '' })
-  const [pw, setPw] = useState({ current_password: '', password: '', password_confirmation: '' })
-  const [enroll, setEnroll] = useState<{ secret: string; qr_svg: string } | null>(null)
-  const [code, setCode] = useState('')
-  const [disablePw, setDisablePw] = useState('')
-  const [showDisable, setShowDisable] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-
-  const run = async (fn: () => Promise<unknown>, message: string) => {
-    setError(null)
-    try { await fn(); await refresh(); toast(message); return true } catch (e) { setError(errorMessage(e)); return false }
-  }
-
-  return (
-    <div className="space-y-6">
-      {error && <Alert tone="danger">{error}</Alert>}
-      <Section title="Your profile" footer={<Button onClick={() => run(() => apiPut('/account/profile', { name: profile.name, phone: profile.phone || null }), 'Profile saved')}>Save</Button>}>
-        <div className="grid gap-4 sm:grid-cols-2">
-          <Input label="Name" value={profile.name} onChange={(e) => setProfile({ ...profile, name: e.target.value })} />
-          <Input label="Phone" value={profile.phone} onChange={(e) => setProfile({ ...profile, phone: e.target.value })} />
-        </div>
-        <Input label="Email" value={user?.email ?? ''} disabled />
-      </Section>
-
-      <Section title="Two-factor authentication" description="Protect your ledger with an authenticator app.">
-        {user?.two_factor_enabled ? (
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <StatusBadge status="PAID" label="Enabled" showIcon />
-            <Button variant="outline" onClick={() => setShowDisable(true)}>Turn off</Button>
-          </div>
-        ) : enroll ? (
-          <div className="grid items-center gap-5 sm:grid-cols-[180px_1fr]">
-            <div className="rounded-xl border border-border-subtle bg-white p-2 [&_svg]:h-auto [&_svg]:w-full" dangerouslySetInnerHTML={{ __html: enroll.qr_svg }} />
-            <div className="space-y-3">
-              <p className="text-sm text-ink-secondary">Scan with Google Authenticator, Authy or 1Password. Or enter this key:</p>
-              <p className="break-all rounded-lg bg-surface-canvas px-3 py-2 font-mono text-xs">{enroll.secret}</p>
-              <div className="flex gap-2">
-                <Input aria-label="6-digit code" inputMode="numeric" maxLength={6} placeholder="123456" value={code} onChange={(e) => setCode(e.target.value.replace(/\D/g, ''))} wrapperClassName="w-36" className="tabular tracking-widest" />
-                <Button disabled={code.length !== 6} onClick={async () => { if (await run(() => apiPost('/account/two-factor/confirm', { code }), 'Two-factor enabled')) setEnroll(null) }}>Confirm</Button>
-              </div>
-            </div>
-          </div>
-        ) : (
-          <Button leftIcon={<KeyRound className="size-4" />} onClick={async () => { try { setEnroll(await apiPost('/account/two-factor')) } catch (e) { setError(errorMessage(e)) } }}>Set up 2FA</Button>
-        )}
-      </Section>
-
-      <Section title="Password" footer={<Button disabled={!pw.current_password || !pw.password} onClick={async () => { if (await run(() => apiPut('/account/password', pw), 'Password changed')) setPw({ current_password: '', password: '', password_confirmation: '' }) }}>Update password</Button>}>
-        <Input label="Current password" type="password" autoComplete="current-password" value={pw.current_password} onChange={(e) => setPw({ ...pw, current_password: e.target.value })} />
-        <div className="grid gap-4 sm:grid-cols-2">
-          <Input label="New password" type="password" autoComplete="new-password" value={pw.password} onChange={(e) => setPw({ ...pw, password: e.target.value })} />
-          <Input label="Confirm" type="password" autoComplete="new-password" value={pw.password_confirmation} onChange={(e) => setPw({ ...pw, password_confirmation: e.target.value })} />
-        </div>
-      </Section>
-
-      <Modal isOpen={showDisable} onClose={() => setShowDisable(false)} title="Turn off two-factor?" size="sm"
-        footer={<><Button variant="ghost" onClick={() => setShowDisable(false)}>Cancel</Button><Button variant="danger" disabled={!disablePw} onClick={async () => { if (await run(() => apiDelete('/account/two-factor', { password: disablePw }), 'Two-factor disabled')) { setShowDisable(false); setDisablePw('') } }}>Turn off</Button></>}>
-        <Input label="Confirm with your password" type="password" value={disablePw} onChange={(e) => setDisablePw(e.target.value)} />
-      </Modal>
     </div>
   )
 }

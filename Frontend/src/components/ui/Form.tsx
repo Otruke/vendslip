@@ -4,7 +4,7 @@ import { cn } from '@/lib/cn'
 
 const fieldBase =
   'block w-full rounded-lg border bg-white text-sm text-ink-primary placeholder:text-ink-muted transition focus:outline-none focus:ring-2 focus:ring-netslip-primary/20 disabled:bg-surface-subtle disabled:text-ink-muted'
-const stateClasses = (error?: string) => (error ? 'border-rose-400 focus:border-rose-500' : 'border-slate-300 focus:border-netslip-primary')
+const stateClasses = (error?: string) => (error ? 'border-tone-open focus:border-tone-open' : 'border-slate-300 focus:border-netslip-primary')
 
 export function Field({ id, label, error, helperText, children, className, labelAction }: { id: string; label?: ReactNode; error?: string; helperText?: ReactNode; children: ReactNode; className?: string; labelAction?: ReactNode }) {
   return (
@@ -17,7 +17,7 @@ export function Field({ id, label, error, helperText, children, className, label
       )}
       {children}
       {error ? (
-        <p id={`${id}-error`} role="alert" className="mt-1 text-xs text-rose-600">{error}</p>
+        <p id={`${id}-error`} role="alert" className="mt-1 text-xs text-tone-open">{error}</p>
       ) : helperText ? (
         <p className="mt-1 text-xs text-ink-muted">{helperText}</p>
       ) : null}

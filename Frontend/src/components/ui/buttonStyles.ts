@@ -9,8 +9,8 @@ const variants: Record<ButtonVariant, string> = {
   secondary: 'bg-netslip-tint text-netslip-deep hover:bg-[#dbe9ed]',
   outline: 'border border-slate-300 bg-white text-ink-primary hover:bg-surface-canvas',
   ghost: 'text-ink-secondary hover:bg-surface-subtle hover:text-ink-primary',
-  danger: 'bg-rose-600 text-white shadow-sm hover:bg-rose-700',
-  success: 'bg-emerald-600 text-white shadow-sm hover:bg-emerald-700',
+  danger: 'bg-tone-open text-white shadow-sm hover:bg-[#8a2a18]',
+  success: 'bg-tone-settled text-white shadow-sm hover:bg-[#175843]',
   white: 'bg-white text-netslip-deep shadow-sm hover:bg-netslip-tint',
 }
 

@@ -70,6 +70,16 @@ class User extends Authenticatable
         return $this->belongsTo(Merchant::class);
     }
 
+    /**
+     * Security events this user performed.
+     *
+     * @return HasMany<SecurityAuditLog, $this>
+     */
+    public function auditLogs(): HasMany
+    {
+        return $this->hasMany(SecurityAuditLog::class, 'actor_user_id');
+    }
+
     /** @return HasMany<ChannelIdentity, $this> */
     public function channelIdentities(): HasMany
     {

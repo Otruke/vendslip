@@ -9,6 +9,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="h-full">
+<x-ui.toasts />
 @php
     $user = auth()->user();
     $nav = [
@@ -44,11 +45,20 @@
                 </a>
             @endforeach
         </nav>
-        <div class="border-t border-white/10 px-5 py-4">
-            <p class="truncate text-sm font-semibold">{{ $user?->name }}</p>
-            <p class="truncate text-xs text-[#cfe3e8]">{{ $user?->isSuperAdmin() ? 'Super Admin' : 'Admin' }} · {{ $user?->email }}</p>
-            <form method="POST" action="{{ route('admin.logout') }}" class="mt-3">@csrf
-                <button class="inline-flex items-center gap-2 text-xs font-semibold text-[#cfe3e8] hover:text-white"><x-ui.icon name="log-out" class="size-3.5" />Sign out</button>
+        <div class="border-t border-white/10 p-3">
+            <a href="{{ route('admin.profile.show') }}" @class([
+                'flex items-center gap-3 rounded-xl px-2 py-2 transition',
+                'bg-white/10' => request()->routeIs('admin.profile.*'),
+                'hover:bg-white/5' => ! request()->routeIs('admin.profile.*'),
+            ]) title="My profile">
+                <span class="flex size-9 shrink-0 items-center justify-center rounded-lg bg-netslip-primary text-sm font-bold">{{ mb_strtoupper(mb_substr($user?->name ?? 'A', 0, 1)) }}</span>
+                <span class="min-w-0">
+                    <span class="block truncate text-sm font-semibold">{{ $user?->name }}</span>
+                    <span class="block truncate text-xs text-[#cfe3e8]">{{ $user?->isSuperAdmin() ? 'Super Admin' : 'Admin' }} · My profile</span>
+                </span>
+            </a>
+            <form method="POST" action="{{ route('admin.logout') }}" class="mt-1 px-2">@csrf
+                <button class="inline-flex items-center gap-2 py-1.5 text-xs font-semibold text-[#cfe3e8] hover:text-white"><x-ui.icon name="log-out" class="size-3.5" />Sign out</button>
             </form>
         </div>
     </aside>
@@ -63,14 +73,13 @@
                         @continue($superOnly && ! $user?->isSuperAdmin())
                         <a href="{{ route($route) }}" class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm hover:bg-surface-subtle"><x-ui.icon :name="$icon" />{{ $label }}</a>
                     @endforeach
+                    <a href="{{ route('admin.profile.show') }}" class="flex items-center gap-2 rounded-lg border-t border-border-subtle px-3 py-2 text-sm hover:bg-surface-subtle"><x-ui.icon name="user" />My profile</a>
                     <form method="POST" action="{{ route('admin.logout') }}">@csrf<button class="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm hover:bg-surface-subtle"><x-ui.icon name="log-out" />Sign out</button></form>
                 </div>
             </details>
         </header>
         <main class="py-6 sm:py-8">
             <x-ui.container size="full" class="space-y-6">
-                @if (session('status'))<x-ui.alert tone="success">{{ session('status') }}</x-ui.alert>@endif
-                @if (session('error'))<x-ui.alert tone="danger">{{ session('error') }}</x-ui.alert>@endif
                 {{ $slot }}
             </x-ui.container>
         </main>

@@ -8,10 +8,10 @@ import { toast } from '@/stores/ui'
 import type { Channel } from '@/types/generated'
 
 const ICONS: Record<string, { icon: ReactNode; color: string; hint: string }> = {
-  WHATSAPP: { icon: <MessageCircle />, color: 'bg-emerald-500', hint: 'Quick-reply confirm inside the free 24h window.' },
-  TELEGRAM: { icon: <Send />, color: 'bg-sky-500', hint: 'Rich tables, ephemeral group drafts, PDF inline.' },
-  INSTAGRAM: { icon: <Camera />, color: 'bg-pink-500', hint: 'DM orders with a signed PDF link.' },
-  FACEBOOK: { icon: <Users />, color: 'bg-blue-600', hint: 'Messenger orders with the PDF attached.' },
+  WHATSAPP: { icon: <MessageCircle />, color: 'bg-tone-settled', hint: 'Quick-reply confirm inside the free 24h window.' },
+  TELEGRAM: { icon: <Send />, color: 'bg-tone-telegram', hint: 'Rich tables, ephemeral group drafts, PDF inline.' },
+  INSTAGRAM: { icon: <Camera />, color: 'bg-tone-instagram', hint: 'DM orders with a signed PDF link.' },
+  FACEBOOK: { icon: <Users />, color: 'bg-tone-facebook', hint: 'Messenger orders with the PDF attached.' },
 }
 
 type LinkCode = { code: string; expires_at: string; telegram_deep_link: string | null; whatsapp_deep_link: string | null }
@@ -77,7 +77,7 @@ export default function Channels() {
                     <StatusBadge status={i.channel as Channel} size="sm" />
                     <div><p className="text-sm font-medium">{i.display_name ?? i.external_user_id}</p><p className="text-xs text-ink-muted">{i.user_name} · linked {formatDate(i.linked_at)}</p></div>
                   </div>
-                  <Button size="xs" variant="ghost" className="text-rose-600" leftIcon={<Trash2 className="size-3.5" />} onClick={() => unlink(i.id)}>Unlink</Button>
+                  <Button size="xs" variant="ghost" className="text-tone-open" leftIcon={<Trash2 className="size-3.5" />} onClick={() => unlink(i.id)}>Unlink</Button>
                 </li>
               ))}
             </ul>

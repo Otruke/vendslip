@@ -11,7 +11,7 @@
     @if ($trend || $hint)
         <p class="mt-1 text-xs {{ $deep ? 'text-[#cfe3e8]' : 'text-ink-secondary' }}">
             @if ($trend)
-                <span @class(['font-semibold', 'text-emerald-600' => ! $deep && str_starts_with((string) $trend, '+'), 'text-rose-600' => ! $deep && str_starts_with((string) $trend, '-')])>{{ $trend }}</span>
+                <span @class(['font-semibold', 'text-[#1d6b52]' => ! $deep && str_starts_with((string) $trend, '+'), 'text-[#a5341f]' => ! $deep && str_starts_with((string) $trend, '-')])>{{ $trend }}</span>
             @endif
             {{ $hint }}
         </p>

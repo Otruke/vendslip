@@ -21,7 +21,7 @@
         .items tbody tr:nth-child(even) td { background: #F8FAFC; }
         .totals td { padding: 4px 0; font-size: 11px; }
         .totals .grand td { font-weight: 900; font-size: 15px; color: #FFFFFF; background: {{ $d['secondary'] }}; padding: 9px 12px; }
-        .totals .balance td { color: #BE123C; font-weight: 800; font-size: 12px; padding-top: 7px; }
+        .totals .balance td { color: #A5341F; font-weight: 800; font-size: 12px; padding-top: 7px; }
         .bank { background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 8px; padding: 10px 12px; }
         .thanks { font-size: 22px; color: {{ $d['secondary'] }}; }
     </style>
@@ -74,7 +74,7 @@
                     @if ($d['document']->customer_email)<div class="muted">{{ $d['document']->customer_email }}</div>@endif
                 </td>
                 <td style="width:50%; text-align:right;">
-                    <span class="pill pill-{{ $d['status'] }}">{{ $d['status_label'] }}</span>
+                    <span class="pill pill-{{ $d['status'] }}"><span class="mark">{{ in_array($d['status'], ['PAID', 'VOID'], true) ? '◆' : '◇' }}</span>{{ $d['status_label'] }}</span>
                     <div style="margin-top:8px;"><span class="muted">Issued</span> &nbsp;<strong>{{ $d['issued_at'] }}</strong></div>
                     @if ($d['due_date'])<div><span class="muted">Due</span> &nbsp;<strong>{{ $d['due_date'] }}</strong></div>@endif
                     @if ($d['parent_number'])<div><span class="muted">Ref</span> &nbsp;<strong>{{ $d['parent_number'] }}</strong></div>@endif
@@ -96,7 +96,7 @@
                         </div>
                     @endif
                     @if ($d['is_void'] && $d['document']->void_reason)
-                        <div style="margin-top:12px; color:#BE123C;"><strong>Voided:</strong> {{ $d['document']->void_reason }}</div>
+                        <div style="margin-top:12px; color:#A5341F;"><strong>Voided:</strong> {{ $d['document']->void_reason }}</div>
                     @endif
                 </td>
                 <td style="width:48%; vertical-align:top;">

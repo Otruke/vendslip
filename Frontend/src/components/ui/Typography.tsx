@@ -29,7 +29,7 @@ const tones: Record<TextTone, string> = {
   secondary: 'text-ink-secondary',
   muted: 'text-ink-muted',
   brand: 'text-netslip-primary',
-  danger: 'text-rose-600',
+  danger: 'text-tone-open',
   inverse: 'text-[#cfe3e8]',
 }
 

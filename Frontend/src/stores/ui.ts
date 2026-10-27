@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 
-type Toast = { id: number; message: string; tone: 'success' | 'error' }
+export type ToastTone = 'success' | 'error' | 'warning' | 'info'
+type Toast = { id: number; message: string; tone: ToastTone }
 
 type UiState = {
   sidebarOpen: boolean
@@ -18,8 +19,8 @@ export const useUiStore = create<UiState>()((set) => ({
   setSidebarOpen: (open) => set({ sidebarOpen: open }),
   toast: (message, tone = 'success') => {
     const id = nextId++
+    // Each toast runs its own countdown (paused on hover); see Toaster in components/ui/Feedback.tsx.
     set((s) => ({ toasts: [...s.toasts.slice(-3), { id, message, tone }] }))
-    setTimeout(() => set((s) => ({ toasts: s.toasts.filter((t) => t.id !== id) })), tone === 'error' ? 6000 : 3500)
   },
   dismissToast: (id) => set((s) => ({ toasts: s.toasts.filter((t) => t.id !== id) })),
 }))

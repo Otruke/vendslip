@@ -15,7 +15,7 @@
         .items td { padding: 6px 0; border-bottom: 1px solid #F1F5F9; }
         .totals td { padding: 3px 0; }
         .totals .grand td { font-size: 16px; font-weight: 900; color: {{ $d['secondary'] }}; padding-top: 8px; border-top: 2px solid {{ $d['primary'] }}; }
-        .totals .balance td { color: #BE123C; font-weight: 800; }
+        .totals .balance td { color: #A5341F; font-weight: 800; }
         .bank { border: 1px solid #E2E8F0; border-radius: 8px; padding: 8px 10px; }
     </style>
 </head>
@@ -28,7 +28,7 @@
         <div class="biz">{{ $d['merchant']->name }}</div>
         <div class="muted" style="font-size:9px;">{{ collect([$d['merchant']->phone, $d['merchant']->address])->filter()->implode(' · ') }}</div>
         <div class="doc">{{ $d['title'] }} &middot; {{ $d['document']->doc_number }}</div>
-        <div style="margin-top:6px;"><span class="pill pill-{{ $d['status'] }}">{{ $d['status_label'] }}</span></div>
+        <div style="margin-top:6px;"><span class="pill pill-{{ $d['status'] }}"><span class="mark">{{ in_array($d['status'], ['PAID', 'VOID'], true) ? '◆' : '◇' }}</span>{{ $d['status_label'] }}</span></div>
     </div>
 
     <div class="rule"></div>

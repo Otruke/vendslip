@@ -11,7 +11,7 @@
         'primary' => 'text-ink-primary',
         'muted' => 'text-ink-muted',
         'brand' => 'text-netslip-primary',
-        'danger' => 'text-rose-600',
+        'danger' => 'text-[#a5341f]',
         default => 'text-ink-secondary',
     };
 @endphp

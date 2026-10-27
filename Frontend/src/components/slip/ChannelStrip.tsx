@@ -1,22 +1,25 @@
-import { Camera, MessageCircle, Send, Users } from 'lucide-react'
 import { cn } from '@/lib/cn'
 
+/** Where NetSlip works: typographic, no generic icons. Each channel keeps its own tone mark. */
 const CHANNELS = [
-  { name: 'WhatsApp', icon: <MessageCircle />, color: 'text-emerald-600 bg-emerald-50' },
-  { name: 'Telegram', icon: <Send />, color: 'text-sky-600 bg-sky-50' },
-  { name: 'Instagram DM', icon: <Camera />, color: 'text-pink-600 bg-pink-50' },
-  { name: 'Facebook Messenger', icon: <Users />, color: 'text-blue-600 bg-blue-50' },
+  { name: 'WhatsApp', tone: 'var(--color-tone-whatsapp)' },
+  { name: 'Telegram', tone: 'var(--color-tone-telegram)' },
+  { name: 'Instagram DM', tone: 'var(--color-tone-instagram)' },
+  { name: 'Messenger', tone: 'var(--color-tone-facebook)' },
 ]
 
-export function ChannelStrip({ className, dark = false }: { className?: string; dark?: boolean }) {
+export function ChannelStrip({ className, dark = false, label = 'Works in' }: { className?: string; dark?: boolean; label?: string | null }) {
   return (
-    <ul className={cn('flex flex-wrap items-center gap-2', className)}>
-      {CHANNELS.map((c) => (
-        <li key={c.name} className={cn('inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-sm font-medium', dark ? 'border-white/15 text-white/90' : 'border-border-subtle bg-white text-ink-secondary')}>
-          <span className={cn('inline-flex size-6 items-center justify-center rounded-full [&>svg]:size-3.5', c.color)}>{c.icon}</span>
-          {c.name}
-        </li>
-      ))}
-    </ul>
+    <div className={cn('flex flex-wrap items-center gap-x-5 gap-y-2 text-sm', className)}>
+      {label && <span className={cn('text-[11px] font-bold uppercase tracking-[0.16em]', dark ? 'text-white/60' : 'text-ink-muted')}>{label}</span>}
+      <ul className="flex flex-wrap items-center gap-x-5 gap-y-2">
+        {CHANNELS.map((c) => (
+          <li key={c.name} className={cn('inline-flex items-center gap-2 font-semibold', dark ? 'text-white/90' : 'text-ink-primary')}>
+            <span className="size-2 rotate-45 rounded-[1px]" style={{ background: c.tone }} aria-hidden />
+            {c.name}
+          </li>
+        ))}
+      </ul>
+    </div>
   )
 }

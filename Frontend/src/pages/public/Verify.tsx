@@ -43,14 +43,14 @@ export default function Verify() {
             {isLoading && <Skeleton className="h-72 rounded-2xl" />}
             {isError && (
               <Card variant="elevated" padding="lg" className="rounded-2xl text-center">
-                <ShieldX className="mx-auto size-10 text-rose-600" />
+                <ShieldX className="mx-auto size-10 text-tone-open" />
                 <h2 className="mt-3 text-lg font-bold">No slip matches this code</h2>
                 <Text className="mt-1">Check the code for typos. If it came from a receipt, treat that receipt with caution.</Text>
               </Card>
             )}
             {data && (
               <Card variant="elevated" padding="none" className="overflow-hidden rounded-2xl animate-slip-in">
-                <div className={cn('flex items-center gap-3 px-6 py-5', !data.authentic ? 'bg-rose-600 text-white' : data.superseded ? 'bg-amber-500 text-white' : 'bg-emerald-600 text-white')}>
+                <div className={cn('flex items-center gap-3 px-6 py-5', !data.authentic ? 'bg-tone-open text-white' : data.superseded ? 'bg-tone-partial text-white' : 'bg-tone-settled text-white')}>
                   {!data.authentic ? <ShieldAlert className="size-7" /> : data.superseded ? <History className="size-7" /> : <BadgeCheck className="size-7" />}
                   <div>
                     <p className="text-lg font-bold">{!data.authentic ? 'Tamper alert' : data.superseded ? 'Older version of this slip' : 'Verified authentic'}</p>

@@ -75,6 +75,35 @@ final class TemplateController extends Controller
         return back()->with('status', "{$template->name} is now the platform default.");
     }
 
+    /**
+     * Delete a custom template. The two system templates and the current platform default are
+     * protected. Merchants who picked it fall back to the platform default; slips already issued
+     * with it keep rendering with it (soft delete).
+     */
+    public function destroy(Request $request, Template $template): RedirectResponse
+    {
+        if ($template->isSystem()) {
+            return back()->with('error', "{$template->name} is a system template. You can edit or hide it, but not delete it.");
+        }
+        if ($template->is_default) {
+            return back()->with('error', "{$template->name} is the platform default. Make another template the default first.");
+        }
+
+        $affected = DB::transaction(static function () use ($template): int {
+            $receipt = Merchant::query()->where('default_receipt_template_id', $template->id)->update(['default_receipt_template_id' => null]);
+            $invoice = Merchant::query()->where('default_invoice_template_id', $template->id)->update(['default_invoice_template_id' => null]);
+            $template->update(['is_active' => false]);
+            $template->delete();
+
+            return $receipt + $invoice;
+        });
+        $this->audit->log('admin.template_deleted', $this->actor($request), null, ['template' => $template->slug, 'merchant_defaults_reset' => $affected]);
+
+        $note = $affected > 0 ? " {$affected} merchant default".($affected === 1 ? '' : 's').' switched to the platform default.' : '';
+
+        return redirect()->route('admin.templates.index')->with('status', "{$template->name} deleted.{$note}");
+    }
+
     public function preview(Request $request, Template $template, SampleDocumentFactory $samples, SlipRenderer $renderer): Response
     {
         $type = DocumentType::from((string) $request->query('type', 'RECEIPT') === 'INVOICE' ? 'INVOICE' : 'RECEIPT');
@@ -119,7 +148,7 @@ final class TemplateController extends Controller
     {
         $base = Str::slug($name) ?: 'template';
         $slug = $base;
-        while (Template::query()->where('slug', $slug)->exists()) {
+        while (Template::withTrashed()->where('slug', $slug)->exists()) { // deleted slugs stay reserved
             $slug = $base.'-'.Str::lower(Str::random(4));
         }
 

@@ -57,6 +57,7 @@ export type Session = {
     permissions: string[]
     two_factor_enabled: boolean
     is_platform_admin: boolean
+    last_login_at: string | null
   }
   merchant: Merchant | null
   entitlements: Entitlements

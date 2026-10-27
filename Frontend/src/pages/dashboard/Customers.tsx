@@ -52,7 +52,7 @@ export default function Customers() {
           <div className="flex items-center gap-3">
             <Avatar name={c.name} />
             <div className="min-w-0 flex-1"><p className="truncate text-sm font-semibold">{c.name}</p><p className="text-xs text-ink-muted">{c.phone ?? c.email ?? '—'}</p></div>
-            {(c.outstanding_minor ?? 0) > 0 && <Money amountMinor={c.outstanding_minor ?? 0} currency={currency} size="sm" className="font-semibold text-rose-600" />}
+            {(c.outstanding_minor ?? 0) > 0 && <Money amountMinor={c.outstanding_minor ?? 0} currency={currency} size="sm" className="font-semibold text-tone-open" />}
           </div>
         )}
         columns={[
@@ -60,7 +60,7 @@ export default function Customers() {
           { key: 'p', header: 'Phone', cell: (c) => <span className="tabular">{c.phone ?? '—'}</span>, hideOnMobile: true },
           { key: 'd', header: 'Slips', align: 'right', cell: (c) => <span className="tabular">{c.documents_count ?? 0}</span> },
           { key: 'b', header: 'Total billed', align: 'right', cell: (c) => <Money amountMinor={c.total_billed_minor ?? 0} currency={currency} size="sm" /> },
-          { key: 'o', header: 'Outstanding', align: 'right', cell: (c) => (c.outstanding_minor ?? 0) > 0 ? <Money amountMinor={c.outstanding_minor ?? 0} currency={currency} size="sm" className="font-semibold text-rose-600" /> : <span className="text-ink-muted">—</span> },
+          { key: 'o', header: 'Outstanding', align: 'right', cell: (c) => (c.outstanding_minor ?? 0) > 0 ? <Money amountMinor={c.outstanding_minor ?? 0} currency={currency} size="sm" className="font-semibold text-tone-open" /> : <span className="text-ink-muted">—</span> },
           { key: 'l', header: 'Last purchase', cell: (c) => <span className="text-ink-secondary">{c.last_purchase_at ? timeAgo(c.last_purchase_at) : '—'}</span>, hideOnMobile: true },
         ]}
       />
@@ -100,7 +100,7 @@ function CustomerDrawer({ id, onClose, onEdit, currency, merchantName }: { id: s
         <div className="space-y-6">
           <div className="grid grid-cols-2 gap-3">
             <Card padding="sm"><p className="text-xs text-ink-muted">Total billed</p><Money amountMinor={data.summary.total_billed_minor} currency={currency} size="lg" /></Card>
-            <Card padding="sm" className={outstanding > 0 ? 'border-rose-200 bg-rose-50' : ''}><p className="text-xs text-ink-muted">Outstanding</p><Money amountMinor={outstanding} currency={currency} size="lg" className={outstanding > 0 ? 'text-rose-600' : ''} /></Card>
+            <Card padding="sm" className={outstanding > 0 ? 'border-l-[3px] border-l-tone-open' : ''}><p className="text-xs text-ink-muted">Outstanding</p><Money amountMinor={outstanding} currency={currency} size="lg" className={outstanding > 0 ? 'text-tone-open' : ''} /></Card>
           </div>
           <dl className="space-y-1.5 text-sm">
             {c.phone && <div className="flex items-center gap-2"><Phone className="size-4 text-ink-muted" /><a className="tabular hover:underline" href={`tel:${c.phone}`}>{c.phone}</a></div>}
@@ -157,7 +157,7 @@ function CustomerForm({ customer, onClose }: { customer: Customer | 'new' | null
 
   return (
     <Modal isOpen={customer !== null} onClose={onClose} title={existing ? 'Edit customer' : 'Add customer'}
-      footer={<>{existing && <Button variant="ghost" className="mr-auto text-rose-600" onClick={remove}>Delete</Button>}<Button variant="ghost" onClick={onClose}>Cancel</Button><Button isLoading={busy} disabled={!form.name.trim()} onClick={save}>Save</Button></>}>
+      footer={<>{existing && <Button variant="ghost" className="mr-auto text-tone-open" onClick={remove}>Delete</Button>}<Button variant="ghost" onClick={onClose}>Cancel</Button><Button isLoading={busy} disabled={!form.name.trim()} onClick={save}>Save</Button></>}>
       <div className="space-y-4">
         {error && <Alert tone="danger">{error}</Alert>}
         <Input label="Name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />

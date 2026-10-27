@@ -1,6 +1,6 @@
 import { useQueryClient } from '@tanstack/react-query'
 import {
-  Bot, Coins, CreditCard, FileText, LayoutDashboard, LayoutTemplate, LogOut, Menu, Package, Plus, Settings, Sparkles, Users, UsersRound, X,
+  Bot, Coins, CreditCard, FileText, KeyRound, LayoutDashboard, LayoutTemplate, LogOut, Menu, Package, Plus, Settings, Sparkles, UserRound, Users, UsersRound, X,
 } from 'lucide-react'
 import { useEffect, type ReactNode } from 'react'
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
@@ -64,12 +64,12 @@ function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
         <div className="rounded-xl bg-white/[0.07] p-3">
           <div className="flex items-center justify-between text-xs">
             <span className="font-semibold uppercase tracking-wider text-[#cfe3e8]">{unlimited ? 'Unlimited plan' : 'Free slips'}</span>
-            <span className="size-2 rounded-full bg-emerald-400" aria-hidden />
+            <span className="size-2 rounded-full bg-tone-settled-light" aria-hidden />
           </div>
           {!unlimited && usage && (
             <>
               <p className="tabular mt-1.5 text-sm font-semibold">{usage.free_used} / {usage.monthly_quota} used</p>
-              <div className="mt-2 h-1.5 rounded-full bg-white/10"><div className="h-1.5 rounded-full bg-emerald-400" style={{ width: `${Math.min(100, (usage.free_used / Math.max(1, usage.monthly_quota ?? 1)) * 100)}%` }} /></div>
+              <div className="mt-2 h-1.5 rounded-full bg-white/10"><div className="h-1.5 rounded-full bg-tone-settled-light" style={{ width: `${Math.min(100, (usage.free_used / Math.max(1, usage.monthly_quota ?? 1)) * 100)}%` }} /></div>
             </>
           )}
           <p className="tabular mt-2 flex items-center gap-1.5 text-xs text-[#cfe3e8]"><Coins className="size-3.5" />{usage?.paid_credits ?? 0} non-expiring credits</p>
@@ -107,8 +107,10 @@ function UserMenu() {
       </summary>
       <div className="absolute right-0 z-30 mt-2 w-56 rounded-xl border border-border-subtle bg-white p-1.5 shadow-lg">
         <p className="truncate px-3 py-2 text-xs text-ink-muted">{session.user.email}</p>
-        <NavLink to="/dashboard/settings" className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm hover:bg-surface-subtle"><Settings className="size-4" />Settings</NavLink>
-        <button type="button" onClick={logout} className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm text-rose-600 hover:bg-rose-50"><LogOut className="size-4" />Sign out</button>
+        <NavLink to="/dashboard/profile" className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm hover:bg-surface-subtle"><UserRound className="size-4" />My profile</NavLink>
+        <NavLink to="/dashboard/profile#password" className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm hover:bg-surface-subtle"><KeyRound className="size-4" />Change password</NavLink>
+        <NavLink to="/dashboard/settings" className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm hover:bg-surface-subtle"><Settings className="size-4" />Business settings</NavLink>
+        <button type="button" onClick={logout} className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm text-tone-open hover:bg-tone-open/10"><LogOut className="size-4" />Sign out</button>
       </div>
     </details>
   )

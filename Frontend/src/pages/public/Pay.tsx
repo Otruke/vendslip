@@ -1,5 +1,5 @@
 import { Bitcoin, CircleCheck, CreditCard, Download, Landmark, Lock } from 'lucide-react'
-import { useState } from 'react'
+import { useState, type CSSProperties } from 'react'
 import { Link, useParams, useSearchParams } from 'react-router-dom'
 import { Alert, Button, Card, Container, Input, Money, Section, Skeleton, StatusBadge, Text } from '@/components/ui'
 import { apiPost, usePublicInvoice } from '@/hooks/queries'
@@ -75,7 +75,7 @@ export default function Pay() {
               {data.tax_minor > 0 && <div className="flex justify-between text-ink-secondary"><dt>VAT</dt><dd><Money amountMinor={data.tax_minor} currency={data.currency} size="sm" /></dd></div>}
               {data.shipping_minor > 0 && <div className="flex justify-between text-ink-secondary"><dt>Shipping</dt><dd><Money amountMinor={data.shipping_minor} currency={data.currency} size="sm" /></dd></div>}
               <div className="flex justify-between border-t border-border-subtle pt-2 font-bold"><dt>Total</dt><dd><Money amountMinor={data.total_minor} currency={data.currency} /></dd></div>
-              {data.amount_paid_minor > 0 && <div className="flex justify-between text-emerald-700"><dt>Paid</dt><dd>-<Money amountMinor={data.amount_paid_minor} currency={data.currency} size="sm" /></dd></div>}
+              {data.amount_paid_minor > 0 && <div className="flex justify-between text-tone-settled"><dt>Paid</dt><dd>-<Money amountMinor={data.amount_paid_minor} currency={data.currency} size="sm" /></dd></div>}
             </dl>
             <div className="mt-5 flex flex-wrap items-center justify-between gap-3 text-xs">
               <Link to={`/verify/${data.verification_hash}`} className="font-semibold text-netslip-primary hover:underline">Verify {data.verification_code}</Link>
@@ -91,7 +91,7 @@ export default function Pay() {
             <p className="text-sm text-ink-secondary">{paid ? 'Settled' : 'Amount due'}</p>
             <Money amountMinor={data.balance_due_minor} currency={data.currency} size="xl" className="mt-1 block" />
             {paid ? (
-              <div className="mt-6 flex items-center gap-2 rounded-xl bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-700"><CircleCheck className="size-5" />This invoice is fully paid.</div>
+              <div className="ns-note mt-6 font-semibold" style={{ '--t': 'var(--tone-settled)' } as CSSProperties}><CircleCheck className="size-5" />This invoice is fully paid.</div>
             ) : canPayOnline ? (
               <div className="mt-6 space-y-4">
                 <div className="grid grid-cols-2 gap-2" role="radiogroup" aria-label="Payment method">

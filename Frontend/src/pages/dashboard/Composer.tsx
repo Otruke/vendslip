@@ -43,8 +43,8 @@ function SlashPane() {
     <div className="overflow-hidden rounded-xl border border-netslip-obsidian/20 bg-netslip-obsidian shadow-sm">
       <div className="flex items-center justify-between gap-2 px-4 py-2.5">
         <div className="flex items-center gap-2">
-          <span className="flex gap-1.5" aria-hidden><span className="size-2.5 rounded-full bg-rose-400" /><span className="size-2.5 rounded-full bg-amber-400" /><span className="size-2.5 rounded-full bg-emerald-400" /></span>
-          <span className="ml-2 font-mono text-xs text-[#9cc3cc]">netslip ~ /slash</span>
+          <img src="/assets/brand/netslip-icon-white.png" alt="" className="h-4 w-auto opacity-80" />
+          <span className="font-mono text-xs text-[#9cc3cc]">slash console</span>
         </div>
         <button type="button" onClick={() => setText('')} className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs text-[#cfe3e8] hover:bg-white/10"><Eraser className="size-3.5" />Clear</button>
       </div>
@@ -55,7 +55,7 @@ function SlashPane() {
         spellCheck={false}
         aria-label="Slash commands"
         placeholder={'/name = Chief Emeka Nwosu\n/item = 2x Leather Sneakers @ 28,500\n/address = 42 Wuse II, Abuja'}
-        className="block w-full resize-y border-0 bg-[#0f2a33] px-4 py-3 font-mono text-[13px] leading-6 text-emerald-100 placeholder:text-[#5f8792] focus:outline-none focus:ring-0"
+        className="block w-full resize-y border-0 bg-[#0f2a33] px-4 py-3 font-mono text-[13px] leading-6 text-[#d9efe6] placeholder:text-[#5f8792] focus:outline-none focus:ring-0"
       />
       <div className="flex flex-wrap gap-1.5 border-t border-white/10 px-4 py-3">
         {SHORTCUTS.map((s) => (
@@ -63,7 +63,7 @@ function SlashPane() {
         ))}
       </div>
       {errors.length > 0 && (
-        <ul className="space-y-1 border-t border-white/10 bg-rose-500/10 px-4 py-2.5 text-xs text-rose-200">
+        <ul className="space-y-1 border-t border-white/10 bg-tone-open/20 px-4 py-2.5 text-xs text-tone-open-light">
           {errors.slice(0, 4).map((e) => <li key={e}>• {e}</li>)}
         </ul>
       )}
@@ -111,7 +111,7 @@ function FormPane({ inventoryEnabled }: { inventoryEnabled: boolean }) {
                 <Input label={i === 0 ? 'Description' : undefined} aria-label="Description" list={inventoryEnabled ? 'sku-list' : undefined} value={item.description} onChange={(e) => pickSku(i, e.target.value)} placeholder="Leather sneakers" />
                 <Input label={i === 0 ? 'Qty' : undefined} aria-label="Quantity" type="number" min={1} value={item.quantity} onChange={(e) => setItem(i, { quantity: Math.max(1, Number(e.target.value) || 1) })} />
                 <MoneyField label={i === 0 ? 'Unit price' : ''} value={item.unit_price_minor} onChange={(v) => setItem(i, { unit_price_minor: v })} />
-                <button type="button" onClick={() => removeItem(i)} className="mb-1 inline-flex size-8 items-center justify-center rounded-lg text-ink-muted hover:bg-rose-50 hover:text-rose-600" aria-label="Remove item"><Trash2 className="size-4" /></button>
+                <button type="button" onClick={() => removeItem(i)} className="mb-1 inline-flex size-8 items-center justify-center rounded-lg text-ink-muted hover:bg-tone-open/10 hover:text-tone-open" aria-label="Remove item"><Trash2 className="size-4" /></button>
               </li>
             ))}
           </ul>
@@ -237,7 +237,7 @@ export default function Composer() {
                 <ToggleSwitch checked={useCredit} onChange={setUseCredit} label={<span className="inline-flex items-center gap-1.5"><Coins className="size-4 text-netslip-primary" />Spend 1 credit for a clean slip</span>} description={`No watermark. ${credits} credit(s) left.`} />
               )}
               {missing.length > 0 && (
-                <p className="flex items-start gap-2 text-sm text-ink-secondary"><TriangleAlert className="mt-0.5 size-4 shrink-0 text-amber-500" />Still needed: {missing.join(', ')}</p>
+                <p className="flex items-start gap-2 text-sm text-ink-secondary"><TriangleAlert className="mt-0.5 size-4 shrink-0 text-tone-partial" />Still needed: {missing.join(', ')}</p>
               )}
               {error === 'quota' ? (
                 <Alert tone="warning" title="You’ve used this month’s free slips" action={<Button to="/dashboard/billing" size="sm">Top up</Button>}>Buy a credit pack or upgrade to keep sending.</Alert>
@@ -267,7 +267,7 @@ export default function Composer() {
       <Modal
         isOpen={issued !== null}
         onClose={() => setIssued(null)}
-        title={<span className="inline-flex items-center gap-2"><CircleCheck className="size-5 text-emerald-600" />{issued?.doc_type === 'INVOICE' ? 'Invoice' : 'Receipt'} {issued?.doc_number} is ready</span>}
+        title={<span className="inline-flex items-center gap-2"><CircleCheck className="size-5 text-tone-settled" />{issued?.doc_type === 'INVOICE' ? 'Invoice' : 'Receipt'} {issued?.doc_number} is ready</span>}
         description={issued ? `${issued.customer_name} · ${formatMoney(issued.total_minor, issued.currency)} · ${issued.verification_code}` : undefined}
         footer={<><Button variant="ghost" onClick={() => setIssued(null)}>New slip</Button><Button onClick={() => issued && navigate(`/dashboard/documents/${issued.id}`)}>View in ledger</Button></>}
       >

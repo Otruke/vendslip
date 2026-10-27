@@ -10,7 +10,7 @@
         .items td { padding: 7px 8px; border-bottom: 1px solid #E2E8F0; }
         .totals td { padding: 4px 0; }
         .totals .grand td { font-weight: 800; font-size: 14px; border-top: 2px solid {{ $data['secondary'] }}; padding-top: 8px; }
-        .totals .balance td { color: #BE123C; font-weight: 800; }
+        .totals .balance td { color: #A5341F; font-weight: 800; }
         .bank { background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 8px; padding: 10px; }
     </style>
 </head>

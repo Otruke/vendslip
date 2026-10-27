@@ -76,7 +76,7 @@ function SkuForm({ sku, onClose }: { sku: Sku | 'new' | null; onClose: () => voi
 
   return (
     <Modal isOpen={sku !== null} onClose={onClose} title={existing ? 'Edit product' : 'Add product'}
-      footer={<>{existing && <Button variant="ghost" className="mr-auto text-rose-600" onClick={remove}>Delete</Button>}<Button variant="ghost" onClick={onClose}>Cancel</Button><Button isLoading={busy} disabled={!form.sku.trim() || !form.name.trim()} onClick={save}>Save</Button></>}>
+      footer={<>{existing && <Button variant="ghost" className="mr-auto text-tone-open" onClick={remove}>Delete</Button>}<Button variant="ghost" onClick={onClose}>Cancel</Button><Button isLoading={busy} disabled={!form.sku.trim() || !form.name.trim()} onClick={save}>Save</Button></>}>
       <div className="space-y-4">
         {error && <Alert tone="danger">{error}</Alert>}
         <div className="grid gap-4 sm:grid-cols-[140px_1fr]">
@@ -119,7 +119,7 @@ function AdjustModal({ sku, onClose }: { sku: Sku | null; onClose: () => void })
         {error && <Alert tone="danger">{error}</Alert>}
         <div className="flex items-center justify-center gap-4">
           <Button variant="outline" onClick={() => setDelta((d) => d - 1)} aria-label="Decrease"><Minus className="size-4" /></Button>
-          <span className={`tabular w-20 text-center text-3xl font-bold ${delta > 0 ? 'text-emerald-600' : delta < 0 ? 'text-rose-600' : ''}`}>{delta > 0 ? `+${delta}` : delta}</span>
+          <span className={`tabular w-20 text-center text-3xl font-bold ${delta > 0 ? 'text-tone-settled' : delta < 0 ? 'text-tone-open' : ''}`}>{delta > 0 ? `+${delta}` : delta}</span>
           <Button variant="outline" onClick={() => setDelta((d) => d + 1)} aria-label="Increase"><Plus className="size-4" /></Button>
         </div>
         <Input label="Reason" value={reason} onChange={(e) => setReason(e.target.value)} placeholder="e.g. New shipment received" />

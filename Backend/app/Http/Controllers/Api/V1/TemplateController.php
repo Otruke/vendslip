@@ -57,8 +57,8 @@ final class TemplateController extends ApiController
         $this->authorizePermission($request, Permission::SETTINGS_MANAGE);
         $merchant = $this->merchant($request);
         $data = $request->validate([
-            'default_receipt_template_id' => ['nullable', 'integer', Rule::exists('templates', 'id')->where('is_active', true)->where('supports_receipt', true)],
-            'default_invoice_template_id' => ['nullable', 'integer', Rule::exists('templates', 'id')->where('is_active', true)->where('supports_invoice', true)],
+            'default_receipt_template_id' => ['nullable', 'integer', Rule::exists('templates', 'id')->where('is_active', true)->where('supports_receipt', true)->whereNull('deleted_at')],
+            'default_invoice_template_id' => ['nullable', 'integer', Rule::exists('templates', 'id')->where('is_active', true)->where('supports_invoice', true)->whereNull('deleted_at')],
         ]);
         foreach ($data as $templateId) {
             if ($templateId !== null && ! Template::query()->findOrFail((int) $templateId)->isAvailableTo($merchant->effectiveTier())) {

@@ -33,6 +33,7 @@ final class SessionPayload
                 'permissions' => $user->getAllPermissions()->pluck('name')->values(),
                 'two_factor_enabled' => $user->hasTwoFactorEnabled(),
                 'is_platform_admin' => $user->isPlatformAdmin(),
+                'last_login_at' => $user->last_login_at?->toIso8601String(),
             ],
             'merchant' => $merchant !== null ? (new MerchantResource($merchant))->resolve() : null,
             'entitlements' => $merchant !== null ? $this->entitlements->featureMap($merchant) : [],

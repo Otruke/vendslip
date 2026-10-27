@@ -67,7 +67,7 @@ export default function Team() {
                   <>
                     <Select aria-label="Role" value={m.role ?? ''} onChange={(e) => update(m.id, { role: e.target.value })} options={data.roles} className="h-8 text-xs" />
                     <Button size="xs" variant="outline" onClick={() => update(m.id, { is_active: !m.is_active })}>{m.is_active ? 'Disable' : 'Enable'}</Button>
-                    <Button size="xs" variant="ghost" className="text-rose-600" onClick={() => remove(m.id, m.name)}>Remove</Button>
+                    <Button size="xs" variant="ghost" className="text-tone-open" onClick={() => remove(m.id, m.name)}>Remove</Button>
                   </>
                 ) : <StatusBadge status={m.role === 'Owner' ? 'BUSINESS_PLUS' : 'PRO'} label={m.role_label ?? m.role ?? ''} size="sm" />}
               </div>

@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\GatewayController;
 use App\Http\Controllers\Admin\MerchantController;
 use App\Http\Controllers\Admin\MonetizationController;
 use App\Http\Controllers\Admin\PaymentController;
+use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\SecurityLogController;
 use App\Http\Controllers\Admin\TemplateController;
 use App\Support\Urls;
@@ -26,6 +27,13 @@ Route::prefix('admin')->name('admin.')->group(function (): void {
 
     Route::middleware(['auth', 'platform'])->group(function (): void {
         Route::get('/', DashboardController::class)->name('dashboard');
+
+        Route::get('profile', [ProfileController::class, 'show'])->name('profile.show');
+        Route::put('profile', [ProfileController::class, 'update'])->name('profile.update');
+        Route::put('profile/password', [ProfileController::class, 'password'])->middleware('throttle:6,1')->name('profile.password');
+        Route::post('profile/two-factor', [ProfileController::class, 'startTwoFactor'])->name('profile.two-factor.start');
+        Route::post('profile/two-factor/confirm', [ProfileController::class, 'confirmTwoFactor'])->middleware('throttle:6,1')->name('profile.two-factor.confirm');
+        Route::delete('profile/two-factor', [ProfileController::class, 'disableTwoFactor'])->middleware('throttle:6,1')->name('profile.two-factor.disable');
 
         Route::get('merchants', [MerchantController::class, 'index'])->name('merchants.index');
         Route::get('merchants/{merchant}', [MerchantController::class, 'show'])->name('merchants.show');
@@ -45,6 +53,7 @@ Route::prefix('admin')->name('admin.')->group(function (): void {
             Route::get('templates/{template}/edit', [TemplateController::class, 'edit'])->name('templates.edit');
             Route::put('templates/{template}', [TemplateController::class, 'update'])->name('templates.update');
             Route::post('templates/{template}/default', [TemplateController::class, 'makeDefault'])->name('templates.default');
+            Route::delete('templates/{template}', [TemplateController::class, 'destroy'])->name('templates.destroy');
 
             Route::get('monetization', [MonetizationController::class, 'edit'])->name('monetization.edit');
             Route::put('monetization/plans/{plan}', [MonetizationController::class, 'updatePlan'])->name('monetization.plans.update');

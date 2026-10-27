@@ -17,7 +17,7 @@ export function Tagline({ className }: { className?: string }) {
 
 export function Avatar({ name, className }: { name: string; className?: string }) {
   return (
-    <span className={cn('inline-flex size-9 shrink-0 items-center justify-center rounded-full bg-netslip-tint text-xs font-bold text-netslip-deep', className)} aria-hidden>
+    <span className={cn('inline-flex size-9 shrink-0 items-center justify-center rounded-lg bg-netslip-deep text-xs font-bold text-white', className)} aria-hidden>
       {initials(name)}
     </span>
   )

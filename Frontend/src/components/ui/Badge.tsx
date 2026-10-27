@@ -2,48 +2,42 @@ import { BadgeCheck, CircleCheck, Clock, FilePen, Lock, TriangleAlert } from 'lu
 import type { ReactNode } from 'react'
 import { cn } from '@/lib/cn'
 
-type Tone = 'emerald' | 'amber' | 'rose' | 'slate' | 'teal' | 'sky' | 'pink' | 'blue' | 'brand' | 'deep'
-const tones: Record<Tone, { pill: string; dot: string }> = {
-  emerald: { pill: 'bg-emerald-50 text-emerald-700 border-emerald-200', dot: 'bg-emerald-500' },
-  amber: { pill: 'bg-amber-50 text-amber-700 border-amber-200', dot: 'bg-amber-500' },
-  rose: { pill: 'bg-rose-50 text-rose-700 border-rose-200', dot: 'bg-rose-500' },
-  slate: { pill: 'bg-slate-100 text-slate-600 border-slate-200', dot: 'bg-slate-400' },
-  teal: { pill: 'bg-teal-50 text-netslip-deep border-teal-200', dot: 'bg-netslip-deep' },
-  sky: { pill: 'bg-sky-50 text-sky-700 border-sky-200', dot: 'bg-sky-500' },
-  pink: { pill: 'bg-pink-50 text-pink-700 border-pink-200', dot: 'bg-pink-500' },
-  blue: { pill: 'bg-blue-50 text-blue-700 border-blue-200', dot: 'bg-blue-600' },
-  brand: { pill: 'bg-netslip-tint text-netslip-deep border-[#cfe3e8]', dot: 'bg-netslip-primary' },
-  deep: { pill: 'bg-netslip-deep text-white border-netslip-deep', dot: 'bg-white' },
-}
+/**
+ * Status "ledger tags" (styles in index.css → .ns-tag). A thin-bordered tag on white with a
+ * diamond punch mark: filled when settled or final, hollow while still open. NetSlip's own
+ * tones, not pastel bg-*-50 pills.
+ */
+type Tone = 'settled' | 'open' | 'partial' | 'neutral' | 'brand' | 'info' | 'whatsapp' | 'telegram' | 'instagram' | 'facebook'
+type Def = { tone: Tone; label: string; solid?: boolean; inverse?: boolean; icon?: ReactNode; pulse?: boolean }
 
-const STATUS: Record<string, { tone: Tone; label: string; icon?: ReactNode; pulse?: boolean }> = {
-  PAID: { tone: 'emerald', label: 'Paid', icon: <CircleCheck /> },
-  PARTIAL: { tone: 'amber', label: 'Part paid', icon: <Clock /> },
-  UNPAID: { tone: 'rose', label: 'Unpaid', icon: <Clock /> },
-  OVERDUE: { tone: 'rose', label: 'Overdue', icon: <TriangleAlert />, pulse: true },
-  DRAFT: { tone: 'slate', label: 'Draft' },
-  VOID: { tone: 'slate', label: 'Void' },
-  IMMUTABLE: { tone: 'teal', label: 'Immutable', icon: <Lock /> },
-  MUTABLE_WITH_AUDIT: { tone: 'sky', label: 'Mutable · Audited', icon: <FilePen /> },
-  MUTABLE_UNRESTRICTED: { tone: 'sky', label: 'Mutable', icon: <FilePen /> },
-  VERIFIED: { tone: 'emerald', label: 'Verified authentic', icon: <BadgeCheck /> },
-  SUCCESSFUL: { tone: 'emerald', label: 'Successful' },
-  PENDING: { tone: 'amber', label: 'Pending', pulse: true },
-  FAILED: { tone: 'rose', label: 'Failed' },
-  CANCELLED: { tone: 'slate', label: 'Cancelled' },
-  ACTIVE: { tone: 'emerald', label: 'Active' },
-  SUSPENDED: { tone: 'rose', label: 'Suspended' },
-  FREE: { tone: 'slate', label: 'Free' },
+const STATUS: Record<string, Def> = {
+  PAID: { tone: 'settled', label: 'Paid', solid: true, icon: <CircleCheck /> },
+  PARTIAL: { tone: 'partial', label: 'Part paid', icon: <Clock /> },
+  UNPAID: { tone: 'open', label: 'Unpaid', icon: <Clock /> },
+  OVERDUE: { tone: 'open', label: 'Overdue', icon: <TriangleAlert />, pulse: true },
+  DRAFT: { tone: 'neutral', label: 'Draft' },
+  VOID: { tone: 'neutral', label: 'Void', solid: true },
+  IMMUTABLE: { tone: 'brand', label: 'Immutable', solid: true, icon: <Lock /> },
+  MUTABLE_WITH_AUDIT: { tone: 'info', label: 'Mutable · Audited', icon: <FilePen /> },
+  MUTABLE_UNRESTRICTED: { tone: 'info', label: 'Mutable', icon: <FilePen /> },
+  VERIFIED: { tone: 'settled', label: 'Verified authentic', solid: true, icon: <BadgeCheck /> },
+  SUCCESSFUL: { tone: 'settled', label: 'Successful', solid: true },
+  PENDING: { tone: 'partial', label: 'Pending', pulse: true },
+  FAILED: { tone: 'open', label: 'Failed', solid: true },
+  CANCELLED: { tone: 'neutral', label: 'Cancelled', solid: true },
+  ACTIVE: { tone: 'settled', label: 'Active', solid: true },
+  SUSPENDED: { tone: 'open', label: 'Suspended', solid: true },
+  FREE: { tone: 'neutral', label: 'Free' },
   PRO: { tone: 'brand', label: 'Pro' },
-  BUSINESS_PLUS: { tone: 'deep', label: 'Business Plus' },
-  WHATSAPP: { tone: 'emerald', label: 'WhatsApp' },
-  TELEGRAM: { tone: 'sky', label: 'Telegram' },
-  INSTAGRAM: { tone: 'pink', label: 'Instagram' },
-  FACEBOOK: { tone: 'blue', label: 'Facebook' },
-  WEB: { tone: 'slate', label: 'Web' },
-  RECEIPT: { tone: 'brand', label: 'Receipt' },
-  INVOICE: { tone: 'deep', label: 'Invoice' },
-  CREDIT_NOTE: { tone: 'amber', label: 'Credit note' },
+  BUSINESS_PLUS: { tone: 'brand', label: 'Business Plus', solid: true, inverse: true },
+  WHATSAPP: { tone: 'whatsapp', label: 'WhatsApp', solid: true },
+  TELEGRAM: { tone: 'telegram', label: 'Telegram', solid: true },
+  INSTAGRAM: { tone: 'instagram', label: 'Instagram', solid: true },
+  FACEBOOK: { tone: 'facebook', label: 'Facebook', solid: true },
+  WEB: { tone: 'neutral', label: 'Web', solid: true },
+  RECEIPT: { tone: 'brand', label: 'Receipt', solid: true },
+  INVOICE: { tone: 'brand', label: 'Invoice', solid: true, inverse: true },
+  CREDIT_NOTE: { tone: 'partial', label: 'Credit note', solid: true },
 }
 
 export function StatusBadge({ status, label, size = 'md', showDot = true, showIcon = false, className }: {
@@ -54,16 +48,19 @@ export function StatusBadge({ status, label, size = 'md', showDot = true, showIc
   showIcon?: boolean
   className?: string
 }) {
-  const def = STATUS[status] ?? { tone: 'slate' as Tone, label: status.replace(/_/g, ' ').toLowerCase().replace(/^\w/, (c) => c.toUpperCase()) }
-  const tone = tones[def.tone]
+  const def: Def = STATUS[status] ?? { tone: 'neutral', label: status.replace(/_/g, ' ').toLowerCase().replace(/^\w/, (c) => c.toUpperCase()) }
   return (
-    <span className={cn('inline-flex items-center gap-1.5 whitespace-nowrap rounded-full border font-semibold', tone.pill, size === 'sm' ? 'px-2 py-0.5 text-[11px]' : 'px-2.5 py-0.5 text-xs', className)}>
-      {showIcon && def.icon ? <span className="[&>svg]:size-3.5">{def.icon}</span> : showDot ? <span className={cn('size-1.5 rounded-full', tone.dot, def.pulse && 'animate-pulse')} /> : null}
+    <span
+      className={cn('ns-tag', `ns-tag--${def.tone}`, size === 'sm' && 'ns-tag--sm', def.inverse && 'ns-tag--inverse', className)}
+      data-fill={def.solid ? 'solid' : 'hollow'}
+      data-pulse={def.pulse ? '' : undefined}
+    >
+      {showIcon && def.icon ? <span className="[&>svg]:size-3.5">{def.icon}</span> : showDot ? <span className="ns-tag__mark" aria-hidden /> : null}
       {label ?? def.label}
     </span>
   )
 }
 
 export function Pill({ children, className }: { children: ReactNode; className?: string }) {
-  return <span className={cn('inline-flex items-center gap-1.5 rounded-full border border-border-subtle bg-white px-3 py-1 text-xs font-medium text-ink-secondary', className)}>{children}</span>
+  return <span className={cn('inline-flex items-center gap-1.5 rounded-md border border-border-subtle bg-white px-2.5 py-1 text-xs font-medium text-ink-secondary', className)}>{children}</span>
 }

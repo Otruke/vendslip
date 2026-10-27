@@ -31,6 +31,7 @@ const Team = lazy(() => import('@/pages/dashboard/Team'))
 const Channels = lazy(() => import('@/pages/dashboard/Channels'))
 const Billing = lazy(() => import('@/pages/dashboard/Billing'))
 const Settings = lazy(() => import('@/pages/dashboard/Settings'))
+const Profile = lazy(() => import('@/pages/dashboard/Profile'))
 
 const page = (node: ReactNode) => <Suspense fallback={<PageLoader />}>{node}</Suspense>
 
@@ -73,6 +74,7 @@ export const router = createBrowserRouter([
           { path: 'channels', element: page(<Channels />) },
           { path: 'billing', element: page(<Billing />) },
           { path: 'settings', element: page(<Settings />) },
+          { path: 'profile', element: page(<Profile />) },
         ],
       },
       { path: '*', element: page(<NotFound />) },

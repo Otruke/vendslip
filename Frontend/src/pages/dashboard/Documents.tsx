@@ -105,9 +105,9 @@ export default function Documents() {
           { key: 'd', header: 'Issued', cell: (d) => <span className="text-ink-secondary">{formatDate(d.issued_at)}</span>, hideOnMobile: true },
           { key: 'ch', header: 'Channel', cell: (d) => <StatusBadge status={d.channel} size="sm" />, hideOnMobile: true },
           { key: 't', header: 'Total', align: 'right', cell: (d) => <Money amountMinor={d.total_minor} currency={d.currency} size="sm" className="font-semibold" /> },
-          { key: 'b', header: 'Balance', align: 'right', cell: (d) => d.balance_due_minor > 0 ? <Money amountMinor={d.balance_due_minor} currency={d.currency} size="sm" className="text-rose-600" /> : <span className="text-ink-muted">—</span>, hideOnMobile: true },
+          { key: 'b', header: 'Balance', align: 'right', cell: (d) => d.balance_due_minor > 0 ? <Money amountMinor={d.balance_due_minor} currency={d.currency} size="sm" className="text-tone-open" /> : <span className="text-ink-muted">—</span>, hideOnMobile: true },
           { key: 's', header: 'Status', cell: (d) => <StatusBadge status={d.status} size="sm" /> },
-          { key: 'r', header: 'Rev', align: 'center', cell: (d) => (d.revisions_count ?? 0) > 0 ? <span className="inline-flex items-center gap-1 text-xs text-sky-700"><History className="size-3.5" />{d.revision_number}</span> : <span className="text-ink-muted">{d.revision_number}</span>, hideOnMobile: true },
+          { key: 'r', header: 'Rev', align: 'center', cell: (d) => (d.revisions_count ?? 0) > 0 ? <span className="inline-flex items-center gap-1 text-xs text-tone-telegram"><History className="size-3.5" />{d.revision_number}</span> : <span className="text-ink-muted">{d.revision_number}</span>, hideOnMobile: true },
         ]}
       />
 
@@ -153,9 +153,9 @@ function DocumentDrawer({ id, onClose }: { id: string | null; onClose: () => voi
               {doc.tax_minor > 0 && <div className="flex justify-between text-ink-secondary"><dt>VAT {(doc.vat_rate_bps / 100).toString()}%{doc.vat_inclusive ? ' (incl.)' : ''}</dt><dd>{formatMoney(doc.tax_minor, doc.currency)}</dd></div>}
               {doc.shipping_minor > 0 && <div className="flex justify-between text-ink-secondary"><dt>Shipping</dt><dd>{formatMoney(doc.shipping_minor, doc.currency)}</dd></div>}
               <div className="flex justify-between pt-1 text-base font-bold"><dt>Total</dt><dd>{formatMoney(doc.total_minor, doc.currency)}</dd></div>
-              {doc.amount_paid_minor > 0 && <div className="flex justify-between text-emerald-700"><dt>Paid</dt><dd>{formatMoney(doc.amount_paid_minor, doc.currency)}</dd></div>}
-              {data.meta.credited_minor > 0 && <div className="flex justify-between text-amber-700"><dt>Credited</dt><dd>{formatMoney(data.meta.credited_minor, doc.currency)}</dd></div>}
-              {doc.balance_due_minor > 0 && <div className="flex justify-between font-bold text-rose-600"><dt>Balance due</dt><dd>{formatMoney(doc.balance_due_minor, doc.currency)}</dd></div>}
+              {doc.amount_paid_minor > 0 && <div className="flex justify-between text-tone-settled"><dt>Paid</dt><dd>{formatMoney(doc.amount_paid_minor, doc.currency)}</dd></div>}
+              {data.meta.credited_minor > 0 && <div className="flex justify-between text-tone-partial"><dt>Credited</dt><dd>{formatMoney(data.meta.credited_minor, doc.currency)}</dd></div>}
+              {doc.balance_due_minor > 0 && <div className="flex justify-between font-bold text-tone-open"><dt>Balance due</dt><dd>{formatMoney(doc.balance_due_minor, doc.currency)}</dd></div>}
             </dl>
           </Card>
 
@@ -168,7 +168,7 @@ function DocumentDrawer({ id, onClose }: { id: string | null; onClose: () => voi
                 {doc.payments?.map((p) => (
                   <li key={p.id} className="flex items-center justify-between gap-3 px-4 py-2.5">
                     <span>{p.method.replace('_', ' ').toLowerCase()} {p.reference && <span className="text-ink-muted">· {p.reference}</span>}<span className="block text-xs text-ink-muted">{formatDateTime(p.paid_at)}</span></span>
-                    <Money amountMinor={p.amount_minor} currency={doc.currency} size="sm" className="font-semibold text-emerald-700" />
+                    <Money amountMinor={p.amount_minor} currency={doc.currency} size="sm" className="font-semibold text-tone-settled" />
                   </li>
                 ))}
               </ul>
@@ -232,7 +232,7 @@ function DocumentActions({ detail, onAction }: { detail: DocDetail; onAction: (a
           {primary && detail.meta.can_edit && <Button size="sm" variant="secondary" leftIcon={<FilePen className="size-4" />} onClick={() => onAction('edit')}>Edit</Button>}
           {primary && !detail.meta.can_edit && detail.meta.mutability_mode === 'IMMUTABLE' && <span className="inline-flex items-center gap-1 text-xs text-ink-muted"><Lock className="size-3.5" />Locked record</span>}
           {primary && canVoid && <Button size="sm" variant="outline" leftIcon={<Undo2 className="size-4" />} onClick={() => onAction('credit')}>Credit note</Button>}
-          {canVoid && <Button size="sm" variant="ghost" className="text-rose-600 hover:bg-rose-50" leftIcon={<Ban className="size-4" />} onClick={() => onAction('void')}>Void</Button>}
+          {canVoid && <Button size="sm" variant="ghost" className="text-tone-open hover:bg-tone-open/10" leftIcon={<Ban className="size-4" />} onClick={() => onAction('void')}>Void</Button>}
         </div>
       )}
     </div>
@@ -421,8 +421,8 @@ function HistoryModal({ id, isOpen, onClose, currency }: { id: string; isOpen: b
                     {Object.entries(r.diff).filter(([f]) => f !== 'verification_hash').map(([field, change]) => (
                       <tr key={field} className="align-top">
                         <td className="w-36 py-1.5 pr-2 font-mono text-ink-muted">{field}</td>
-                        <td className="py-1.5 pr-2 text-rose-700 line-through decoration-rose-300">{renderValue(field, change.before, currency)}</td>
-                        <td className="py-1.5 text-emerald-700">{renderValue(field, change.after, currency)}</td>
+                        <td className="py-1.5 pr-2 text-tone-open line-through decoration-tone-open/40">{renderValue(field, change.before, currency)}</td>
+                        <td className="py-1.5 text-tone-settled">{renderValue(field, change.after, currency)}</td>
                       </tr>
                     ))}
                   </tbody>

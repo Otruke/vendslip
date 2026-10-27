@@ -35,7 +35,7 @@ final class AdminPortalTest extends TestCase
             route('admin.dashboard'), route('admin.merchants.index'), route('admin.merchants.show', $merchant),
             route('admin.payments.index'), route('admin.security.index'), route('admin.templates.index'),
             route('admin.templates.create'), route('admin.templates.edit', $template), route('admin.monetization.edit'),
-            route('admin.gateways.edit'), route('admin.admins.index'),
+            route('admin.gateways.edit'), route('admin.admins.index'), route('admin.profile.show'),
         ] as $url) {
             $csp = (string) $this->get($url)->assertOk()->headers->get('Content-Security-Policy');
             $this->assertStringContainsString("script-src 'self';", $csp, "Admin CSP must not allow inline scripts ({$url})");

@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Enums\PlanTier;
+use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * @property int $id
@@ -23,9 +25,12 @@ use Illuminate\Database\Eloquent\Model;
  * @property bool $is_active
  * @property bool $is_default
  * @property int $sort_order
+ * @property CarbonImmutable|null $deleted_at
  */
 class Template extends Model
 {
+    use SoftDeletes;
+
     public const string ENGINE_BLADE = 'blade';
 
     public const string ENGINE_HTML = 'html';
@@ -33,6 +38,9 @@ class Template extends Model
     public const string CLASSIC_EXECUTIVE = 'netslip-classic-executive';
 
     public const string MINIMALIST_SOCIAL = 'netslip-minimalist-social';
+
+    /** The two designs NetSlip ships with. They can be edited and hidden, never deleted. */
+    public const array SYSTEM_SLUGS = [self::CLASSIC_EXECUTIVE, self::MINIMALIST_SOCIAL];
 
     /** Tokens available to admin-authored HTML templates. */
     public const array TOKENS = [
@@ -69,6 +77,11 @@ class Template extends Model
     public function scopeActive(Builder $query): Builder
     {
         return $query->where('is_active', true)->orderBy('sort_order')->orderBy('id');
+    }
+
+    public function isSystem(): bool
+    {
+        return in_array($this->slug, self::SYSTEM_SLUGS, true) || $this->engine === self::ENGINE_BLADE;
     }
 
     public function isAvailableTo(PlanTier $tier): bool
