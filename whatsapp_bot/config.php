@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /*
-| NetSlip WhatsApp bot module (Twilio Programmable Messaging).
+| VendSlip WhatsApp bot module (Twilio Programmable Messaging).
 | Runtime credentials live in Backend platform settings (/admin/gateways) or Backend/.env:
 |   TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_WHATSAPP_FROM=whatsapp:+14155238886
 |   TWILIO_WHATSAPP_CONFIRM_CONTENT_SID=HX...   (optional quick-reply template, see README)
@@ -20,6 +20,6 @@ return [
     ],
     // WhatsApp caps a quick-reply body at 1024 characters.
     'max_summary_chars' => 1000,
-    // PDFs are attached as media; Twilio fetches them from this signed NetSlip URL.
+    // PDFs are attached as media; Twilio fetches them from this signed VendSlip URL.
     'attach_pdf' => true,
 ];

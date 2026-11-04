@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace NetSlip\Bots\Instagram;
+namespace VendSlip\Bots\Instagram;
 
 use App\Enums\Channel;
 use App\Services\Bot\Actions\AskConfirmation;

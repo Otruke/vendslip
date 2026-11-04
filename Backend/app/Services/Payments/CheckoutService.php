@@ -46,7 +46,7 @@ final class CheckoutService
             'plan_tier' => $tier, 'billing_cycle' => $cycle,
         ]);
 
-        return $this->start($transaction, GatewayCredentials::platform($this->settings), "NetSlip {$plan->name} ({$cycle->label()})", $user);
+        return $this->start($transaction, GatewayCredentials::platform($this->settings), "VendSlip {$plan->name} ({$cycle->label()})", $user);
     }
 
     public function creditPack(Merchant $merchant, User $user, CreditPack $pack, PaymentGateway $gateway): PaymentTransaction
@@ -58,7 +58,7 @@ final class CheckoutService
             'credits' => $pack->credits,
         ]);
 
-        return $this->start($transaction, GatewayCredentials::platform($this->settings), "NetSlip {$pack->credits} slip credits", $user);
+        return $this->start($transaction, GatewayCredentials::platform($this->settings), "VendSlip {$pack->credits} slip credits", $user);
     }
 
     /** Customer pays a merchant's invoice through the merchant's own gateway account. */
@@ -85,7 +85,7 @@ final class CheckoutService
         ]);
 
         $customer = [
-            'email' => $email ?: ($invoice->customer_email ?: 'customer+'.$invoice->public_uid.'@netslip.app'),
+            'email' => $email ?: ($invoice->customer_email ?: 'customer+'.$invoice->public_uid.'@vendslip.app'),
             'name' => $invoice->customer_name,
             'phonenumber' => $invoice->customer_phone,
         ];
@@ -111,7 +111,7 @@ final class CheckoutService
                 route('payments.flutterwave.return', ['reference' => $transaction->reference]),
                 $customer,
                 $title,
-                ['netslip_reference' => $transaction->reference],
+                ['vendslip_reference' => $transaction->reference],
             );
         } else {
             $successUrl = $isInvoice

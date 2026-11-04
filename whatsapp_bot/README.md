@@ -1,6 +1,6 @@
-# NetSlip · WhatsApp bot module
+# VendSlip · WhatsApp bot module
 
-Twilio Programmable Messaging adapter. Namespace `NetSlip\Bots\WhatsApp\` (autoloaded by `Backend/composer.json`).
+Twilio Programmable Messaging adapter. Namespace `VendSlip\Bots\WhatsApp\` (autoloaded by `Backend/composer.json`).
 
 | File | Role |
 | --- | --- |
@@ -13,7 +13,7 @@ Twilio Programmable Messaging adapter. Namespace `NetSlip\Bots\WhatsApp\` (autol
 
 1. Vendor sends `/name = Ada`, then `/item = 2x Shoe @ 15000` (or both in one message).
 2. Incomplete drafts are stored in `bot_draft_sessions` and Twilio gets an empty `<Response/>`: **no outbound message, no fee**.
-3. When the draft first becomes complete, NetSlip sends **one** summary with Confirm / Edit / Cancel.
+3. When the draft first becomes complete, VendSlip sends **one** summary with Confirm / Edit / Cancel.
 4. Later field updates are buffered silently; `/preview` re-sends the summary on demand.
 5. Confirm → branded PDF attached as WhatsApp media + verification link (+ pay link for invoices).
 

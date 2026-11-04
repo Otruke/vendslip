@@ -20,7 +20,7 @@ final class TwilioGateway
     /** Validate X-Twilio-Signature against the exact public URL Twilio called. */
     public function isAuthentic(Request $request): bool
     {
-        if (! config('netslip.twilio.validate_signature', true)) {
+        if (! config('vendslip.twilio.validate_signature', true)) {
             return app()->environment('local', 'testing');
         }
         $token = $this->settings->string('twilio.auth_token');

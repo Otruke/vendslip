@@ -17,7 +17,7 @@ export function PaperSlipPreview({ slip, compact = false, className }: { slip: S
       <div className="serrated relative overflow-hidden rounded-t-xl bg-white pb-6 shadow-[0_24px_60px_-28px_rgba(15,23,42,0.55)]">
         {slip.watermark && (
           <div className="pointer-events-none absolute inset-0 flex items-center justify-center" aria-hidden>
-            <span className="-rotate-[24deg] whitespace-nowrap text-3xl font-extrabold tracking-wider text-netslip-primary/[0.07]">POWERED BY NETSLIP</span>
+            <span className="-rotate-[24deg] whitespace-nowrap text-3xl font-extrabold tracking-wider text-vendslip-primary/[0.07]">POWERED BY VENDSLIP</span>
           </div>
         )}
         {slip.status === 'VOID' && (
@@ -122,8 +122,8 @@ export function PaperSlipPreview({ slip, compact = false, className }: { slip: S
           <div className="mt-4 flex items-center gap-3 border-t border-dashed border-slate-300 pt-4">
             <QrStamp seed={slip.verificationCode ?? slip.docNumber} size={compact ? 46 : 58} />
             <div className="min-w-0">
-              <p className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-ink-muted"><BadgeCheck className="size-3 text-netslip-primary" /> Scan to verify</p>
-              <p className="tabular truncate text-xs font-bold text-ink-primary">{slip.verificationCode ?? 'NSV-···· on issue'}</p>
+              <p className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-ink-muted"><BadgeCheck className="size-3 text-vendslip-primary" /> Scan to verify</p>
+              <p className="tabular truncate text-xs font-bold text-ink-primary">{slip.verificationCode ?? 'VSV-···· on issue'}</p>
               <p className="text-[10px] text-ink-muted">HMAC-SHA256 signed</p>
             </div>
           </div>

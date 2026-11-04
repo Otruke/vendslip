@@ -1,21 +1,35 @@
 <x-admin.layout title="My profile">
     <x-ui.page-header eyebrow="Account" title="My profile" subtitle="Your details, password and sign-in security." />
 
-    @php
-        $initials = collect(preg_split('/\s+/', trim($user->name)) ?: [])->filter()->take(2)->map(fn ($p) => mb_strtoupper(mb_substr($p, 0, 1)))->implode('');
-    @endphp
-
     <div class="grid items-start gap-6 lg:grid-cols-[320px_minmax(0,1fr)]">
         {{-- Identity card --}}
         <aside class="lg:col-start-1 lg:row-start-1">
-            <div class="relative overflow-hidden rounded-2xl bg-netslip-obsidian p-6 text-white">
-                <img src="/assets/brand/netslip-icon-white.png" alt="" class="pointer-events-none absolute -top-5 -right-5 h-28 w-auto opacity-[0.06]">
-                <div class="flex size-16 items-center justify-center rounded-2xl bg-netslip-primary text-2xl font-extrabold tracking-tight">{{ $initials ?: 'A' }}</div>
+            <div class="relative overflow-hidden rounded-2xl bg-vendslip-obsidian p-6 text-white">
+                <img src="/assets/brand/vendslip-icon-white.png" alt="" class="pointer-events-none absolute -top-5 -right-5 h-28 w-auto opacity-[0.06]">
+                <div class="flex items-end gap-3">
+                    <x-admin.avatar :user="$user" class="size-20 rounded-2xl text-2xl tracking-tight" />
+                    <div class="flex flex-col items-start gap-1.5 pb-0.5">
+                        <form method="POST" action="{{ route('admin.profile.avatar') }}" enctype="multipart/form-data">
+                            @csrf
+                            <label class="inline-flex cursor-pointer items-center gap-1.5 rounded-md bg-white px-2.5 py-1 text-xs font-semibold text-vendslip-deep hover:bg-[#e3eef1] focus-within:ring-2 focus-within:ring-white/60">
+                                <x-ui.icon name="upload" class="size-3.5" />{{ $user->avatar_path ? 'Change photo' : 'Upload photo' }}
+                                <input type="file" name="avatar" accept="image/jpeg,image/png,image/webp" class="sr-only" data-autosubmit>
+                            </label>
+                        </form>
+                        @if ($user->avatar_path)
+                            <form method="POST" action="{{ route('admin.profile.avatar.delete') }}">@csrf @method('DELETE')
+                                <button class="text-xs font-semibold text-[#cfe3e8] underline-offset-2 hover:text-white hover:underline">Remove</button>
+                            </form>
+                        @endif
+                    </div>
+                </div>
+                @error('avatar')<p class="mt-2 text-xs font-semibold text-[#ffb4a6]">{{ $message }}</p>@enderror
+                <p class="mt-2 text-[11px] text-[#9fb9c0]">JPG, PNG or WebP, up to 5 MB. Stored privately.</p>
                 <p class="mt-4 text-lg font-bold leading-tight">{{ $user->name }}</p>
                 <p class="truncate text-sm text-[#cfe3e8]">{{ $user->email }}</p>
-                <span class="ns-tag ns-tag--sm mt-3" style="--t:#cfe3e8; background:transparent" data-fill="solid"><span class="ns-tag__mark"></span>{{ $role }}</span>
+                <span class="vs-tag vs-tag--sm mt-3" style="--t:#cfe3e8; background:transparent" data-fill="solid"><span class="vs-tag__mark"></span>{{ $role }}</span>
                 <dl class="mt-6 space-y-3 border-t border-white/10 pt-4 text-sm">
-                    <div class="flex justify-between gap-3"><dt class="text-[#9fb9c0]">Last sign-in</dt><dd class="tabular text-right">{{ $user->last_login_at?->timezone(config('netslip.timezone'))->format('j M Y, H:i') ?? 'Not recorded' }}</dd></div>
+                    <div class="flex justify-between gap-3"><dt class="text-[#9fb9c0]">Last sign-in</dt><dd class="tabular text-right">{{ $user->last_login_at?->timezone(config('vendslip.timezone'))->format('j M Y, H:i') ?? 'Not recorded' }}</dd></div>
                     <div class="flex justify-between gap-3"><dt class="text-[#9fb9c0]">Two-factor</dt><dd>{{ $user->hasTwoFactorEnabled() ? 'On' : 'Off' }}</dd></div>
                     <div class="flex justify-between gap-3"><dt class="text-[#9fb9c0]">Phone</dt><dd class="tabular">{{ $user->phone ?: '—' }}</dd></div>
                 </dl>
@@ -28,7 +42,7 @@
                 @forelse ($recentEvents as $event)
                     <div class="mt-3 flex items-start justify-between gap-3 text-xs">
                         <span class="font-mono text-ink-secondary">{{ $event->event }}</span>
-                        <span class="tabular shrink-0 text-ink-muted">{{ $event->created_at?->timezone(config('netslip.timezone'))->format('j M, H:i') }}</span>
+                        <span class="tabular shrink-0 text-ink-muted">{{ $event->created_at?->timezone(config('vendslip.timezone'))->format('j M, H:i') }}</span>
                     </div>
                 @empty
                     <p class="mt-2 text-xs text-ink-muted">Nothing yet.</p>
@@ -42,7 +56,7 @@
                 <form method="POST" action="{{ route('admin.profile.update') }}">
                     @csrf @method('PUT')
                     <div class="border-b border-border-subtle px-5 py-4"><h2 class="font-semibold">Details</h2><p class="text-sm text-ink-secondary">How you appear in audit logs.</p></div>
-                    <div class="grid gap-4 px-5 py-5 sm:grid-cols-2">
+                    <div class="grid grid-cols-1 gap-4 px-5 py-5 sm:grid-cols-2">
                         <x-ui.input name="name" label="Full name" :value="$user->name" required maxlength="120" autocomplete="name" />
                         <x-ui.input name="phone" label="Phone" :value="$user->phone" maxlength="32" autocomplete="tel" />
                         <div class="sm:col-span-2"><x-ui.input name="email_display" label="Email" :value="$user->email" disabled helper="Ask a Super-Admin to change the sign-in email." /></div>
@@ -58,7 +72,7 @@
                     <div class="border-b border-border-subtle px-5 py-4"><h2 class="font-semibold">Change password</h2><p class="text-sm text-ink-secondary">Other devices are signed out when you change it.</p></div>
                     <div class="space-y-4 px-5 py-5">
                         <x-ui.input name="current_password" type="password" label="Current password" required autocomplete="current-password" />
-                        <div class="grid gap-4 sm:grid-cols-2">
+                        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                             <x-ui.input name="password" type="password" label="New password" required autocomplete="new-password" helper="At least 8 characters." />
                             <x-ui.input name="password_confirmation" type="password" label="Confirm new password" required autocomplete="new-password" />
                         </div>

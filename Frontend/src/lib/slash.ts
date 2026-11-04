@@ -1,7 +1,7 @@
 import { parseToMinor } from './money'
 
 /**
- * NetSlip /slash parser — 1:1 mirror of Backend/app/Services/Slash/SlashCommandParser.php.
+ * VendSlip /slash parser — 1:1 mirror of Backend/app/Services/Slash/SlashCommandParser.php.
  * Keep both in sync; Backend tests in tests/Unit/SlashParserTest.php define the contract.
  */
 export const KEY_ALIASES: Record<string, string> = {

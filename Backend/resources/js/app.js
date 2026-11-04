@@ -1,4 +1,4 @@
-// NetSlip admin: tiny progressive enhancement (no framework).
+// VendSlip admin: tiny progressive enhancement (no framework).
 // data-open="id"   → opens <dialog id="id"> (modals & drawers)
 // data-close       → closes the closest dialog
 // data-confirm="…" → asks before submitting a form
@@ -84,4 +84,12 @@ document.addEventListener('keydown', (event) => {
     if (event.key !== 'Escape' || document.querySelector('dialog[open]')) return;
     const toasts = document.querySelectorAll('[data-toast]:not([data-leaving])');
     if (toasts.length) dismissToast(toasts[toasts.length - 1]);
+});
+
+// ── File inputs that submit their form as soon as a file is picked (profile photo) ──
+document.addEventListener('change', (event) => {
+    const input = event.target;
+    if (input instanceof HTMLInputElement && input.type === 'file' && input.hasAttribute('data-autosubmit') && input.files?.length) {
+        input.form?.requestSubmit();
+    }
 });

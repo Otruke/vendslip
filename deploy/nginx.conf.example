@@ -1,30 +1,30 @@
-# NetSlip — single-domain production layout (e.g. https://netslip.ng)
+# VendSlip — single-domain production layout (e.g. https://vendslip.com)
 #
 #   /                   -> React SPA (Frontend/dist), with history fallback for /verify/*, /pay/*, /dashboard/*
 #   /api, /sanctum      -> Laravel (php-fpm)   — same origin, so Sanctum session cookies just work
 #   /admin, /build, /up -> Laravel              — Blade Admin & Super-Admin portal, its assets, health check
 #   /storage            -> Laravel public disk  — merchant logos (php artisan storage:link)
 #
-# Replace /var/www/netslip and the php-fpm socket with your own paths.
+# Replace /var/www/vendslip and the php-fpm socket with your own paths.
 
 server {
     listen 80;
-    server_name netslip.ng www.netslip.ng;
-    return 301 https://netslip.ng$request_uri;
+    server_name vendslip.com www.vendslip.com;
+    return 301 https://vendslip.com$request_uri;
 }
 
 server {
     listen 443 ssl http2;   # nginx >= 1.25.1 may use `listen 443 ssl;` + `http2 on;` instead
-    server_name netslip.ng;
+    server_name vendslip.com;
 
-    ssl_certificate     /etc/letsencrypt/live/netslip.ng/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/netslip.ng/privkey.pem;
+    ssl_certificate     /etc/letsencrypt/live/vendslip.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/vendslip.com/privkey.pem;
 
     client_max_body_size 4m;   # logo uploads are capped at 1 MB by validation
     server_tokens off;
 
-    set $laravel /var/www/netslip/Backend/public;
-    root /var/www/netslip/Frontend/dist;
+    set $laravel /var/www/vendslip/Backend/public;
+    root /var/www/vendslip/Frontend/dist;
     index index.html;
 
     # ---- Laravel ---------------------------------------------------------

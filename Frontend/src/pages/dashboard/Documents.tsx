@@ -73,7 +73,7 @@ export default function Documents() {
           { value: 'outstanding', label: 'Unpaid' }, { value: 'CREDIT_NOTE', label: 'Credit notes' },
         ]} />
         <div className="flex flex-col gap-2 sm:flex-row">
-          <Input aria-label="Search" placeholder="Number, customer, phone, NSV code" value={q} onChange={(e) => setQ(e.target.value)} prefixIcon={<Search />} wrapperClassName="sm:w-72" />
+          <Input aria-label="Search" placeholder="Number, customer, phone, VSV code" value={q} onChange={(e) => setQ(e.target.value)} prefixIcon={<Search />} wrapperClassName="sm:w-72" />
           <Select aria-label="Status" value={params.get('status') ?? ''} onChange={(e) => set('status', e.target.value || null)} placeholder="Any status" options={['PAID', 'PARTIAL', 'UNPAID', 'OVERDUE', 'VOID'].map((s) => ({ value: s, label: s.charAt(0) + s.slice(1).toLowerCase() }))} />
           <Select aria-label="Channel" value={params.get('channel') ?? ''} onChange={(e) => set('channel', e.target.value || null)} placeholder="Any channel" options={[['WHATSAPP', 'WhatsApp'], ['TELEGRAM', 'Telegram'], ['INSTAGRAM', 'Instagram'], ['FACEBOOK', 'Facebook'], ['WEB', 'Web']].map(([value, label]) => ({ value: value ?? '', label: label ?? '' }))} />
         </div>
@@ -192,8 +192,8 @@ function DocumentDrawer({ id, onClose }: { id: string | null; onClose: () => voi
             <p className="tabular mt-1 text-sm font-bold">{doc.verification_code}</p>
             <p className="mt-1 break-all font-mono text-[11px] text-ink-muted">{doc.verification_hash}</p>
             <div className="mt-2 flex gap-3">
-              <a href={doc.verify_url} target="_blank" rel="noreferrer" className="font-semibold text-netslip-primary hover:underline">Open public check</a>
-              {(doc.revisions_count ?? 0) > 0 && <button type="button" onClick={() => setModal('history')} className="font-semibold text-netslip-primary hover:underline">Revision history ({doc.revisions_count})</button>}
+              <a href={doc.verify_url} target="_blank" rel="noreferrer" className="font-semibold text-vendslip-primary hover:underline">Open public check</a>
+              {(doc.revisions_count ?? 0) > 0 && <button type="button" onClick={() => setModal('history')} className="font-semibold text-vendslip-primary hover:underline">Revision history ({doc.revisions_count})</button>}
             </div>
           </div>
         </div>

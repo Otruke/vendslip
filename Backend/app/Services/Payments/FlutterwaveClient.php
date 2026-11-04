@@ -27,7 +27,7 @@ final class FlutterwaveClient
         $secret = $credentials->flutterwaveSecretKey ?? throw PaymentGatewayException::notConfigured('Flutterwave');
 
         try {
-            $response = Http::baseUrl((string) config('netslip.flutterwave.base_url'))
+            $response = Http::baseUrl((string) config('vendslip.flutterwave.base_url'))
                 ->withToken($secret)->acceptJson()->timeout(20)->retry(2, 300, throw: false)
                 ->post('/payments', [
                     'tx_ref' => $txRef,
@@ -63,7 +63,7 @@ final class FlutterwaveClient
             return null;
         }
         try {
-            $response = Http::baseUrl((string) config('netslip.flutterwave.base_url'))
+            $response = Http::baseUrl((string) config('vendslip.flutterwave.base_url'))
                 ->withToken($secret)->acceptJson()->timeout(20)
                 ->get('/transactions/verify_by_reference', ['tx_ref' => $txRef]);
         } catch (ConnectionException) {

@@ -52,7 +52,7 @@ export default function Templates() {
                 ) : (
                   <iframe title={`${t.name} preview`} src={`/api/v1/templates/${t.id}/preview?type=${type}#toolbar=0&navpanes=0&view=FitH`} className="h-full w-full" loading="lazy" />
                 )}
-                {isDefault && <span className="absolute left-3 top-3 inline-flex items-center gap-1 rounded-full bg-netslip-deep px-2.5 py-1 text-xs font-semibold text-white shadow"><Check className="size-3.5" />Default</span>}
+                {isDefault && <span className="absolute left-3 top-3 inline-flex items-center gap-1 rounded-full bg-vendslip-deep px-2.5 py-1 text-xs font-semibold text-white shadow"><Check className="size-3.5" />Default</span>}
               </div>
               <div className="flex items-start justify-between gap-3 p-4">
                 <div className="min-w-0">

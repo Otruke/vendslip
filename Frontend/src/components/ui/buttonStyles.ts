@@ -4,14 +4,14 @@ export type ButtonVariant = 'primary' | 'deep' | 'secondary' | 'outline' | 'ghos
 export type ButtonSize = 'xs' | 'sm' | 'md' | 'lg'
 
 const variants: Record<ButtonVariant, string> = {
-  primary: 'bg-netslip-primary text-white shadow-sm shadow-netslip-deep/10 hover:bg-netslip-primary-hover',
-  deep: 'bg-netslip-deep text-white shadow-sm hover:bg-netslip-obsidian',
-  secondary: 'bg-netslip-tint text-netslip-deep hover:bg-[#dbe9ed]',
+  primary: 'bg-vendslip-primary text-white shadow-sm shadow-vendslip-deep/10 hover:bg-vendslip-primary-hover',
+  deep: 'bg-vendslip-deep text-white shadow-sm hover:bg-vendslip-obsidian',
+  secondary: 'bg-vendslip-tint text-vendslip-deep hover:bg-[#dbe9ed]',
   outline: 'border border-slate-300 bg-white text-ink-primary hover:bg-surface-canvas',
   ghost: 'text-ink-secondary hover:bg-surface-subtle hover:text-ink-primary',
   danger: 'bg-tone-open text-white shadow-sm hover:bg-[#8a2a18]',
   success: 'bg-tone-settled text-white shadow-sm hover:bg-[#175843]',
-  white: 'bg-white text-netslip-deep shadow-sm hover:bg-netslip-tint',
+  white: 'bg-white text-vendslip-deep shadow-sm hover:bg-vendslip-tint',
 }
 
 const sizes: Record<ButtonSize, string> = {

@@ -1,7 +1,7 @@
 import { BadgeCheck, History, Search, ShieldAlert, ShieldX } from 'lucide-react'
 import { useState, type FormEvent } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { Button, Card, Container, Heading, Input, Money, Section, Skeleton, StatusBadge, Text } from '@/components/ui'
+import { Button, Card, Container, Heading, Input, Money, Section, Skeleton, StatusBadge, Text, Words } from '@/components/ui'
 import { useVerify } from '@/hooks/queries'
 import { cn } from '@/lib/cn'
 import { formatDateTime } from '@/lib/format'
@@ -16,7 +16,7 @@ export function VerifyLookup({ className }: { className?: string }) {
   }
   return (
     <form onSubmit={submit} className={cn('flex gap-2', className)}>
-      <Input aria-label="Verification code" placeholder="NSV-9A84-F2E0-1C77" value={code} onChange={(e) => setCode(e.target.value)} prefixIcon={<Search />} wrapperClassName="flex-1" className="h-12 font-mono uppercase" />
+      <Input aria-label="Verification code" placeholder="VSV-9A84-F2E0-1C77" value={code} onChange={(e) => setCode(e.target.value)} prefixIcon={<Search />} wrapperClassName="flex-1" className="h-12 font-mono uppercase" />
       <Button type="submit" size="lg">Verify</Button>
     </form>
   )
@@ -31,12 +31,12 @@ export default function Verify() {
   return (
     <Section className="min-h-[70vh]">
       <Container size="sm">
-        <div className="text-center">
-          <Text variant="eyebrow" tone="brand">Slip verification</Text>
-          <Heading level={1} className="mt-3">Is this slip genuine?</Heading>
-          <Text variant="lead" className="mt-3">Scan the QR on a NetSlip receipt, or type its NSV code.</Text>
+        <div className="text-center" data-stagger>
+          <Text variant="eyebrow" tone="brand" data-reveal="rise">Slip verification</Text>
+          <Heading level={1} className="mt-3" data-reveal="type"><Words>Is this slip genuine?</Words></Heading>
+          <Text variant="lead" className="mt-3" data-reveal="rise">Scan the QR on a VendSlip receipt, or type its VSV code.</Text>
+          <div data-reveal="rise"><VerifyLookup className="mx-auto mt-8 max-w-md" /></div>
         </div>
-        <VerifyLookup className="mx-auto mt-8 max-w-md" />
 
         {code && (
           <div className="mt-10">
@@ -68,7 +68,7 @@ export default function Verify() {
                     {data.merchant.logo_url ? <img src={data.merchant.logo_url} alt="" className="size-10 rounded-lg object-contain" /> : <span className="inline-flex size-10 items-center justify-center rounded-lg font-bold text-white" style={{ background: data.merchant.primary_color }}>{data.merchant.name[0]}</span>}
                     <div>
                       <p className="font-bold text-ink-primary">{data.merchant.name}</p>
-                      <p className="text-xs text-ink-muted">On NetSlip since {data.merchant.verified_since}</p>
+                      <p className="text-xs text-ink-muted">On VendSlip since {data.merchant.verified_since}</p>
                     </div>
                   </div>
                   <dl className="mt-6 grid grid-cols-2 gap-x-6 gap-y-4 text-sm">

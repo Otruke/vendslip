@@ -32,7 +32,7 @@ final class DashboardController extends ApiController
         $this->authorizePermission($request, Permission::DOCUMENTS_VIEW);
         $range = (string) ($request->validate(['range' => ['nullable', 'in:7d,30d,90d,12m']])['range'] ?? '30d');
         $merchant = $this->merchant($request);
-        $tz = (string) config('netslip.timezone');
+        $tz = (string) config('vendslip.timezone');
         $now = CarbonImmutable::now($tz);
         [$start, $bucket] = match ($range) {
             '7d' => [$now->subDays(6)->startOfDay(), 'day'],

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace NetSlip\Bots\Telegram;
+namespace VendSlip\Bots\Telegram;
 
 use App\Services\Settings\PlatformSettings;
 use Illuminate\Http\Client\ConnectionException;
@@ -28,7 +28,7 @@ final class TelegramApiClient
         if ($token === null) {
             return ['ok' => false, 'description' => 'bot token not configured'];
         }
-        $base = rtrim((string) config('netslip.telegram.api_base', 'https://api.telegram.org'), '/');
+        $base = rtrim((string) config('vendslip.telegram.api_base', 'https://api.telegram.org'), '/');
 
         try {
             $response = Http::timeout(25)->acceptJson()->asJson()->post("{$base}/bot{$token}/{$method}", $params);

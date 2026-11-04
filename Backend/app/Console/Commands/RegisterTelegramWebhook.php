@@ -6,13 +6,13 @@ namespace App\Console\Commands;
 
 use App\Services\Settings\PlatformSettings;
 use Illuminate\Console\Command;
-use NetSlip\Bots\Telegram\TelegramApiClient;
+use VendSlip\Bots\Telegram\TelegramApiClient;
 
 final class RegisterTelegramWebhook extends Command
 {
-    protected $signature = 'netslip:telegram-webhook {--url= : Public HTTPS base URL (defaults to APP_URL)} {--delete : Remove the webhook}';
+    protected $signature = 'vendslip:telegram-webhook {--url= : Public HTTPS base URL (defaults to APP_URL)} {--delete : Remove the webhook}';
 
-    protected $description = 'Register (or delete) the NetSlip Telegram webhook with secret_token';
+    protected $description = 'Register (or delete) the VendSlip Telegram webhook with secret_token';
 
     public function handle(TelegramApiClient $api, PlatformSettings $settings): int
     {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace NetSlip\Bots\WhatsApp;
+namespace VendSlip\Bots\WhatsApp;
 
 use App\Services\Bot\Actions\AskConfirmation;
 use App\Services\Bot\SummaryFormatter;

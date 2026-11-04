@@ -29,7 +29,7 @@ export default function ResetPassword() {
   }
 
   return (
-    <AuthLayout title="Choose a new password" footer={<Link to="/login" className="font-semibold text-netslip-primary">Back to sign in</Link>}>
+    <AuthLayout title="Choose a new password" footer={<Link to="/login" className="font-semibold text-vendslip-primary">Back to sign in</Link>}>
       {done ? <Alert tone="success" title="Password updated">You can now sign in with your new password.</Alert> : (
         <form onSubmit={submit} className="space-y-4">
           {error && <Alert tone="danger">{error}</Alert>}

@@ -1,10 +1,10 @@
-import { KeyRound, ShieldCheck } from 'lucide-react'
-import { useEffect, useState, type CSSProperties, type ReactNode } from 'react'
+import { ImageUp, KeyRound, ShieldCheck, Trash2 } from 'lucide-react'
+import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react'
 import { useLocation } from 'react-router-dom'
-import { Alert, Button, Card, Input, Modal, PageHeader, StatusBadge } from '@/components/ui'
+import { Alert, Avatar, Button, Card, Input, Modal, PageHeader, StatusBadge } from '@/components/ui'
 import { apiDelete, apiPost, apiPut, useRefreshSession } from '@/hooks/queries'
-import { ApiError, errorMessage } from '@/lib/api'
-import { formatDateTime, initials } from '@/lib/format'
+import { api, ApiError, errorMessage } from '@/lib/api'
+import { formatDateTime } from '@/lib/format'
 import { useAuthStore } from '@/stores/auth'
 import { toast } from '@/stores/ui'
 
@@ -42,8 +42,33 @@ export default function Profile() {
   const [showDisable, setShowDisable] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [busy, setBusy] = useState<string | null>(null)
+  const [preview, setPreview] = useState<string | null>(null)
+  const fileRef = useRef<HTMLInputElement>(null)
 
   if (!user) return null
+
+  const AVATAR_TYPES = ['image/jpeg', 'image/png', 'image/webp']
+  const uploadAvatar = async (file: File) => {
+    if (!AVATAR_TYPES.includes(file.type)) { toast('Choose a JPG, PNG or WebP photo.', 'error'); return }
+    if (file.size > 5 * 1024 * 1024) { toast('That photo is over 5 MB. Choose a smaller one.', 'error'); return }
+    const local = URL.createObjectURL(file)
+    setPreview(local)
+    setBusy('avatar')
+    try {
+      const body = new FormData()
+      body.append('avatar', file)
+      await api.post('/account/avatar', body)
+      await refresh()
+      toast('Profile photo updated')
+    } catch (e) {
+      toast(errorMessage(e), 'error')
+    } finally {
+      setBusy(null)
+      setPreview(null)
+      URL.revokeObjectURL(local)
+    }
+  }
+  const removeAvatar = () => run('avatar-remove', () => apiDelete('/account/avatar'), 'Profile photo removed')
 
   const run = async (key: string, fn: () => Promise<unknown>, message: string) => {
     setError(null)
@@ -70,12 +95,29 @@ export default function Profile() {
       <PageHeader title="My profile" subtitle="Your details, password and sign-in security." />
 
       <div className="grid items-start gap-6 lg:grid-cols-[300px_minmax(0,1fr)]">
-        <aside className="relative overflow-hidden rounded-2xl bg-netslip-obsidian p-6 text-white">
-          <img src="/assets/brand/netslip-icon-white.png" alt="" className="pointer-events-none absolute -top-5 -right-5 h-28 w-auto opacity-[0.06]" />
-          <span className="flex size-16 items-center justify-center rounded-2xl bg-netslip-primary text-2xl font-extrabold tracking-tight">{initials(user.name)}</span>
+        <aside className="relative overflow-hidden rounded-2xl bg-vendslip-obsidian p-6 text-white">
+          <img src="/assets/brand/vendslip-icon-white.png" alt="" className="pointer-events-none absolute -top-5 -right-5 h-28 w-auto opacity-[0.06]" />
+          <div className="flex items-end gap-4">
+            <span className="relative">
+              <Avatar name={user.name} src={preview ?? user.avatar_url} className="size-20 rounded-2xl bg-vendslip-primary text-2xl font-extrabold tracking-tight" />
+              {busy === 'avatar' && <span className="absolute inset-0 flex items-center justify-center rounded-2xl bg-vendslip-obsidian/70 text-[11px] font-semibold">Saving…</span>}
+            </span>
+            <div className="flex flex-col items-start gap-1.5 pb-0.5">
+              <input ref={fileRef} type="file" accept="image/jpeg,image/png,image/webp" className="sr-only" aria-label="Choose a profile photo" onChange={(e) => { const f = e.target.files?.[0]; if (f) void uploadAvatar(f); e.target.value = '' }} />
+              <button type="button" disabled={busy === 'avatar'} onClick={() => fileRef.current?.click()} className="inline-flex items-center gap-1.5 rounded-md bg-white px-2.5 py-1 text-xs font-semibold text-vendslip-deep hover:bg-[#e3eef1] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white disabled:opacity-60">
+                <ImageUp className="size-3.5" />{user.avatar_url ? 'Change photo' : 'Upload photo'}
+              </button>
+              {user.avatar_url && (
+                <button type="button" disabled={busy === 'avatar-remove'} onClick={() => void removeAvatar()} className="inline-flex items-center gap-1 text-xs font-semibold text-[#cfe3e8] hover:text-white disabled:opacity-60">
+                  <Trash2 className="size-3" />Remove
+                </button>
+              )}
+            </div>
+          </div>
+          <p className="mt-2 text-[11px] text-[#9fb9c0]">JPG, PNG or WebP, up to 5 MB. Only your team can see it.</p>
           <p className="mt-4 text-lg font-bold leading-tight">{user.name}</p>
           <p className="truncate text-sm text-[#cfe3e8]">{user.email}</p>
-          <span className="ns-tag ns-tag--sm mt-3" style={{ '--t': '#cfe3e8', background: 'transparent' } as CSSProperties} data-fill="solid"><span className="ns-tag__mark" />{user.role_label ?? 'Member'}</span>
+          <span className="vs-tag vs-tag--sm mt-3" style={{ '--t': '#cfe3e8', background: 'transparent' } as CSSProperties} data-fill="solid"><span className="vs-tag__mark" />{user.role_label ?? 'Member'}</span>
           <dl className="mt-6 space-y-3 border-t border-white/10 pt-4 text-sm">
             <div className="flex justify-between gap-3"><dt className="text-[#9fb9c0]">Business</dt><dd className="truncate text-right">{merchant?.name ?? '—'}</dd></div>
             <div className="flex justify-between gap-3"><dt className="text-[#9fb9c0]">Last sign-in</dt><dd className="tabular text-right">{user.last_login_at ? formatDateTime(user.last_login_at) : 'Now'}</dd></div>

@@ -57,9 +57,9 @@ export default function Billing() {
       )}
 
       <div className="grid gap-4 sm:grid-cols-3">
-        <StatCard variant="deep" title="Current plan" value={merchant?.effective_tier === 'BUSINESS_PLUS' ? 'Business Plus' : merchant?.effective_tier === 'PRO' ? 'Pro Merchant' : 'Free'} hint={merchant?.plan_expires_at && merchant.effective_tier !== 'FREE' ? `Renews ${formatDate(merchant.plan_expires_at)}` : '15 slips every month'} icon={<CalendarClock />} />
-        <StatCard title="Free slips this month" value={usage?.monthly_quota === null ? 'Unlimited' : `${usage?.free_used ?? 0} / ${usage?.monthly_quota ?? 15}`} icon={<Receipt />} />
-        <StatCard title="Non-expiring credits" value={usage?.paid_credits ?? 0} hint="1 credit = 1 clean slip" icon={<Coins />} />
+        <StatCard variant="obsidian" title="Current plan" value={merchant?.effective_tier === 'BUSINESS_PLUS' ? 'Business Plus' : merchant?.effective_tier === 'PRO' ? 'Pro Merchant' : 'Free'} hint={merchant?.plan_expires_at && merchant.effective_tier !== 'FREE' ? `Renews ${formatDate(merchant.plan_expires_at)}` : '15 slips every month'} icon={<CalendarClock />} />
+        <StatCard variant="deep" title="Free slips this month" value={usage?.monthly_quota === null ? 'Unlimited' : `${usage?.free_used ?? 0} / ${usage?.monthly_quota ?? 15}`} icon={<Receipt />} />
+        <StatCard variant="teal" title="Non-expiring credits" value={usage?.paid_credits ?? 0} hint="1 credit = 1 clean slip" icon={<Coins />} />
       </div>
 
       {canBuy ? (
@@ -109,7 +109,7 @@ export default function Billing() {
           {error && <Alert tone="danger">{error}</Alert>}
           <Button fullWidth size="lg" variant="primary" isLoading={busy === 'FLUTTERWAVE'} disabled={!billing?.gateways.flutterwave || busy !== null} leftIcon={<CreditCard className="size-5" />} onClick={() => checkout('FLUTTERWAVE')}>Card, transfer or USSD</Button>
           <Button fullWidth size="lg" variant="outline" isLoading={busy === 'NOWPAYMENTS'} disabled={!billing?.gateways.nowpayments || busy !== null} leftIcon={<Bitcoin className="size-5" />} onClick={() => checkout('NOWPAYMENTS')}>Crypto (USDT, USDC, BTC, TON)</Button>
-          {billing && !billing.gateways.flutterwave && !billing.gateways.nowpayments && <Alert tone="warning">Payments aren’t configured yet. Contact NetSlip support.</Alert>}
+          {billing && !billing.gateways.flutterwave && !billing.gateways.nowpayments && <Alert tone="warning">Payments aren’t configured yet. Contact VendSlip support.</Alert>}
           <p className="text-center text-xs text-ink-muted">You’ll return here automatically after paying.</p>
         </div>
       </Modal>

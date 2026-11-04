@@ -53,8 +53,8 @@ export default function Onboarding() {
       <ol className="grid grid-cols-2 gap-2 sm:grid-cols-4">
         {STEPS.map((s, i) => (
           <li key={s.key}>
-            <button type="button" onClick={() => setStep(i)} className={cn('flex w-full items-center gap-2 rounded-xl border px-3 py-2.5 text-left text-sm font-medium transition', i === step ? 'border-netslip-primary bg-netslip-tint text-netslip-deep' : i < step ? 'border-border-subtle bg-white text-ink-primary' : 'border-border-subtle bg-white text-ink-muted')}>
-              <span className={cn('inline-flex size-6 shrink-0 items-center justify-center rounded-full text-xs [&>svg]:size-3.5', i < step ? 'bg-tone-settled text-white' : i === step ? 'bg-netslip-deep text-white' : 'bg-surface-subtle')}>{i < step ? <Check /> : i + 1}</span>
+            <button type="button" onClick={() => setStep(i)} className={cn('flex w-full items-center gap-2 rounded-xl border px-3 py-2.5 text-left text-sm font-medium transition', i === step ? 'border-vendslip-primary bg-vendslip-tint text-vendslip-deep' : i < step ? 'border-border-subtle bg-white text-ink-primary' : 'border-border-subtle bg-white text-ink-muted')}>
+              <span className={cn('inline-flex size-6 shrink-0 items-center justify-center rounded-full text-xs [&>svg]:size-3.5', i < step ? 'bg-tone-settled text-white' : i === step ? 'bg-vendslip-deep text-white' : 'bg-surface-subtle')}>{i < step ? <Check /> : i + 1}</span>
               <span className="truncate">{s.title}</span>
             </button>
           </li>
@@ -65,7 +65,7 @@ export default function Onboarding() {
         {step === 0 && <BusinessSettings compact onSaved={() => setStep(1)} />}
         {step === 1 && (
           <div className="space-y-6">
-            {branding ? <BrandingSettings /> : <Card variant="tinted" padding="sm" className="text-sm text-netslip-deep">Free slips use NetSlip teal. Upgrade to Pro to add your logo and colours.</Card>}
+            {branding ? <BrandingSettings /> : <Card variant="tinted" padding="sm" className="text-sm text-vendslip-deep">Free slips use VendSlip teal. Upgrade to Pro to add your logo and colours.</Card>}
             <Templates />
           </div>
         )}

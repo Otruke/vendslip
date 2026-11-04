@@ -78,7 +78,7 @@ export default function Pay() {
               {data.amount_paid_minor > 0 && <div className="flex justify-between text-tone-settled"><dt>Paid</dt><dd>-<Money amountMinor={data.amount_paid_minor} currency={data.currency} size="sm" /></dd></div>}
             </dl>
             <div className="mt-5 flex flex-wrap items-center justify-between gap-3 text-xs">
-              <Link to={`/verify/${data.verification_hash}`} className="font-semibold text-netslip-primary hover:underline">Verify {data.verification_code}</Link>
+              <Link to={`/verify/${data.verification_hash}`} className="font-semibold text-vendslip-primary hover:underline">Verify {data.verification_code}</Link>
               <Button href={data.pdf_url} target="_blank" variant="ghost" size="xs" leftIcon={<Download className="size-3.5" />}>PDF</Button>
             </div>
           </div>
@@ -91,18 +91,18 @@ export default function Pay() {
             <p className="text-sm text-ink-secondary">{paid ? 'Settled' : 'Amount due'}</p>
             <Money amountMinor={data.balance_due_minor} currency={data.currency} size="xl" className="mt-1 block" />
             {paid ? (
-              <div className="ns-note mt-6 font-semibold" style={{ '--t': 'var(--tone-settled)' } as CSSProperties}><CircleCheck className="size-5" />This invoice is fully paid.</div>
+              <div className="vs-note mt-6 font-semibold" style={{ '--t': 'var(--tone-settled)' } as CSSProperties}><CircleCheck className="size-5" />This invoice is fully paid.</div>
             ) : canPayOnline ? (
               <div className="mt-6 space-y-4">
                 <div className="grid grid-cols-2 gap-2" role="radiogroup" aria-label="Payment method">
                   {data.gateways.flutterwave && (
-                    <button type="button" role="radio" aria-checked={selected === 'FLUTTERWAVE'} onClick={() => setGateway('FLUTTERWAVE')} className={`rounded-xl border p-3 text-left text-sm transition ${selected === 'FLUTTERWAVE' ? 'border-netslip-primary bg-netslip-tint' : 'border-border-subtle hover:bg-surface-canvas'}`}>
-                      <CreditCard className="size-5 text-netslip-deep" /><p className="mt-2 font-semibold">Card · Transfer · USSD</p><p className="text-xs text-ink-muted">Flutterwave</p>
+                    <button type="button" role="radio" aria-checked={selected === 'FLUTTERWAVE'} onClick={() => setGateway('FLUTTERWAVE')} className={`rounded-xl border p-3 text-left text-sm transition ${selected === 'FLUTTERWAVE' ? 'border-vendslip-primary bg-vendslip-tint' : 'border-border-subtle hover:bg-surface-canvas'}`}>
+                      <CreditCard className="size-5 text-vendslip-deep" /><p className="mt-2 font-semibold">Card · Transfer · USSD</p><p className="text-xs text-ink-muted">Flutterwave</p>
                     </button>
                   )}
                   {data.gateways.nowpayments && (
-                    <button type="button" role="radio" aria-checked={selected === 'NOWPAYMENTS'} onClick={() => setGateway('NOWPAYMENTS')} className={`rounded-xl border p-3 text-left text-sm transition ${selected === 'NOWPAYMENTS' ? 'border-netslip-primary bg-netslip-tint' : 'border-border-subtle hover:bg-surface-canvas'}`}>
-                      <Bitcoin className="size-5 text-netslip-deep" /><p className="mt-2 font-semibold">Crypto</p><p className="text-xs text-ink-muted">USDT · USDC · BTC · TON</p>
+                    <button type="button" role="radio" aria-checked={selected === 'NOWPAYMENTS'} onClick={() => setGateway('NOWPAYMENTS')} className={`rounded-xl border p-3 text-left text-sm transition ${selected === 'NOWPAYMENTS' ? 'border-vendslip-primary bg-vendslip-tint' : 'border-border-subtle hover:bg-surface-canvas'}`}>
+                      <Bitcoin className="size-5 text-vendslip-deep" /><p className="mt-2 font-semibold">Crypto</p><p className="text-xs text-ink-muted">USDT · USDC · BTC · TON</p>
                     </button>
                   )}
                 </div>

@@ -22,7 +22,7 @@ class MonetizationSeeder extends Seeder
                     'multi_user' => false, 'payment_links' => false, 'inventory' => false, 'debt_reminders' => false,
                     'max_team_members' => 1,
                 ],
-                'highlights' => ['15 slips every month', 'Standard templates', 'WhatsApp & Telegram bots', 'QR verification', '"Powered by NetSlip" watermark'],
+                'highlights' => ['15 slips every month', 'Standard templates', 'WhatsApp & Telegram bots', 'QR verification', '"Powered by VendSlip" watermark'],
                 'sort_order' => 1,
             ],
             [

@@ -43,7 +43,7 @@ export default function Register() {
   }
 
   return (
-    <AuthLayout title="Start free" subtitle="15 slips a month on us. No card needed." footer={<>Already have an account? <Link to="/login" className="font-semibold text-netslip-primary">Sign in</Link></>}>
+    <AuthLayout title="Start free" subtitle="15 slips a month on us. No card needed." footer={<>Already have an account? <Link to="/login" className="font-semibold text-vendslip-primary">Sign in</Link></>}>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
         {formError && <Alert tone="danger">{formError}</Alert>}
         <Input label="Business name" placeholder="Ada’s Closet" error={errors.business_name?.message} {...register('business_name')} />

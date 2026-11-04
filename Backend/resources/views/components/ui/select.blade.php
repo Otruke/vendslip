@@ -6,7 +6,7 @@
 @endphp
 <div>
     @if ($label)<label for="{{ $id }}" class="mb-1.5 block text-sm font-medium text-ink-primary">{{ $label }}</label>@endif
-    <select id="{{ $id }}" name="{{ $name }}" {{ $attributes->except('id')->merge(['class' => 'block h-10 w-full rounded-lg border border-slate-300 bg-white px-3 text-sm text-ink-primary focus:border-netslip-primary focus:outline-none focus:ring-2 focus:ring-netslip-primary/20']) }}>
+    <select id="{{ $id }}" name="{{ $name }}" {{ $attributes->except('id')->merge(['class' => 'block h-10 w-full rounded-lg border border-slate-300 bg-white px-3 text-sm text-ink-primary focus:border-vendslip-primary focus:outline-none focus:ring-2 focus:ring-vendslip-primary/20']) }}>
         @if ($placeholder)<option value="">{{ $placeholder }}</option>@endif
         @foreach ($options as $optionValue => $optionLabel)
             <option value="{{ $optionValue }}" @selected($current === (string) $optionValue)>{{ $optionLabel }}</option>

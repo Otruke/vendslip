@@ -12,7 +12,7 @@ final class BotTexts
     public static function help(): string
     {
         return implode("\n", [
-            'NetSlip turns chat orders into receipts.',
+            'VendSlip turns chat orders into receipts.',
             '',
             'Send fields one by one or all together:',
             '/name = Ada Obi',
@@ -30,7 +30,7 @@ final class BotTexts
 
     public static function notLinked(): string
     {
-        return "Welcome to NetSlip!\nLink this chat first: Dashboard → Channels → get a code, then send:\n/link YOURCODE\n\n".Urls::frontend('dashboard/channels');
+        return "Welcome to VendSlip!\nLink this chat first: Dashboard → Channels → get a code, then send:\n/link YOURCODE\n\n".Urls::frontend('dashboard/channels');
     }
 
     public static function linked(string $merchant, string $name): string

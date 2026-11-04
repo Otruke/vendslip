@@ -3,8 +3,8 @@ import type { ReactNode } from 'react'
 import { cn } from '@/lib/cn'
 
 /**
- * Status "ledger tags" (styles in index.css → .ns-tag). A thin-bordered tag on white with a
- * diamond punch mark: filled when settled or final, hollow while still open. NetSlip's own
+ * Status "ledger tags" (styles in index.css → .vs-tag). A thin-bordered tag on white with a
+ * diamond punch mark: filled when settled or final, hollow while still open. VendSlip's own
  * tones, not pastel bg-*-50 pills.
  */
 type Tone = 'settled' | 'open' | 'partial' | 'neutral' | 'brand' | 'info' | 'whatsapp' | 'telegram' | 'instagram' | 'facebook'
@@ -51,11 +51,11 @@ export function StatusBadge({ status, label, size = 'md', showDot = true, showIc
   const def: Def = STATUS[status] ?? { tone: 'neutral', label: status.replace(/_/g, ' ').toLowerCase().replace(/^\w/, (c) => c.toUpperCase()) }
   return (
     <span
-      className={cn('ns-tag', `ns-tag--${def.tone}`, size === 'sm' && 'ns-tag--sm', def.inverse && 'ns-tag--inverse', className)}
+      className={cn('vs-tag', `vs-tag--${def.tone}`, size === 'sm' && 'vs-tag--sm', def.inverse && 'vs-tag--inverse', className)}
       data-fill={def.solid ? 'solid' : 'hollow'}
       data-pulse={def.pulse ? '' : undefined}
     >
-      {showIcon && def.icon ? <span className="[&>svg]:size-3.5">{def.icon}</span> : showDot ? <span className="ns-tag__mark" aria-hidden /> : null}
+      {showIcon && def.icon ? <span className="[&>svg]:size-3.5">{def.icon}</span> : showDot ? <span className="vs-tag__mark" aria-hidden /> : null}
       {label ?? def.label}
     </span>
   )

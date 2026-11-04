@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace NetSlip\Bots\Facebook;
+namespace VendSlip\Bots\Facebook;
 
 use App\Services\Bot\Actions\AskConfirmation;
 use App\Services\Bot\Actions\DeliverSlip;

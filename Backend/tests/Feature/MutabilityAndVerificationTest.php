@@ -109,8 +109,14 @@ final class MutabilityAndVerificationTest extends TestCase
             ->assertJsonPath('authentic', true)
             ->assertJsonPath('document.customer_display', 'Chief E. N.')
             ->assertJsonMissingPath('document.customer_phone');
-        $this->getJson('/api/v1/public/verify/nsv-'.strtolower(substr($doc['verification_code'], 4)))->assertOk();
-        $this->getJson('/api/v1/public/verify/NSV-0000-0000-0000')->assertNotFound();
+        $this->assertStringStartsWith('VSV-', $doc['verification_code']);
+        $this->getJson('/api/v1/public/verify/vsv-'.strtolower(substr($doc['verification_code'], 4)))->assertOk();
+        $this->getJson('/api/v1/public/verify/VSV-0000-0000-0000')->assertNotFound();
+
+        // Slips printed before the VendSlip rename carry NSV- codes; they must keep verifying.
+        DB::table('documents')->where('id', $doc['id'])->update(['verification_code' => 'NSV-'.substr($doc['verification_code'], 4)]);
+        $this->getJson('/api/v1/public/verify/NSV-'.substr($doc['verification_code'], 4))->assertOk()->assertJsonPath('authentic', true);
+        $this->getJson('/api/v1/public/verify/VSV-'.substr($doc['verification_code'], 4))->assertOk();
 
         // Someone edits the ledger directly in the database: the HMAC no longer matches.
         DB::table('documents')->where('id', $doc['id'])->update(['total_minor' => 1]);

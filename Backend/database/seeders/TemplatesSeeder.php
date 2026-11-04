@@ -13,7 +13,7 @@ class TemplatesSeeder extends Seeder
     public function run(): void
     {
         Template::query()->updateOrCreate(['slug' => Template::CLASSIC_EXECUTIVE], [
-            'name' => 'NetSlip Classic Executive',
+            'name' => 'VendSlip Classic Executive',
             'description' => 'A4 slip with a deep brand header, itemised table and QR proof.',
             'engine' => Template::ENGINE_BLADE,
             'blade_view' => 'pdf.templates.classic-executive',
@@ -26,7 +26,7 @@ class TemplatesSeeder extends Seeder
         ]);
 
         Template::query()->updateOrCreate(['slug' => Template::MINIMALIST_SOCIAL], [
-            'name' => 'NetSlip Minimalist Social Slip',
+            'name' => 'VendSlip Minimalist Social Slip',
             'description' => 'Compact A5 slip that reads beautifully on a phone screen.',
             'engine' => Template::ENGINE_BLADE,
             'blade_view' => 'pdf.templates.minimalist-social',

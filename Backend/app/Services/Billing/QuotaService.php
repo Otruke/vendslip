@@ -26,7 +26,7 @@ final class QuotaService
 
     public function currentPeriod(?CarbonImmutable $now = null): string
     {
-        return ($now ?? CarbonImmutable::now(config('netslip.timezone')))->format('Y-m');
+        return ($now ?? CarbonImmutable::now(config('vendslip.timezone')))->format('Y-m');
     }
 
     public function freeUsedThisPeriod(Merchant $merchant): int

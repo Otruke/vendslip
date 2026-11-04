@@ -4,7 +4,10 @@ import { createRoot } from 'react-dom/client'
 import { RouterProvider } from 'react-router-dom'
 import { ApiError } from '@/lib/api'
 import { router } from '@/router'
+import { enableMotion } from '@/lib/motion'
 import './index.css'
+
+enableMotion()
 
 const queryClient = new QueryClient({
   defaultOptions: {

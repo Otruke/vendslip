@@ -1,6 +1,6 @@
-# NetSlip · Telegram bot module (Bot API 10.3)
+# VendSlip · Telegram bot module (Bot API 10.3)
 
-Namespace `NetSlip\Bots\Telegram\`. Uses the Bot API features released through **10.3 (24 Aug 2026)**:
+Namespace `VendSlip\Bots\Telegram\`. Uses the Bot API features released through **10.3 (24 Aug 2026)**:
 
 | Feature | Where | Why |
 | --- | --- | --- |
@@ -19,7 +19,7 @@ working on older clients or if `TELEGRAM_RICH_MESSAGES=false`.
 
 1. Create a bot with @BotFather; note the token and username.
 2. `/admin/gateways` (or `.env`): `TELEGRAM_BOT_TOKEN`, `TELEGRAM_WEBHOOK_SECRET` (any long random string), `TELEGRAM_BOT_USERNAME`.
-3. Register the webhook: `php artisan netslip:telegram-webhook` (uses `APP_URL`, must be HTTPS).
+3. Register the webhook: `php artisan vendslip:telegram-webhook` (uses `APP_URL`, must be HTTPS).
 4. Vendors link via Dashboard → Channels → *Open in Telegram* (deep link `t.me/<bot>?start=CODE`) or `/link CODE`.
 
 The webhook rejects any request whose `X-Telegram-Bot-Api-Secret-Token` header doesn't match.

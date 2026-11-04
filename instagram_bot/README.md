@@ -1,6 +1,6 @@
-# NetSlip · Instagram DM bot module
+# VendSlip · Instagram DM bot module
 
-Namespace `NetSlip\Bots\Instagram\`. Same conversation engine as WhatsApp (`BotOrchestrator`), rendered for Instagram:
+Namespace `VendSlip\Bots\Instagram\`. Same conversation engine as WhatsApp (`BotOrchestrator`), rendered for Instagram:
 
 - Single-message (`/name = Ada, /amount = 15000`) or field-by-field input, buffered silently.
 - One numbered summary (`Reply 1 ✅ Confirm · 2 ✏️ Edit · 3 ❌ Cancel`).

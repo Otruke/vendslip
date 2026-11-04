@@ -84,7 +84,7 @@ final class DraftPayload
         }
 
         foreach ($result->unknownKeys as $unknown) {
-            $errors[] = "/{$unknown} isn't a NetSlip field. Send /help for the list.";
+            $errors[] = "/{$unknown} isn't a VendSlip field. Send /help for the list.";
         }
 
         return [$next, $errors];

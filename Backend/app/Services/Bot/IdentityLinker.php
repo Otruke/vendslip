@@ -30,7 +30,7 @@ final class IdentityLinker
             'user_id' => $user->id,
             'merchant_id' => (string) $user->merchant_id,
             'code' => $code,
-            'expires_at' => now()->addMinutes((int) config('netslip.bots.link_code_ttl_minutes', 30)),
+            'expires_at' => now()->addMinutes((int) config('vendslip.bots.link_code_ttl_minutes', 30)),
         ]);
     }
 

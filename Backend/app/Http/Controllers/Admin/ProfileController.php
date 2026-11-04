@@ -7,15 +7,18 @@ namespace App\Http\Controllers\Admin;
 use App\Enums\AuditSeverity;
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Services\Account\AvatarStore;
 use App\Services\Pdf\QrCodeService;
 use App\Services\Security\AuditLogger;
 use App\Services\Security\PasswordChanger;
 use App\Services\Security\TotpService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
+use Symfony\Component\HttpFoundation\Response;
 
 /** "My profile" for Admins and Super-Admins: details, password and two-factor authentication. */
 final class ProfileController extends Controller
@@ -24,6 +27,7 @@ final class ProfileController extends Controller
         private readonly AuditLogger $audit,
         private readonly TotpService $totp,
         private readonly QrCodeService $qr,
+        private readonly AvatarStore $avatars,
     ) {}
 
     public function show(Request $request): View
@@ -35,7 +39,7 @@ final class ProfileController extends Controller
             'user' => $user,
             'role' => $user->isSuperAdmin() ? 'Super Admin' : 'Admin',
             'setupSecret' => $pending ? $user->two_factor_secret : null,
-            'setupQr' => $pending ? $this->qr->svg($this->totp->otpauthUri((string) $user->two_factor_secret, $user->email, 'NetSlip Control')) : null,
+            'setupQr' => $pending ? $this->qr->svg($this->totp->otpauthUri((string) $user->two_factor_secret, $user->email, 'VendSlip Control')) : null,
             'recentEvents' => $user->auditLogs()->latest('id')->limit(6)->get(),
         ]);
     }
@@ -50,6 +54,35 @@ final class ProfileController extends Controller
         $user->update($data);
 
         return back()->with('status', 'Profile saved.');
+    }
+
+    public function uploadAvatar(Request $request): RedirectResponse
+    {
+        $user = $this->user($request);
+        $request->validate(['avatar' => AvatarStore::rules()]);
+        /** @var UploadedFile $file */
+        $file = $request->file('avatar');
+        $this->avatars->store($user, $file);
+        $this->audit->log('account.avatar_updated', $user);
+
+        return back()->with('status', 'Profile photo updated.');
+    }
+
+    public function deleteAvatar(Request $request): RedirectResponse
+    {
+        $user = $this->user($request);
+        $this->avatars->remove($user);
+        $this->audit->log('account.avatar_removed', $user);
+
+        return back()->with('status', 'Profile photo removed.');
+    }
+
+    /** Platform staff may see any account's photo; it is never served without a signed-in admin. */
+    public function showAvatar(Request $request, User $user): Response
+    {
+        abort_unless($this->avatars->canView($this->user($request), $user), 404);
+
+        return $this->avatars->response($user);
     }
 
     public function password(Request $request, PasswordChanger $passwords): RedirectResponse

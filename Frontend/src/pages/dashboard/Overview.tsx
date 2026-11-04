@@ -33,10 +33,10 @@ export default function Overview() {
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {isLoading || !k ? Array.from({ length: 4 }, (_, i) => <Skeleton key={i} className="h-[132px] rounded-xl" />) : (
           <>
-            <StatCard variant="deep" title="Settled revenue" value={formatMoney(k.settled_revenue_minor, currency)} trend={k.settled_revenue_change_pct} hint="vs previous period" icon={<Wallet />} />
-            <StatCard title="Unpaid receivables" value={formatMoney(k.receivables_minor, currency)} hint={k.overdue_count > 0 ? <span className="font-semibold text-tone-open">{k.overdue_count} overdue</span> : 'Nothing overdue'} icon={<TriangleAlert />} />
-            <StatCard title={k.monthly_quota === null ? 'Plan' : 'Free slips left'} value={k.monthly_quota === null ? 'Unlimited' : `${k.free_remaining} / ${k.monthly_quota}`} hint={`${k.paid_credits} non-expiring credits`} icon={<Coins />} />
-            <StatCard title="Messaging calls saved" value={k.api_calls_saved.toLocaleString()} hint={`${k.slips_issued} slips issued`} icon={<MessageCircle />} />
+            <StatCard variant="obsidian" title="Settled revenue" value={formatMoney(k.settled_revenue_minor, currency)} trend={k.settled_revenue_change_pct} hint="vs previous period" icon={<Wallet />} />
+            <StatCard variant="mist" title="Unpaid receivables" value={formatMoney(k.receivables_minor, currency)} hint={k.overdue_count > 0 ? <span className="font-semibold text-tone-open">{k.overdue_count} overdue</span> : 'Nothing overdue'} icon={<TriangleAlert />} />
+            <StatCard variant="deep" title={k.monthly_quota === null ? 'Plan' : 'Free slips left'} value={k.monthly_quota === null ? 'Unlimited' : `${k.free_remaining} / ${k.monthly_quota}`} hint={`${k.paid_credits} non-expiring credits`} icon={<Coins />} />
+            <StatCard variant="teal" title="Messaging calls saved" value={k.api_calls_saved.toLocaleString()} hint={`${k.slips_issued} slips issued`} icon={<MessageCircle />} />
           </>
         )}
       </div>
@@ -46,7 +46,7 @@ export default function Overview() {
           <div className="flex flex-wrap items-center justify-between gap-2">
             <h2 className="font-semibold">Revenue vs. invoiced</h2>
             <div className="flex gap-4 text-xs text-ink-secondary">
-              <span className="inline-flex items-center gap-1.5"><span className="size-2 rounded-full bg-netslip-primary" />Cash received</span>
+              <span className="inline-flex items-center gap-1.5"><span className="size-2 rounded-full bg-vendslip-primary" />Cash received</span>
               <span className="inline-flex items-center gap-1.5"><span className="size-2 rounded-full bg-tone-partial" />Invoiced</span>
             </div>
           </div>

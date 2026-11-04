@@ -46,7 +46,7 @@ final class DocumentIssuanceService
         $document = DB::transaction(function () use ($merchant, $actor, $draft, $channel): Document {
             /** @var Merchant $locked */
             $locked = Merchant::query()->whereKey($merchant->id)->lockForUpdate()->firstOrFail();
-            $now = CarbonImmutable::now(config('netslip.timezone'));
+            $now = CarbonImmutable::now(config('vendslip.timezone'));
 
             $lines = array_map(static fn ($item): array => [
                 'description' => trim($item->description),
@@ -83,7 +83,7 @@ final class DocumentIssuanceService
             $dueDate = null;
             if ($draft->type === DocumentType::INVOICE) {
                 $dueDate = $draft->due_date !== null
-                    ? CarbonImmutable::createFromFormat('Y-m-d', $draft->due_date, config('netslip.timezone'))?->startOfDay()
+                    ? CarbonImmutable::createFromFormat('Y-m-d', $draft->due_date, config('vendslip.timezone'))?->startOfDay()
                     : $now->startOfDay()->addDays($locked->invoice_due_days);
             }
 
@@ -158,7 +158,7 @@ final class DocumentIssuanceService
      */
     public function issueSystemDocument(Merchant $merchant, DocumentType $type, array $lines, array $attributes): Document
     {
-        $now = CarbonImmutable::now(config('netslip.timezone'));
+        $now = CarbonImmutable::now(config('vendslip.timezone'));
         $totals = $this->calculator->calculate($lines, 0, 0, 0, false, $type === DocumentType::INVOICE ? 0 : PHP_INT_MAX);
 
         $document = new Document([

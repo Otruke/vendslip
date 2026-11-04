@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace NetSlip\Bots\Telegram;
+namespace VendSlip\Bots\Telegram;
 
 use App\Enums\AuditSeverity;
 use App\Enums\Channel;
@@ -181,7 +181,7 @@ final class Telegram103WebhookHandler
     {
         $session = $action->session;
         $keyboard = $this->builder->confirmKeyboard($action);
-        $rich = (bool) $this->config['rich_messages'] && (bool) config('netslip.telegram.rich_messages', true);
+        $rich = (bool) $this->config['rich_messages'] && (bool) config('vendslip.telegram.rich_messages', true);
 
         // Free on Telegram: refresh the existing summary in place when fields change.
         if ($action->isUpdate && $session->confirmation_message_id !== null && ! $message->isGroup) {
@@ -209,7 +209,7 @@ final class Telegram103WebhookHandler
     {
         $extra = $this->ephemeral->ephemeralParams($message);
         $keyboard = $this->builder->verifyKeyboard($action);
-        $rich = (bool) $this->config['rich_messages'] && (bool) config('netslip.telegram.rich_messages', true);
+        $rich = (bool) $this->config['rich_messages'] && (bool) config('vendslip.telegram.rich_messages', true);
 
         $result = $rich
             ? $this->api->call('sendRichMessage', ['chat_id' => $message->externalChatId, 'rich_message' => $this->builder->delivery($action), 'reply_markup' => $keyboard, ...$extra])

@@ -20,7 +20,7 @@ return [
     |
     */
 
-    // NetSlip: the SPA's own origin (FRONTEND_URL) and APP_URL are always trusted, so a production
+    // VendSlip: the SPA's own origin (FRONTEND_URL) and APP_URL are always trusted, so a production
     // deploy can't silently break cookie login by forgetting to update SANCTUM_STATEFUL_DOMAINS.
     'stateful' => array_values(array_unique(array_filter(array_map('trim', [
         ...explode(',', (string) env('SANCTUM_STATEFUL_DOMAINS', sprintf(

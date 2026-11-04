@@ -20,7 +20,7 @@ final class TotpService
         return $this->base32Encode(random_bytes(20));
     }
 
-    public function otpauthUri(string $secret, string $account, string $issuer = 'NetSlip'): string
+    public function otpauthUri(string $secret, string $account, string $issuer = 'VendSlip'): string
     {
         return sprintf(
             'otpauth://totp/%s:%s?secret=%s&issuer=%s&algorithm=SHA1&digits=6&period=30',

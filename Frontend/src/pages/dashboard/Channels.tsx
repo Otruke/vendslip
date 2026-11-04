@@ -38,9 +38,9 @@ export default function Channels() {
       <PageHeader title="Bot channels" subtitle="Link your chat apps once. Then sell with /slash." actions={<Button leftIcon={<Link2 className="size-4" />} isLoading={busy} onClick={getCode}>Link a chat</Button>} />
 
       <div className="grid gap-4 sm:grid-cols-3">
-        <StatCard title="Drafts · 30 days" value={data.stats.drafts_30d} icon={<MessageCircle />} />
-        <StatCard title="Confirmed slips" value={data.stats.confirmed_30d} icon={<CircleCheck />} />
-        <StatCard variant="deep" title="Messages saved" value={data.stats.api_calls_saved_30d} hint="silent draft buffering" icon={<Zap />} />
+        <StatCard variant="obsidian" title="Drafts · 30 days" value={data.stats.drafts_30d} icon={<MessageCircle />} />
+        <StatCard variant="deep" title="Confirmed slips" value={data.stats.confirmed_30d} icon={<CircleCheck />} />
+        <StatCard variant="teal" title="Messages saved" value={data.stats.api_calls_saved_30d} hint="silent draft buffering" icon={<Zap />} />
       </div>
 
       <div className="grid gap-4 md:grid-cols-2">
@@ -88,7 +88,7 @@ export default function Channels() {
       <Modal isOpen={code !== null} onClose={() => { setCode(null); void invalidate('channels') }} title="Link your chat" description="Valid for 30 minutes, single use.">
         {code && (
           <div className="space-y-5">
-            <div className="rounded-xl bg-netslip-obsidian px-4 py-5 text-center">
+            <div className="rounded-xl bg-vendslip-obsidian px-4 py-5 text-center">
               <p className="text-xs uppercase tracking-widest text-[#9cc3cc]">Send this to the bot</p>
               <p className="mt-2 font-mono text-2xl font-bold tracking-[0.2em] text-white">/link {code.code}</p>
             </div>

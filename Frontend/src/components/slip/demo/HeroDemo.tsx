@@ -13,11 +13,11 @@ import { PhoneShell } from './PhoneShell'
 /** Two scripted sales: a WhatsApp receipt, then a Telegram invoice. The real parser runs on every line. */
 const SCENARIOS: { channel: ChannelKey; shop: string; meta: string; lines: string[]; docNumber: string; code: string }[] = [
   {
-    channel: 'whatsapp', shop: 'Ada’s Closet', meta: 'Lekki, Lagos', docNumber: 'RCP-2026-0108', code: 'NSV-7C1E-04B9-A2D3',
+    channel: 'whatsapp', shop: 'Ada’s Closet', meta: 'Lekki, Lagos', docNumber: 'RCP-2026-0108', code: 'VSV-7C1E-04B9-A2D3',
     lines: ['/item = 2x Ankara Dress @ 18,500', '/item = Gele Headwrap @ 6,500', '/discount = 10%', '/name = Ada Obi'],
   },
   {
-    channel: 'telegram', shop: 'Kemi Fabrics', meta: 'Balogun Market, Lagos', docNumber: 'INV-2026-0047', code: 'NSV-41D0-9EB2-77FA',
+    channel: 'telegram', shop: 'Kemi Fabrics', meta: 'Balogun Market, Lagos', docNumber: 'INV-2026-0047', code: 'VSV-41D0-9EB2-77FA',
     lines: ['/type = invoice', '/item = 3x Aso-oke Set @ 45,000', '/shipping = 3,500', '/due = 7d', '/name = Chief Emeka Nwosu'],
   },
 ]
@@ -154,7 +154,7 @@ export function HeroDemo() {
           setCaption({ key: Date.now(), text: captionFor(line, current) })
           if (n === 0) {
             await sleep(450)
-            push({ kind: 'note', text: 'NetSlip holds partial details silently. No reply, no message cost, until the slip is complete.' })
+            push({ kind: 'note', text: 'VendSlip holds partial details silently. No reply, no message cost, until the slip is complete.' })
           }
           await sleep(900)
         }
@@ -187,7 +187,7 @@ export function HeroDemo() {
           kind: 'document',
           fileName: `${sc.docNumber}.pdf`,
           meta: '1 page · PDF · 46 KB',
-          caption: totals.docType === 'INVOICE' ? `Verified ${sc.code}. Pay online: netslip.ng/pay/…` : `Verified ${sc.code}. Scan the QR to check it.`,
+          caption: totals.docType === 'INVOICE' ? `Verified ${sc.code}. Pay online: vendslip.com/pay/…` : `Verified ${sc.code}. Scan the QR to check it.`,
           time: nowTime(),
         })
         cursorPos.current = { x: cursorPos.current.x + 60, y: cursorPos.current.y + 70 }
@@ -287,18 +287,18 @@ export function HeroDemo() {
           <div className="relative">
             <PaperSlipPreview slip={slip} compact className={cn('transition-transform duration-500', ready && !issued && 'sm:-translate-y-1')} />
             {caption && (
-              <span key={caption.key} className="absolute -top-3 left-3 rounded-md bg-netslip-obsidian px-2.5 py-1 text-[11px] font-semibold text-white shadow-lg animate-fade-up">
+              <span key={caption.key} className="absolute -top-3 left-3 rounded-md bg-vendslip-obsidian px-2.5 py-1 text-[11px] font-semibold text-white shadow-lg animate-fade-up">
                 {caption.text}
               </span>
             )}
             {issued && (
-              <span className="ns-stamp pointer-events-none absolute bottom-[92px] right-4 rotate-[-10deg] rounded-md border-2 border-tone-settled px-2.5 py-1 text-center text-[10px] font-black uppercase leading-tight tracking-[0.18em] text-tone-settled" aria-hidden>
+              <span className="vs-stamp pointer-events-none absolute bottom-[92px] right-4 rotate-[-10deg] rounded-md border-2 border-tone-settled px-2.5 py-1 text-center text-[10px] font-black uppercase leading-tight tracking-[0.18em] text-tone-settled" aria-hidden>
                 Issued
                 <span className="block text-[8.5px] tracking-[0.12em]">Signed · {scenario.code.slice(4, 8)}</span>
               </span>
             )}
           </div>
-          <p className="mt-3 text-center text-xs text-ink-secondary sm:-rotate-[2.5deg]">
+          <p className="mt-3 text-center text-xs font-medium text-[#cfe3e8] sm:-rotate-[2.5deg]">
             {issued ? 'The branded PDF lands back in the chat.' : 'The slip builds itself as you type.'}
           </p>
         </div>
@@ -315,7 +315,7 @@ export function HeroDemo() {
                 <path d="M4 2.5v17.2l4.6-4.3 2.9 6.6 2.9-1.3-2.8-6.4h6.3z" fill="#fff" stroke="#0b0f11" strokeWidth="1.4" strokeLinejoin="round" />
               </svg>
             </span>
-            {ripple && <span key={ripple.key} className="ns-ripple pointer-events-none absolute z-30 size-9 rounded-full border-2 border-netslip-primary" style={{ left: ripple.x - 18, top: ripple.y - 18 }} aria-hidden />}
+            {ripple && <span key={ripple.key} className="vs-ripple pointer-events-none absolute z-30 size-9 rounded-full border-2 border-vendslip-primary" style={{ left: ripple.x - 18, top: ripple.y - 18 }} aria-hidden />}
           </>
         )}
       </div>
@@ -324,16 +324,16 @@ export function HeroDemo() {
       <div className="mt-5 flex flex-wrap items-center justify-center gap-2 text-xs">
         {!userMode ? (
           <>
-            <button type="button" onClick={togglePause} className="inline-flex items-center gap-1.5 rounded-md border border-border-subtle bg-white/90 px-2.5 py-1.5 font-semibold text-ink-secondary hover:text-ink-primary" aria-pressed={paused}>
+            <button type="button" onClick={togglePause} className="inline-flex items-center gap-1.5 rounded-md border border-white/25 bg-white/10 px-2.5 py-1.5 font-semibold text-white hover:bg-white/20" aria-pressed={paused}>
               {paused ? <Play className="size-3.5" /> : <Pause className="size-3.5" />}{paused ? 'Play' : 'Pause'}
             </button>
-            <button type="button" onClick={takeOver} className="inline-flex items-center gap-1.5 rounded-md bg-netslip-deep px-2.5 py-1.5 font-semibold text-white hover:bg-netslip-obsidian">
+            <button type="button" onClick={takeOver} className="inline-flex items-center gap-1.5 rounded-md bg-white px-2.5 py-1.5 font-semibold text-vendslip-deep hover:bg-vendslip-tint">
               <Keyboard className="size-3.5" />Type your own
             </button>
-            <span className="ml-1 font-medium text-ink-secondary">Now showing: {THEMES[channel].label} {scenario.docNumber.startsWith('INV') ? 'invoice' : 'receipt'}</span>
+            <span className="ml-1 font-medium text-[#cfe3e8]">Now showing: {THEMES[channel].label} {scenario.docNumber.startsWith('INV') ? 'invoice' : 'receipt'}</span>
           </>
         ) : (
-          <button type="button" onClick={replay} className="inline-flex items-center gap-1.5 rounded-md border border-border-subtle bg-white/90 px-2.5 py-1.5 font-semibold text-ink-secondary hover:text-ink-primary">
+          <button type="button" onClick={replay} className="inline-flex items-center gap-1.5 rounded-md bg-white px-2.5 py-1.5 font-semibold text-vendslip-deep hover:bg-vendslip-tint">
             <RotateCcw className="size-3.5" />Back to the demo
           </button>
         )}

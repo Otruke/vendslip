@@ -7,20 +7,20 @@ function clock(): string {
 }
 
 /**
- * A phone in a matte protective case: case rim with side-button bumps, black bezel, camera
+ * A phone in a matte, pale-teal protective case: case rim with side-button bumps, black bezel, camera
  * island and status bar. Pure CSS so it stays sharp at every size.
  */
 export function PhoneShell({ children, dark = false, tint = '#ffffff', className }: { children: ReactNode; dark?: boolean; tint?: string; className?: string }) {
   return (
     <div className={cn('relative mx-auto w-[min(300px,78vw)] select-none', className)}>
       {/* Side buttons sit on the case, like a real protective cover */}
-      <span className="absolute top-[22%] -left-[3px] h-9 w-[5px] rounded-l-md bg-[#1f3a42]" aria-hidden />
-      <span className="absolute top-[30%] -left-[3px] h-14 w-[5px] rounded-l-md bg-[#1f3a42]" aria-hidden />
-      <span className="absolute top-[41%] -left-[3px] h-14 w-[5px] rounded-l-md bg-[#1f3a42]" aria-hidden />
-      <span className="absolute top-[28%] -right-[3px] h-20 w-[5px] rounded-r-md bg-[#1f3a42]" aria-hidden />
+      <span className="absolute top-[22%] -left-[3px] h-9 w-[5px] rounded-l-md bg-[#c5d8dd]" aria-hidden />
+      <span className="absolute top-[30%] -left-[3px] h-14 w-[5px] rounded-l-md bg-[#c5d8dd]" aria-hidden />
+      <span className="absolute top-[41%] -left-[3px] h-14 w-[5px] rounded-l-md bg-[#c5d8dd]" aria-hidden />
+      <span className="absolute top-[28%] -right-[3px] h-20 w-[5px] rounded-r-md bg-[#c5d8dd]" aria-hidden />
 
       {/* Case */}
-      <div className="rounded-[3.1rem] bg-[linear-gradient(145deg,#2f5560_0%,#24454f_45%,#1b363e_100%)] p-[9px] shadow-[0_40px_80px_-30px_rgba(10,30,36,0.65),0_18px_36px_-18px_rgba(10,30,36,0.45),inset_0_1px_0_rgba(255,255,255,0.12),inset_0_-2px_6px_rgba(0,0,0,0.35)]">
+      <div className="rounded-[3.1rem] bg-[#dde9ec] p-[9px] shadow-[0_40px_80px_-30px_rgba(5,20,26,0.75),0_18px_36px_-18px_rgba(5,20,26,0.5),inset_0_0_0_1px_rgba(255,255,255,0.7),inset_0_-2px_5px_rgba(38,83,99,0.25)]">
         {/* Phone body + bezel */}
         <div className="rounded-[2.6rem] bg-[#0b0f11] p-[7px] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.06)]">
           <div className="relative overflow-hidden rounded-[2.15rem] bg-white">

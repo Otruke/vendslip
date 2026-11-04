@@ -7,7 +7,7 @@ export function FeatureGate({ title, description, plan = 'Business Plus', icon }
     <Card variant="elevated" padding="lg" className="mx-auto max-w-xl rounded-2xl text-center">
       <span className="mx-auto block w-fit drop-shadow-[0_8px_10px_rgba(22,53,64,0.16)]" aria-hidden>
         <span className="serrated flex h-16 w-14 flex-col items-center gap-1.5 border border-b-0 border-border-subtle bg-white pt-3">
-          <span className="text-netslip-primary [&>svg]:size-5">{icon ?? <Lock />}</span>
+          <span className="text-vendslip-primary [&>svg]:size-5">{icon ?? <Lock />}</span>
           <span className="h-px w-7 bg-border-subtle" />
           <span className="h-px w-5 bg-border-subtle" />
         </span>

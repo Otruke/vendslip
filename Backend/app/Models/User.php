@@ -21,6 +21,8 @@ use Spatie\Permission\Traits\HasRoles;
  * @property string $name
  * @property string $email
  * @property string|null $phone
+ * @property string|null $avatar_path
+ * @property CarbonImmutable|null $avatar_updated_at
  * @property string $password
  * @property string|null $two_factor_secret
  * @property CarbonImmutable|null $two_factor_confirmed_at
@@ -42,6 +44,8 @@ class User extends Authenticatable
     /** @var array<string, mixed> */
     protected $attributes = [
         'phone' => null,
+        'avatar_path' => null,
+        'avatar_updated_at' => null,
         'two_factor_secret' => null,
         'two_factor_confirmed_at' => null,
         'is_active' => true,
@@ -49,7 +53,7 @@ class User extends Authenticatable
     ];
 
     /** @var list<string> */
-    protected $hidden = ['password', 'remember_token', 'two_factor_secret'];
+    protected $hidden = ['password', 'remember_token', 'two_factor_secret', 'avatar_path'];
 
     /** @return array<string, string> */
     protected function casts(): array
@@ -60,6 +64,7 @@ class User extends Authenticatable
             'two_factor_secret' => 'encrypted',
             'two_factor_confirmed_at' => 'immutable_datetime',
             'last_login_at' => 'immutable_datetime',
+            'avatar_updated_at' => 'immutable_datetime',
             'is_active' => 'boolean',
         ];
     }

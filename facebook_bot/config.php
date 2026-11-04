@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /*
-| NetSlip Facebook Messenger bot module (Twilio Programmable Messaging).
+| VendSlip Facebook Messenger bot module (Twilio Programmable Messaging).
 |   TWILIO_FACEBOOK_FROM=messenger:<your-page-id>
 */
 return [

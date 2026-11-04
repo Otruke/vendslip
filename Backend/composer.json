@@ -35,10 +35,10 @@
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/",
-            "NetSlip\\Bots\\WhatsApp\\": "../whatsapp_bot/src/",
-            "NetSlip\\Bots\\Telegram\\": "../telegram_bot/src/",
-            "NetSlip\\Bots\\Instagram\\": "../instagram_bot/src/",
-            "NetSlip\\Bots\\Facebook\\": "../facebook_bot/src/"
+            "VendSlip\\Bots\\WhatsApp\\": "../whatsapp_bot/src/",
+            "VendSlip\\Bots\\Telegram\\": "../telegram_bot/src/",
+            "VendSlip\\Bots\\Instagram\\": "../instagram_bot/src/",
+            "VendSlip\\Bots\\Facebook\\": "../facebook_bot/src/"
         }
     },
     "autoload-dev": {

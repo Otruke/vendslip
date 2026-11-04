@@ -158,7 +158,7 @@ export function applyParse(base: DraftPayload, parsed: ParseResult, today = new 
     if (error) errors.push(error)
   }
   for (const item of parsed.items) draft.items.push({ description: item.description, quantity: item.quantity, unit_price_minor: item.unit_price_minor })
-  for (const unknown of parsed.unknownKeys) errors.push(`/${unknown} isn't a NetSlip field.`)
+  for (const unknown of parsed.unknownKeys) errors.push(`/${unknown} isn't a VendSlip field.`)
   return { draft, errors }
 }
 

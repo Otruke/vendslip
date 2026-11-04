@@ -8,7 +8,7 @@ export function Skeleton({ className }: { className?: string }) {
 }
 
 export function Spinner({ className, label = 'Loading' }: { className?: string; label?: string }) {
-  return <LoaderCircle className={cn('size-5 animate-spin text-netslip-primary', className)} aria-label={label} role="status" />
+  return <LoaderCircle className={cn('size-5 animate-spin text-vendslip-primary', className)} aria-label={label} role="status" />
 }
 
 export function PageLoader() {
@@ -26,7 +26,7 @@ const alertTones = {
 export function Alert({ tone = 'info', title, children, action, className }: { tone?: keyof typeof alertTones; title?: ReactNode; children?: ReactNode; action?: ReactNode; className?: string }) {
   const t = alertTones[tone]
   return (
-    <div role={tone === 'danger' ? 'alert' : 'status'} className={cn('ns-note', className)} style={{ '--t': t.tone } as CSSProperties}>
+    <div role={tone === 'danger' ? 'alert' : 'status'} className={cn('vs-note', className)} style={{ '--t': t.tone } as CSSProperties}>
       <span className="mt-0.5 shrink-0 [&>svg]:size-4" style={{ color: t.tone }}>{t.icon}</span>
       <div className="min-w-0 flex-1">
         {title && <p className="font-semibold">{title}</p>}
@@ -37,14 +37,14 @@ export function Alert({ tone = 'info', title, children, action, className }: { t
   )
 }
 
-/** Empty state drawn as a small torn slip: NetSlip's own motif instead of an icon in a tinted square. */
+/** Empty state drawn as a small torn slip: VendSlip's own motif instead of an icon in a tinted square. */
 export function EmptyState({ icon, title, description, action, className }: { icon?: ReactNode; title: ReactNode; description?: ReactNode; action?: ReactNode; className?: string }) {
   return (
     <div className={cn('flex flex-col items-center justify-center px-6 py-10 text-center', className)}>
       {icon && (
         <span className="block drop-shadow-[0_6px_8px_rgba(22,53,64,0.14)]" aria-hidden>
           <span className="serrated flex h-14 w-12 flex-col items-center gap-1 border border-b-0 border-border-subtle bg-white pt-2.5">
-            <span className="text-netslip-primary [&>svg]:size-4">{icon}</span>
+            <span className="text-vendslip-primary [&>svg]:size-4">{icon}</span>
             <span className="h-px w-6 bg-border-subtle" />
             <span className="h-px w-4 bg-border-subtle" />
           </span>
@@ -89,19 +89,19 @@ function ToastCard({ id, message, tone }: { id: number; message: string; tone: T
 
   return (
     <div
-      className={cn('ns-toast', `ns-toast--${tone}`)}
+      className={cn('vs-toast', `vs-toast--${tone}`)}
       role={tone === 'error' ? 'alert' : 'status'}
       data-leaving={leaving ? '' : undefined}
       style={{ '--ns-toast-ms': `${ms}ms` } as CSSProperties}
       onMouseEnter={pause} onMouseLeave={start} onFocus={pause} onBlur={start}
     >
-      <span className="ns-toast__icon [&>svg]:size-4">{TOAST_ICON[tone]}</span>
+      <span className="vs-toast__icon [&>svg]:size-4">{TOAST_ICON[tone]}</span>
       <div className="min-w-0">
-        <p className="ns-toast__title">{TOAST_TITLE[tone]}</p>
-        <p className="ns-toast__body">{message}</p>
+        <p className="vs-toast__title">{TOAST_TITLE[tone]}</p>
+        <p className="vs-toast__body">{message}</p>
       </div>
-      <button type="button" onClick={close} className="ns-toast__close" aria-label="Dismiss"><X className="size-4" /></button>
-      <span className="ns-toast__timer" aria-hidden />
+      <button type="button" onClick={close} className="vs-toast__close" aria-label="Dismiss"><X className="size-4" /></button>
+      <span className="vs-toast__timer" aria-hidden />
     </div>
   )
 }
@@ -109,7 +109,7 @@ function ToastCard({ id, message, tone }: { id: number; message: string; tone: T
 export function Toaster() {
   const toasts = useUiStore((s) => s.toasts)
   return (
-    <div className="ns-toasts" aria-live="polite">
+    <div className="vs-toasts" aria-live="polite">
       {toasts.map((t) => <ToastCard key={t.id} {...t} />)}
     </div>
   )

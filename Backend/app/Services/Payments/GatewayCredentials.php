@@ -8,7 +8,7 @@ use App\Models\Merchant;
 use App\Services\Settings\PlatformSettings;
 
 /**
- * Which keys to use: platform keys for NetSlip's own sales (plans, credit packs),
+ * Which keys to use: platform keys for VendSlip's own sales (plans, credit packs),
  * the merchant's own keys for their customers' invoice payments.
  */
 final readonly class GatewayCredentials

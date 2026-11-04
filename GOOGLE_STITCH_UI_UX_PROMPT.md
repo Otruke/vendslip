@@ -1,27 +1,27 @@
-# NetSlip — Google Stitch UI/UX Design Specification & Prompt Pack
-> **Brand Identity Source:** `C:\Users\rufus.otolorin\Documents\Ampps\netSlip\brand_identity`  
+# VendSlip — Google Stitch UI/UX Design Specification & Prompt Pack
+> **Brand Identity Source:** `C:\Users\rufus.otolorin\Documents\Ampps\vendSlip\brand_identity`  
 > **UI/UX Aesthetic References:** Casho E-Invoice (`pin/978970037779180254`), Invoice2go (`pin/665688388643811563`), Business Billing Manager (`pin/988610555722404628`), Paper-Free Tactile Invoices (`pin/955818720923905617`)
 
 ---
 
 ## 1. Exact Brand Identity Specification (Extracted from `./brand_identity`)
 
-When generating UI/UX in **Google Stitch**, upload these files from `C:\Users\rufus.otolorin\Documents\Ampps\netSlip\brand_identity` as **Reference Attachments**:
-1. **`Netslip PNG.png`** — Official full transparent logo (Icon + Wordmark + Tagline).
+When generating UI/UX in **Google Stitch**, upload these files from `C:\Users\rufus.otolorin\Documents\Ampps\vendSlip\brand_identity` as **Reference Attachments**:
+1. **`VendSlip PNG.png`** — Official full transparent logo (Icon + Wordmark + Tagline).
 2. **`Brand Guide.jpg`** — Official color swatches (`#377581` & `#265363`) and typography guide (**Lupio** & **Brush Script MT**).
 3. **`DP 1.jpg`** — 3D tactile icon mark showing the exact white-sheet/teal-checkmark depth.
 
 ### 1.1 Complete Brand DNA Included in Every Stitch Prompt Below
-* **Logo Mark Anatomy (`Netslip PNG.png` & `DP 1.jpg`)**:
+* **Logo Mark Anatomy (`VendSlip PNG.png` & `DP 1.jpg`)**:
   * A bold, geometric uppercase **`N`** in **Deep Slate Teal (`#265363`)** whose right vertical stem seamlessly forms a **folded-corner receipt/invoice document** with a crisp white (`#FFFFFF`) interior page.
   * Inside the white page are **4 rounded horizontal pill bars** (short, full, full, medium) in **Primary Teal (`#377581`)** representing transaction line items, with a bold **verification checkmark (`✓`)** in `#377581` at the bottom right.
 * **Wordmark & Tagline Anatomy**:
-  * **Wordmark**: **`NetSlip`** set in **Lupio ExtraBold / Black** in Deep Slate Teal (`#265363`) on light backgrounds (or pure white `#FFFFFF` on dark `#265363` headers).
+  * **Wordmark**: **`VendSlip`** set in **Lupio ExtraBold / Black** in Deep Slate Teal (`#265363`) on light backgrounds (or pure white `#FFFFFF` on dark `#265363` headers).
   * **Tagline**: ***"Close the sale. Send the slip"*** set in **Brush Script MT** (italic script) in Primary Teal (`#377581`).
-* **Official Color System (`Brand Guide.jpg` & `Netslip Mock 1–4.jpg`)**:
+* **Official Color System (`Brand Guide.jpg` & `VendSlip Mock 1–4.jpg`)**:
   * **Primary Brand Teal**: `#377581` — Primary CTA buttons, active navigation indicators, receipt table headers, interactive chips, and checkmark accents.
   * **Deep Slate Teal**: `#265363` — Sidebar navigation, executive summary hero card, receipt header band, and primary display headings.
-  * **Architectural Canvas Neutrals (from `DP 1.jpg` & `Netslip Mock 1.jpg`)**: Warm Alabaster Canvas (`#F4F7F8`), Pure Paper White (`#FFFFFF`), Subtle Hairline Border (`#E2E8F0`), and Deep Charcoal Ink (`#111820` from `Netslip Mock 4.jpg`).
+  * **Architectural Canvas Neutrals (from `DP 1.jpg` & `VendSlip Mock 1.jpg`)**: Warm Alabaster Canvas (`#F4F7F8`), Pure Paper White (`#FFFFFF`), Subtle Hairline Border (`#E2E8F0`), and Deep Charcoal Ink (`#111820` from `VendSlip Mock 4.jpg`).
 * **Official Typography (`Brand Guide.jpg`)**:
   * **Primary Font — `Lupio`** (Geometric Neo-Grotesque Sans-Serif, weights: Regular `400`, Medium `500`, SemiBold `600`, Bold `700`, ExtraBold `800`, Black `900` + tabular numerals for all currency figures).
   * **Secondary Font — `Brush Script MT`** (Expressive Script Font used *exclusively* for the brand tagline *"Close the sale. Send the slip"* and the receipt footer signature *"Thank you for your patronage!"*).
@@ -30,21 +30,21 @@ When generating UI/UX in **Google Stitch**, upload these files from `C:\Users\ru
 
 ## 2. Copy-Paste Prompts for Google Stitch (With Full Brand Identity Embedded)
 
-> **Tip for Google Stitch:** Upload `Netslip PNG.png` and `Brand Guide.jpg` into the Stitch prompt attachment box, then paste **Prompt 0** first, followed by **Prompts 1–7** for each screen. Every prompt below carries the self-contained brand identity block so Stitch never drifts into generic colors or fonts.
+> **Tip for Google Stitch:** Upload `VendSlip PNG.png` and `Brand Guide.jpg` into the Stitch prompt attachment box, then paste **Prompt 0** first, followed by **Prompts 1–7** for each screen. Every prompt below carries the self-contained brand identity block so Stitch never drifts into generic colors or fonts.
 
 ---
 
-### PROMPT 0: Master Design System & App Shell Prompt (Paste First with `Netslip PNG.png` & `Brand Guide.jpg`)
+### PROMPT 0: Master Design System & App Shell Prompt (Paste First with `VendSlip PNG.png` & `Brand Guide.jpg`)
 
 ```text
-Design a sleek, tactile, real-world B2B Fintech SaaS web application and responsive mobile interface called "NetSlip" (Tagline: "Close the sale. Send the slip") — an Automated Receipt & Invoice Generator for WhatsApp, Instagram, Facebook, and Telegram sellers.
+Design a sleek, tactile, real-world B2B Fintech SaaS web application and responsive mobile interface called "VendSlip" (Tagline: "Close the sale. Send the slip") — an Automated Receipt & Invoice Generator for WhatsApp, Instagram, Facebook, and Telegram sellers.
 
-1. STRICT BRAND IDENTITY (MATCH THE UPLOADED NETSLIP LOGO & BRAND GUIDE EXACTLY):
-- Logo Mark: Use the uploaded NetSlip logo (a bold geometric "N" in #265363 whose right vertical pillar transforms into a folded-corner white receipt page containing 4 horizontal #377581 line-item bars and a bottom-right #377581 checkmark, above the bold "NetSlip" wordmark and cursive "Close the sale. Send the slip" tagline).
+1. STRICT BRAND IDENTITY (MATCH THE UPLOADED VENDSLIP LOGO & BRAND GUIDE EXACTLY):
+- Logo Mark: Use the uploaded VendSlip logo (a bold geometric "N" in #265363 whose right vertical pillar transforms into a folded-corner white receipt page containing 4 horizontal #377581 line-item bars and a bottom-right #377581 checkmark, above the bold "VendSlip" wordmark and cursive "Close the sale. Send the slip" tagline).
 - Official Brand Colors ONLY:
   • Primary Brand Teal: #377581 (CTAs, active pills, receipt table headers, links, focus rings, progress bars)
   • Deep Slate Teal: #265363 (Left sidebar navigation, executive balance card, receipt header band, bold headings)
-  • Architectural Canvas Background: #F4F7F8 (Soft warm alabaster-slate background, like the clean white/off-white studio surface in the NetSlip 3D mockup)
+  • Architectural Canvas Background: #F4F7F8 (Soft warm alabaster-slate background, like the clean white/off-white studio surface in the VendSlip 3D mockup)
   • Elevated Paper / Card Surface: #FFFFFF (Pure white cards with 1px solid #E2E8F0 hairline borders and soft tactile shadow 0 2px 10px rgba(38, 83, 99, 0.06))
   • Executive Dark Contrast Accent: #111820 (Deep matte charcoal for code/terminal drawers and high-contrast text)
   • Semantic Financial Statuses: Paid (#10B981 on #ECFDF5), Partial/Pending (#D97706 on #FFFBEB), Overdue (#E11D48 on #FFF1F2), Immutable Lock (#475569 on #F1F5F9).
@@ -58,7 +58,7 @@ Design a sleek, tactile, real-world B2B Fintech SaaS web application and respons
 
 3. GLOBAL APPLICATION SHELL:
 - Left Navigation Sidebar (260px wide, solid #265363 Deep Slate Teal):
-  • Top Brand Lockup: White rounded badge holding the NetSlip "N" receipt-checkmark logo, "NetSlip" in white Lupio ExtraBold, and "Close the sale. Send the slip" in #8CD4E0 Brush Script MT cursive.
+  • Top Brand Lockup: White rounded badge holding the VendSlip "N" receipt-checkmark logo, "VendSlip" in white Lupio ExtraBold, and "Close the sale. Send the slip" in #8CD4E0 Brush Script MT cursive.
   • Active Store Card: "Amina Luxury Couture · Business Plus Plan" with a subtle #377581 border.
   • Navigation Items: Overview & Analytics, /Slash Slip Composer, Receipts & Invoices, Template Gallery, Customers & Debtors, Inventory (SKU), Team & Staff, Bot Channels (WA/TG/IG/FB), Billing & PAYG Credits.
   • Bottom Entitlement Widget: Shows "Unlimited Plan Active" + "50 Non-Expiring PAYG Credits" with a full-width "#377581" button: "+ Top Up Credits".
@@ -71,7 +71,7 @@ Design a sleek, tactile, real-world B2B Fintech SaaS web application and respons
 ### PROMPT 1: Business Dashboard — Executive Overview & Analytics Screen (React TS)
 
 ```text
-Using the exact NetSlip Brand Identity (Primary Teal #377581, Deep Slate Teal #265363, Warm Alabaster Canvas #F4F7F8, Pure White Cards #FFFFFF, Lupio geometric sans-serif font, Brush Script MT cursive tagline, and the uploaded NetSlip "N" receipt-checkmark logo), design the "Overview & Analytics" screen for the Merchant Dashboard.
+Using the exact VendSlip Brand Identity (Primary Teal #377581, Deep Slate Teal #265363, Warm Alabaster Canvas #F4F7F8, Pure White Cards #FFFFFF, Lupio geometric sans-serif font, Brush Script MT cursive tagline, and the uploaded VendSlip "N" receipt-checkmark logo), design the "Overview & Analytics" screen for the Merchant Dashboard.
 
 VISUAL LAYOUT (CASHO & INVOICE2GO FINTECH CRAFTSMANSHIP):
 1. Top 4-Card KPI Bento Grid:
@@ -87,7 +87,7 @@ VISUAL LAYOUT (CASHO & INVOICE2GO FINTECH CRAFTSMANSHIP):
    - Card 3 (Pure White #FFFFFF Card):
      • Label: "Subscription & PAYG Credit Wallet"
      • Value: "Unlimited Slips" + "50 PAYG Credits"
-     • Footer: "Paid Credits Remove NetSlip Watermark Automatically".
+     • Footer: "Paid Credits Remove VendSlip Watermark Automatically".
    - Card 4 (Pure White #FFFFFF Card):
      • Label: "Twilio / Meta Cost-Saver Buffer"
      • Value: "142 Outbound API Calls Saved"
@@ -100,7 +100,7 @@ VISUAL LAYOUT (CASHO & INVOICE2GO FINTECH CRAFTSMANSHIP):
 3. Bottom Split Section:
    - Left (7 Columns — Casho-Style Recent Slips List):
      • Segmented filter tabs: "All Slips", "Receipts", "Invoices", "Overdue".
-     • Clean document rows with the NetSlip document icon, "RCP-2026-1004 · John Danjuma", Channel badge ("WhatsApp"), Issue Date, right-aligned bold Lupio amount ("₦15,000.00"), emerald "PAID" badge, and quick action icons (PDF Download, QR Verify, Share).
+     • Clean document rows with the VendSlip document icon, "RCP-2026-1004 · John Danjuma", Channel badge ("WhatsApp"), Issue Date, right-aligned bold Lupio amount ("₦15,000.00"), emerald "PAID" badge, and quick action icons (PDF Download, QR Verify, Share).
    - Right (5 Columns — Inventory Low-Stock & Overdue Debtors Card):
      • Shows low-stock SKUs ("SKU-BAG-03 Handcrafted Tote Bag · 3 left in stock") and top debtors with a 1-click "[Send Payment Link]" button in #377581.
 ```
@@ -110,7 +110,7 @@ VISUAL LAYOUT (CASHO & INVOICE2GO FINTECH CRAFTSMANSHIP):
 ### PROMPT 2: Split-Screen `/Slash` Bot Studio & Invoice2go-Style Live Slip Composer
 
 ```text
-Using the exact NetSlip Brand Identity (Primary Teal #377581, Deep Slate Teal #265363, Lupio primary font, Brush Script MT cursive accent font, and the uploaded NetSlip "N" receipt-checkmark logo), design the "Omnichannel /Slash Composer & Live Paper Slip Preview" screen inspired by Invoice2go.
+Using the exact VendSlip Brand Identity (Primary Teal #377581, Deep Slate Teal #265363, Lupio primary font, Brush Script MT cursive accent font, and the uploaded VendSlip "N" receipt-checkmark logo), design the "Omnichannel /Slash Composer & Live Paper Slip Preview" screen inspired by Invoice2go.
 
 SPLIT-SCREEN WORKSPACE (55% Left Controls / 45% Right Live Paper Slip Preview):
 
@@ -130,7 +130,7 @@ LEFT PANE (55% Width — Transaction Input & Pre-Confirmation Studio):
    - "[✅ Confirm & Generate Branded PDF]" (solid #377581 button), "[🪙 Spend 1 Paid Credit (Remove Watermark)]" (#265363 button), and "[Reset Draft]".
 
 RIGHT PANE (45% Width — Tactile Floating Paper Slip Preview):
-- Top Preview Toolbar: Template selector pill ("Template: NetSlip Classic Executive ▾"), Mode badge ("INVOICE PREVIEW"), and "[⬇ Download PDF]" / "[🖨️ Print]".
+- Top Preview Toolbar: Template selector pill ("Template: VendSlip Classic Executive ▾"), Mode badge ("INVOICE PREVIEW"), and "[⬇ Download PDF]" / "[🖨️ Print]".
 - Realistic Floating Paper Document Sheet (#FFFFFF with realistic paper shadow):
   • Top Banner in #265363 Deep Slate Teal with a 6px #377581 bottom accent bar, Store Logo, "Amina Luxury Couture & Kicks", and right-aligned "INVOICE #INV-2026-5001" + amber "PARTIALLY PAID" stamp.
   • Two-column "Billed To" (Chief Emeka Nwosu, 42 Wuse II Abuja) and "Metadata" (Issued Date, Due Date, Channel: Telegram 10.3).
@@ -144,7 +144,7 @@ RIGHT PANE (45% Width — Tactile Floating Paper Slip Preview):
 ### PROMPT 3: Casho-Style Documents Ledger & Admin-Controlled Mutable/Immutable Edit Drawer
 
 ```text
-Using the exact NetSlip Brand Identity (Primary Teal #377581, Deep Slate Teal #265363, Lupio font, Brush Script MT accent font, and the uploaded NetSlip "N" receipt-checkmark logo), design the "Receipts, Invoices & Credit Notes Ledger" screen with a slide-over "Edit Document Drawer".
+Using the exact VendSlip Brand Identity (Primary Teal #377581, Deep Slate Teal #265363, Lupio font, Brush Script MT accent font, and the uploaded VendSlip "N" receipt-checkmark logo), design the "Receipts, Invoices & Credit Notes Ledger" screen with a slide-over "Edit Document Drawer".
 
 MAIN LEDGER VIEW:
 1. Top Header & Admin Mutability Status Pill:
@@ -155,7 +155,7 @@ MAIN LEDGER VIEW:
 2. Segmented Filter Bar (Casho Style):
    - Pills: "All Slips (128)", "Receipts (94)", "Invoices (30)", "Overdue (4)", "Credit Notes / Void (4)" + Search input and Channel filter (WhatsApp, Telegram, Instagram, Facebook).
 3. Tactile Ledger Table (#FFFFFF card):
-   - Columns: Document # & Verification Hash, Type Pill (RECEIPT / INVOICE), Customer & Address, Channel Badge, Grand Total (right-aligned Lupio bold), Balance Due, Status Badge (PAID, PARTIAL, OVERDUE, VOID), Watermark Status ("Clean · No Watermark" vs "Powered by NetSlip"), and Actions: "[Preview]", "[PDF]", "[✏️ Edit]", "[Credit Note]".
+   - Columns: Document # & Verification Hash, Type Pill (RECEIPT / INVOICE), Customer & Address, Channel Badge, Grand Total (right-aligned Lupio bold), Balance Due, Status Badge (PAID, PARTIAL, OVERDUE, VOID), Watermark Status ("Clean · No Watermark" vs "Powered by VendSlip"), and Actions: "[Preview]", "[PDF]", "[✏️ Edit]", "[Credit Note]".
 
 RIGHT SLIDE-OVER DRAWER ("Edit Issued Document #INV-2026-5001 — Revision #2"):
 - Header in #265363: "Edit Record (Admin-Authorized Mutable Mode)"
@@ -169,18 +169,18 @@ RIGHT SLIDE-OVER DRAWER ("Edit Issued Document #INV-2026-5001 — Revision #2"):
 ### PROMPT 4: Template Gallery & Dual Default Templates Showcase (`Classic Executive` & `Minimalist Social Slip`)
 
 ```text
-Using the exact NetSlip Brand Identity (Primary Teal #377581, Deep Slate Teal #265363, Lupio font, Brush Script MT cursive tagline/signature font, and the uploaded NetSlip "N" receipt-checkmark logo), design the "Invoice & Receipt Template Gallery & Brand Customizer" screen.
+Using the exact VendSlip Brand Identity (Primary Teal #377581, Deep Slate Teal #265363, Lupio font, Brush Script MT cursive tagline/signature font, and the uploaded VendSlip "N" receipt-checkmark logo), design the "Invoice & Receipt Template Gallery & Brand Customizer" screen.
 
 SCREEN LAYOUT:
 1. Top Brand Customizer Strip (#FFFFFF Card):
    - Store Logo Uploader preview, Primary Color Swatch (#377581), Secondary Color Swatch (#265363), Font Preview ("Lupio + Brush Script MT"), and a live preview mode switch: "[Preview as: Paid Receipt]" vs "[Preview as: Unpaid Invoice]".
 
 2. Prominent Showcase of the 2 Built-In Default Templates (Side-by-Side High-Detail Paper Previews):
-   - DEFAULT TEMPLATE 1 CARD: "NetSlip Classic Executive" (Badge: "Default Corporate · Supports Invoice & Receipt")
-     • Shows a detailed miniature A4 paper slip with a full-width #265363 header band, #377581 accent stripe, two-column customer/metadata block, zebra-striped Lupio item table, bank + Flutterwave/Crypto payment box, Brush Script MT "Thank you for your patronage!" signature, QR verification code, and optional bottom watermark bar ("Powered by NetSlip — Close the sale. Send the slip").
+   - DEFAULT TEMPLATE 1 CARD: "VendSlip Classic Executive" (Badge: "Default Corporate · Supports Invoice & Receipt")
+     • Shows a detailed miniature A4 paper slip with a full-width #265363 header band, #377581 accent stripe, two-column customer/metadata block, zebra-striped Lupio item table, bank + Flutterwave/Crypto payment box, Brush Script MT "Thank you for your patronage!" signature, QR verification code, and optional bottom watermark bar ("Powered by VendSlip — Close the sale. Send the slip").
      • Footer Actions: "[✓ Selected for Invoices]" (solid #377581), "[Use for Receipts]", "[Customize Fields]".
 
-   - DEFAULT TEMPLATE 2 CARD: "NetSlip Minimalist Social Slip" (Badge: "Default Mobile-First · Supports Invoice & Receipt")
+   - DEFAULT TEMPLATE 2 CARD: "VendSlip Minimalist Social Slip" (Badge: "Default Mobile-First · Supports Invoice & Receipt")
      • Shows a sleek, vertical mobile-optimized receipt/invoice card designed for instant reading inside WhatsApp, Instagram, and Telegram chats without zooming. Centered logo, bold #265363 store title, crisp dashed horizontal dividers, stacked item rows, a high-contrast #377581 bordered Grand Total box, compact payment link button, centered QR verification code, and Brush Script MT thank-you line.
      • Footer Actions: "[✓ Selected for Receipts]" (solid #265363), "[Use for Invoices]", "[Customize Fields]".
 
@@ -192,13 +192,13 @@ SCREEN LAYOUT:
 ### PROMPT 5: Subscriptions, Non-Expiring PAYG Credit Packs & Flutterwave + Crypto Checkout
 
 ```text
-Using the exact NetSlip Brand Identity (Primary Teal #377581, Deep Slate Teal #265363, Lupio font, Brush Script MT cursive tagline, and the uploaded NetSlip "N" receipt-checkmark logo), design the "Plans, Non-Expiring PAYG Credit Packs & Payment Checkout" screen.
+Using the exact VendSlip Brand Identity (Primary Teal #377581, Deep Slate Teal #265363, Lupio font, Brush Script MT cursive tagline, and the uploaded VendSlip "N" receipt-checkmark logo), design the "Plans, Non-Expiring PAYG Credit Packs & Payment Checkout" screen.
 
 SCREEN SECTIONS:
 1. 3 Subscription Tier Cards (Clean Fintech Pricing Grid):
    - Card 1: "Free Plan" — "₦0 / month"
      • For new sellers & low-volume vendors.
-     • Includes: 15 receipts/month, WhatsApp & Telegram text-to-receipt, 2 default templates, carries the "Powered by NetSlip — Close the sale. Send the slip" watermark.
+     • Includes: 15 receipts/month, WhatsApp & Telegram text-to-receipt, 2 default templates, carries the "Powered by VendSlip — Close the sale. Send the slip" watermark.
    - Card 2 (Featured Card with #377581 2px border & "#265363 Most Popular" ribbon): "Pro Merchant Plan" — "₦2,500 / month" or "₦24,000 / year"
      • For active social media sellers.
      • Includes: Unlimited PDF receipts & invoices, custom logo & brand colors, 100% watermark removal, automated WhatsApp sales summaries, Excel/CSV bookkeeping exports.
@@ -208,7 +208,7 @@ SCREEN SECTIONS:
 
 2. Pay-As-You-Go Non-Expiring Credit Packs Banner (For Micro-Merchants Who Dislike Monthly Subscriptions):
    - Deep Slate Teal (#265363) header strip with 3 tactile credit pack cards:
-     • "50 Credits Pack — ₦1,000" (Non-expiring · Automatically removes "Powered by NetSlip" watermark!)
+     • "50 Credits Pack — ₦1,000" (Non-expiring · Automatically removes "Powered by VendSlip" watermark!)
      • "150 + 15 Bonus Credits Pack — ₦2,500" (Non-expiring · Watermark-Free)
      • "350 + 50 Bonus Credits Pack — ₦5,000" (Non-expiring · Watermark-Free)
 
@@ -222,11 +222,11 @@ SCREEN SECTIONS:
 ### PROMPT 6: Laravel Super-Admin & Admin Control Portal (`/admin/*`)
 
 ```text
-Using the exact NetSlip Brand Identity (Primary Teal #377581, Deep Slate Teal #265363, Lupio geometric sans-serif font, Brush Script MT tagline accent, and the uploaded NetSlip "N" receipt-checkmark logo), design the "Super-Admin & Admin Control Portal" (Laravel Backend Dashboard).
+Using the exact VendSlip Brand Identity (Primary Teal #377581, Deep Slate Teal #265363, Lupio geometric sans-serif font, Brush Script MT tagline accent, and the uploaded VendSlip "N" receipt-checkmark logo), design the "Super-Admin & Admin Control Portal" (Laravel Backend Dashboard).
 
 LAYOUT & MODULES:
 1. Top Super-Admin Header (#265363 with #377581 accent):
-   - Displays NetSlip Logo, "Super-Admin Command Center", Platform MRR, Total PAYG Credits Sold, Active Merchants, and Webhook HMAC Health ("100% Verified").
+   - Displays VendSlip Logo, "Super-Admin Command Center", Platform MRR, Total PAYG Credits Sold, Active Merchants, and Webhook HMAC Health ("100% Verified").
 
 2. Main Module A — Client Management & Per-Client Mutable/Immutable Controller:
    - Merchant list table with an interactive inspection panel for "Amina Luxury Couture":
@@ -239,11 +239,11 @@ LAYOUT & MODULES:
      • Forensic Diff Viewer Table: Shows Revision #2 on INV-2026-5001 ("Customer Address & Total edited by Owner · Before: ₦12,000 -> After: ₦15,000").
 
 3. Main Module B — Admin Invoice & Receipt Template Builder Studio:
-   - Shows the 2 Default Templates ("NetSlip Classic Executive" & "NetSlip Minimalist Social Slip") plus a "[+ Create New Template]" builder where the Admin configures layout blocks, placeholders, and assigns templates to plans or specific clients.
+   - Shows the 2 Default Templates ("VendSlip Classic Executive" & "VendSlip Minimalist Social Slip") plus a "[+ Create New Template]" builder where the Admin configures layout blocks, placeholders, and assigns templates to plans or specific clients.
 
 4. Main Module C — Dynamic Monetization & Watermark Rules Engine:
    - Live editable inputs for Plan Prices (₦0, ₦2,500/₦24,000, ₦6,000/₦60,000), Free Quota (15/mo), and Credit Packs (₦1,000 = 50 credits).
-   - Master Switch: "[✓] Remove 'Powered by NetSlip' watermark automatically when a Free user consumes a paid PAYG credit".
+   - Master Switch: "[✓] Remove 'Powered by VendSlip' watermark automatically when a Free user consumes a paid PAYG credit".
 ```
 
 ---
@@ -251,7 +251,7 @@ LAYOUT & MODULES:
 ### PROMPT 7: Public Customer Invoice Checkout (`/pay/{uid}`) & Cryptographic QR Verifier (`/verify/{hash}`)
 
 ```text
-Using the exact NetSlip Brand Identity (Primary Teal #377581, Deep Slate Teal #265363, Lupio font, Brush Script MT cursive tagline/signature, and the uploaded NetSlip "N" receipt-checkmark logo), design the two public customer-facing screens side-by-side:
+Using the exact VendSlip Brand Identity (Primary Teal #377581, Deep Slate Teal #265363, Lupio font, Brush Script MT cursive tagline/signature, and the uploaded VendSlip "N" receipt-checkmark logo), design the two public customer-facing screens side-by-side:
 
 1. Left Screen — Hosted Customer Invoice Checkout (/pay/INV-2026-5001):
    - Displays the merchant's branded invoice slip at the top with itemized breakdown and "Balance Due: ₦44,775.00".
@@ -260,7 +260,7 @@ Using the exact NetSlip Brand Identity (Primary Teal #377581, Deep Slate Teal #2
      • "[🪙 Pay with Crypto via NOWPayments (28.15 USDT TRC-20 / USDC / BTC / TON)]" (#265363 button with QR wallet preview).
 
 2. Right Screen — Official Cryptographic Receipt Verification Portal (/verify/NSV-9A84F2...):
-   - Top header in #265363 with the NetSlip "N" receipt-checkmark logo and cursive tagline "Close the sale. Send the slip".
+   - Top header in #265363 with the VendSlip "N" receipt-checkmark logo and cursive tagline "Close the sale. Send the slip".
    - Green verification banner: "✅ AUTHENTIC & UNALTERED RECEIPT — HMAC-SHA256 Signature Verified".
    - Clean metadata summary: Merchant Name, Document #RCP-2026-1001, Customer Name, Total Paid (₦15,000.00), Issued Timestamp, and "[⬇ Download Official Verified PDF]".
 ```

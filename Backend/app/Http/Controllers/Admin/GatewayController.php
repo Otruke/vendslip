@@ -30,7 +30,7 @@ final class GatewayController extends Controller
         'Telegram bot (Bot API 10.3)' => [
             'telegram.bot_token' => ['Bot token', 'From @BotFather'],
             'telegram.webhook_secret' => ['Webhook secret token', 'Any long random string'],
-            'telegram.bot_username' => ['Bot username', 'e.g. NetSlipBot'],
+            'telegram.bot_username' => ['Bot username', 'e.g. VendSlipBot'],
         ],
         'Twilio (WhatsApp · Instagram · Messenger)' => [
             'twilio.account_sid' => ['Account SID', 'AC…'],
@@ -108,7 +108,7 @@ final class GatewayController extends Controller
 
     public function registerTelegram(): RedirectResponse
     {
-        $code = Artisan::call('netslip:telegram-webhook');
+        $code = Artisan::call('vendslip:telegram-webhook');
         $output = trim(Artisan::output());
 
         return back()->with($code === 0 ? 'status' : 'error', 'Telegram: '.mb_substr($output, 0, 300));

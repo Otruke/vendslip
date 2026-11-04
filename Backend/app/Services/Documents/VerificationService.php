@@ -17,13 +17,21 @@ use Illuminate\Support\Str;
  */
 final class VerificationService
 {
+    /** VendSlip Verification code prefix printed under the QR (VSV-XXXX-XXXX-XXXX). */
+    public const string CODE_PREFIX = 'VSV';
+
+    /** Codes printed before the rename (NSV-…) still resolve. */
+    private const array LEGACY_PREFIXES = ['NSV'];
+
     public function key(): string
     {
-        $configured = config('netslip.verification_key');
+        $configured = config('vendslip.verification_key');
         if (is_string($configured) && $configured !== '') {
             return $configured;
         }
 
+        // Frozen domain-separation label, kept from before the VendSlip rename. Never change it:
+        // every QR code already issued is signed with the key derived from this exact string.
         return hash_hmac('sha256', 'netslip-slip-verification-v1', (string) config('app.key'));
     }
 
@@ -71,7 +79,7 @@ final class VerificationService
     {
         $hex = strtoupper(substr($hash, 0, 12));
 
-        return 'NSV-'.implode('-', str_split($hex, 4));
+        return self::CODE_PREFIX.'-'.implode('-', str_split($hex, 4));
     }
 
     public function isIntact(Document $document): bool
@@ -80,7 +88,7 @@ final class VerificationService
     }
 
     /**
-     * Resolve a QR hash, verification code (NSV-XXXX-XXXX-XXXX) or a superseded hash.
+     * Resolve a QR hash, verification code (VSV-XXXX-XXXX-XXXX, or a legacy NSV- code) or a superseded hash.
      *
      * @return array{document: Document|null, superseded_by_revision: int|null}
      */
@@ -102,15 +110,23 @@ final class VerificationService
         }
 
         $code = Str::upper((string) preg_replace('/[^A-Za-z0-9]/', '', $input));
-        if (str_starts_with($code, 'NSV')) {
-            $code = substr($code, 3);
+        foreach ([self::CODE_PREFIX, ...self::LEGACY_PREFIXES] as $prefix) {
+            if (str_starts_with($code, $prefix)) {
+                $code = substr($code, strlen($prefix));
+                break;
+            }
         }
         if (preg_match('/^[A-F0-9]{12}$/', $code) !== 1) {
             return ['document' => null, 'superseded_by_revision' => null];
         }
 
         return [
-            'document' => Document::query()->where('verification_code', 'NSV-'.implode('-', str_split($code, 4)))->first(),
+            'document' => Document::query()
+                ->whereIn('verification_code', array_map(
+                    static fn (string $prefix): string => $prefix.'-'.implode('-', str_split($code, 4)),
+                    [self::CODE_PREFIX, ...self::LEGACY_PREFIXES],
+                ))
+                ->first(),
             'superseded_by_revision' => null,
         ];
     }

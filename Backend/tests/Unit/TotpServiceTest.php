@@ -23,6 +23,6 @@ final class TotpServiceTest extends TestCase
 
         $generated = $totp->generateSecret();
         $this->assertMatchesRegularExpression('/^[A-Z2-7]{32}$/', $generated);
-        $this->assertStringStartsWith('otpauth://totp/NetSlip:', $totp->otpauthUri($generated, 'a@b.c'));
+        $this->assertStringStartsWith('otpauth://totp/VendSlip:', $totp->otpauthUri($generated, 'a@b.c'));
     }
 }

@@ -34,6 +34,9 @@ Route::prefix('admin')->name('admin.')->group(function (): void {
         Route::post('profile/two-factor', [ProfileController::class, 'startTwoFactor'])->name('profile.two-factor.start');
         Route::post('profile/two-factor/confirm', [ProfileController::class, 'confirmTwoFactor'])->middleware('throttle:6,1')->name('profile.two-factor.confirm');
         Route::delete('profile/two-factor', [ProfileController::class, 'disableTwoFactor'])->middleware('throttle:6,1')->name('profile.two-factor.disable');
+        Route::post('profile/avatar', [ProfileController::class, 'uploadAvatar'])->middleware('throttle:10,1')->name('profile.avatar');
+        Route::delete('profile/avatar', [ProfileController::class, 'deleteAvatar'])->name('profile.avatar.delete');
+        Route::get('avatars/{user}', [ProfileController::class, 'showAvatar'])->whereNumber('user')->name('avatar');
 
         Route::get('merchants', [MerchantController::class, 'index'])->name('merchants.index');
         Route::get('merchants/{merchant}', [MerchantController::class, 'show'])->name('merchants.show');

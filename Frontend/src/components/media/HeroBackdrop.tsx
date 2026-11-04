@@ -6,46 +6,49 @@ type Slip = { x: number; y: number; vx: number; vy: number; rot: number; vr: num
 
 const TEAL = '55, 117, 129'
 
-/** One small paper slip: rounded top, serrated bottom, two printed lines. */
-function drawSlip(ctx: CanvasRenderingContext2D, s: Slip, lit: number) {
+/** One small slip in the VendSlip logo's language: scalloped tear edge on top, folded corner. */
+function drawSlip(ctx: CanvasRenderingContext2D, s: Slip, lit: number, fade: number) {
   const w = s.size
-  const h = s.size * 1.3
-  const teeth = 5
+  const h = s.size * 1.25
+  const scallops = 5
+  const r = w / scallops / 2
+  const fold = w * 0.32
   ctx.save()
   ctx.translate(s.x, s.y)
   ctx.rotate(s.rot)
+  ctx.globalAlpha = fade
   ctx.beginPath()
-  ctx.moveTo(-w / 2, h / 2)
-  ctx.lineTo(-w / 2, -h / 2 + 3)
-  ctx.quadraticCurveTo(-w / 2, -h / 2, -w / 2 + 3, -h / 2)
-  ctx.lineTo(w / 2 - 3, -h / 2)
-  ctx.quadraticCurveTo(w / 2, -h / 2, w / 2, -h / 2 + 3)
-  ctx.lineTo(w / 2, h / 2)
-  for (let i = teeth; i > 0; i--) {
-    const x0 = -w / 2 + (w / teeth) * i
-    ctx.lineTo(x0 - w / teeth / 2, h / 2 - 3)
-    ctx.lineTo(x0 - w / teeth, h / 2)
+  ctx.moveTo(-w / 2, -h / 2 + r)
+  for (let i = 0; i < scallops; i++) {
+    ctx.arc(-w / 2 + r + i * 2 * r, -h / 2 + r, r, Math.PI, 0)
   }
+  ctx.lineTo(w / 2, h / 2)
+  ctx.lineTo(-w / 2 + fold, h / 2)
+  ctx.lineTo(-w / 2, h / 2 - fold)
   ctx.closePath()
-  ctx.fillStyle = `rgba(255, 255, 255, ${0.55 + 0.4 * s.depth})`
+  ctx.fillStyle = `rgba(255, 255, 255, ${0.6 + 0.35 * s.depth})`
   ctx.fill()
   ctx.lineWidth = 1
-  ctx.strokeStyle = `rgba(${TEAL}, ${0.22 + 0.25 * s.depth + 0.45 * lit})`
+  ctx.strokeStyle = `rgba(${TEAL}, ${0.25 + 0.25 * s.depth + 0.45 * lit})`
   ctx.stroke()
-  ctx.strokeStyle = `rgba(${TEAL}, ${0.18 + 0.3 * lit})`
+  // Folded corner and two printed lines
+  ctx.fillStyle = `rgba(${TEAL}, ${0.18 + 0.35 * lit})`
   ctx.beginPath()
-  ctx.moveTo(-w / 2 + 4, -h / 2 + 6)
-  ctx.lineTo(w / 2 - 6, -h / 2 + 6)
-  ctx.moveTo(-w / 2 + 4, -h / 2 + 10)
-  ctx.lineTo(w / 4, -h / 2 + 10)
-  ctx.stroke()
+  ctx.moveTo(-w / 2, h / 2 - fold)
+  ctx.lineTo(-w / 2 + fold, h / 2 - fold)
+  ctx.lineTo(-w / 2 + fold, h / 2)
+  ctx.closePath()
+  ctx.fill()
+  ctx.fillRect(-w / 2 + 4, -h / 2 + 2 * r + 4, w * 0.62, 1.5)
+  ctx.fillRect(-w / 2 + 4, -h / 2 + 2 * r + 9, w * 0.38, 1.5)
   ctx.restore()
 }
 
 /**
- * Hero background: the NetSlip geometric wallpaper (landscape / portrait art direction) plus an
- * interactive layer of drifting paper slips. Slips part around the cursor and link to it with
- * fine teal traces, echoing the circuit lines in the wallpaper. Static when reduced motion is on.
+ * Hero background: VendSlip's own flat illustration (ledger paper with a giant receipt in the logo's
+ * shape, art-directed for landscape and portrait) plus an interactive layer of drifting slips that
+ * part around the cursor and link to it with fine teal traces. No gradients anywhere. Static when
+ * reduced motion is on.
  */
 export function HeroBackdrop({ className }: { className?: string }) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -93,15 +96,15 @@ export function HeroBackdrop({ className }: { className?: string }) {
       if (reduced) draw()
     }
 
+    // On wide screens the headline sits on the left: slips fade out as they drift towards it.
+    const clearOfCopy = (x: number) => {
+      if (width < 1024) return 0.55
+      const t = (x / width - 0.36) / 0.16
+      return Math.max(0, Math.min(1, t))
+    }
+
     const draw = () => {
       ctx.clearRect(0, 0, width, height)
-      if (mouse.active) {
-        const glow = ctx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, 220)
-        glow.addColorStop(0, `rgba(${TEAL}, 0.10)`)
-        glow.addColorStop(1, `rgba(${TEAL}, 0)`)
-        ctx.fillStyle = glow
-        ctx.fillRect(mouse.x - 220, mouse.y - 220, 440, 440)
-      }
       for (const s of slips) {
         const dx = s.x - mouse.x
         const dy = s.y - mouse.y
@@ -119,7 +122,7 @@ export function HeroBackdrop({ className }: { className?: string }) {
           ctx.fillStyle = `rgba(${TEAL}, ${0.6 * lit})`
           ctx.fillRect(s.x - 1.5, mouse.y - 1.5, 3, 3)
         }
-        drawSlip(ctx, s, lit)
+        drawSlip(ctx, s, lit, clearOfCopy(s.x))
       }
     }
 
@@ -184,16 +187,12 @@ export function HeroBackdrop({ className }: { className?: string }) {
   }, [])
 
   return (
-    <div className={cn('pointer-events-none absolute inset-0 -z-10 overflow-hidden', className)} aria-hidden>
+    <div className={cn('pointer-events-none absolute inset-0 -z-10 overflow-hidden bg-[#F2F6F7]', className)} aria-hidden>
       <picture>
-        <source media="(max-width: 767px) and (orientation: portrait)" srcSet={heroBackground.portrait.srcSet} sizes="100vw" />
-        <img src={heroBackground.landscape.src} srcSet={heroBackground.landscape.srcSet} sizes="100vw" alt="" className="absolute inset-0 h-full w-full object-cover" fetchPriority="high" decoding="async" />
+        <source media="(max-width: 1023px)" srcSet={heroBackground.portrait} />
+        <img src={heroBackground.landscape} alt="" className="absolute inset-0 h-full w-full object-cover object-right" fetchPriority="high" decoding="async" />
       </picture>
-      {/* Reading wash: strong behind the copy, clear behind the demo. */}
-      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(248,250,252,0.92)_0%,rgba(248,250,252,0.7)_45%,rgba(248,250,252,0.85)_100%)] lg:bg-[linear-gradient(90deg,rgba(248,250,252,0.95)_0%,rgba(248,250,252,0.82)_38%,rgba(248,250,252,0.35)_70%,rgba(248,250,252,0.15)_100%)]" />
-      {/* Slips stay clear of the headline: faded under the copy, full strength around the demo. */}
-      <canvas ref={canvasRef} className="absolute inset-0 h-full w-full [mask-image:linear-gradient(180deg,transparent_0%,rgba(0,0,0,0.35)_30%,#000_60%)] lg:[mask-image:linear-gradient(90deg,transparent_0%,transparent_30%,rgba(0,0,0,0.5)_44%,#000_58%)]" />
-      <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-b from-transparent to-white" />
+      <canvas ref={canvasRef} className="absolute inset-0 h-full w-full" />
     </div>
   )
 }

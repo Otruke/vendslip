@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace NetSlip\Bots\Telegram;
+namespace VendSlip\Bots\Telegram;
 
 use App\Services\Bot\Actions\AskConfirmation;
 use App\Services\Bot\Actions\DeliverSlip;

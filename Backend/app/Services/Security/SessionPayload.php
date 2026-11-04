@@ -6,6 +6,7 @@ namespace App\Services\Security;
 
 use App\Http\Resources\MerchantResource;
 use App\Models\User;
+use App\Services\Account\AvatarStore;
 use App\Services\Billing\PlanEntitlements;
 use App\Services\Billing\QuotaService;
 
@@ -15,6 +16,7 @@ final class SessionPayload
     public function __construct(
         private readonly PlanEntitlements $entitlements,
         private readonly QuotaService $quota,
+        private readonly AvatarStore $avatars,
     ) {}
 
     /** @return array<string, mixed> */
@@ -28,6 +30,7 @@ final class SessionPayload
                 'name' => $user->name,
                 'email' => $user->email,
                 'phone' => $user->phone,
+                'avatar_url' => $this->avatars->apiUrl($user),
                 'role' => $user->merchantRole()?->value,
                 'role_label' => $user->merchantRole()?->label(),
                 'permissions' => $user->getAllPermissions()->pluck('name')->values(),

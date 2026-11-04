@@ -1,4 +1,4 @@
-# NetSlip Frontend
+# VendSlip Frontend
 
 React 19 + Vite + TypeScript + Tailwind v4: the public site (landing, pricing, verify, pay)
 and the merchant dashboard.

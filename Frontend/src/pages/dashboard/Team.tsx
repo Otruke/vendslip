@@ -54,7 +54,7 @@ export default function Team() {
           {data.members.map((m) => (
             <li key={m.id} className="flex flex-col gap-3 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex items-center gap-3">
-                <Avatar name={m.name} />
+                <Avatar name={m.name} src={m.avatar_url} />
                 <div>
                   <p className="font-semibold text-ink-primary">{m.name} {m.id === me && <span className="text-xs font-normal text-ink-muted">(you)</span>}</p>
                   <p className="text-sm text-ink-secondary">{m.email} · last seen {timeAgo(m.last_login_at)}</p>
@@ -92,7 +92,7 @@ export default function Team() {
         </div>
       )}
 
-      <Card variant="tinted" padding="sm" className="flex gap-3 text-sm text-netslip-deep">
+      <Card variant="tinted" padding="sm" className="flex gap-3 text-sm text-vendslip-deep">
         <ShieldCheck className="mt-0.5 size-4 shrink-0" />
         <p><strong>Owners</strong> control everything. <strong>Managers</strong> issue, edit and void. <strong>Sales agents</strong> issue slips and record payments. <strong>Accountants</strong> view, void and record payments.</p>
       </Card>

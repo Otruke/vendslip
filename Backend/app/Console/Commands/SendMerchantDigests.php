@@ -15,7 +15,7 @@ use App\Support\Money;
 use App\Support\Urls;
 use Carbon\CarbonImmutable;
 use Illuminate\Console\Command;
-use NetSlip\Bots\Telegram\TelegramApiClient;
+use VendSlip\Bots\Telegram\TelegramApiClient;
 
 /**
  * Daily 8pm digests to linked Telegram chats (free to send):
@@ -25,7 +25,7 @@ use NetSlip\Bots\Telegram\TelegramApiClient;
  */
 final class SendMerchantDigests extends Command
 {
-    protected $signature = 'netslip:digests';
+    protected $signature = 'vendslip:digests';
 
     protected $description = 'Send daily sales summaries and debt reminders to linked Telegram chats';
 
@@ -36,7 +36,7 @@ final class SendMerchantDigests extends Command
 
             return self::SUCCESS;
         }
-        $tz = (string) config('netslip.timezone');
+        $tz = (string) config('vendslip.timezone');
         $start = CarbonImmutable::now($tz)->startOfDay();
         $sent = 0;
 

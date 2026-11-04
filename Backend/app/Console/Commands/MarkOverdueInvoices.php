@@ -12,13 +12,13 @@ use Illuminate\Console\Command;
 
 final class MarkOverdueInvoices extends Command
 {
-    protected $signature = 'netslip:mark-overdue';
+    protected $signature = 'vendslip:mark-overdue';
 
     protected $description = 'Flag unpaid / part-paid invoices past their due date as OVERDUE';
 
     public function handle(): int
     {
-        $today = CarbonImmutable::now(config('netslip.timezone'))->toDateString();
+        $today = CarbonImmutable::now(config('vendslip.timezone'))->toDateString();
         $count = Document::query()
             ->where('doc_type', DocumentType::INVOICE->value)
             ->whereIn('status', [DocumentStatus::UNPAID->value, DocumentStatus::PARTIAL->value])

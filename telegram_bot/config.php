@@ -3,10 +3,10 @@
 declare(strict_types=1);
 
 /*
-| NetSlip Telegram bot module — Telegram Bot API 10.3 (24 Aug 2026).
+| VendSlip Telegram bot module — Telegram Bot API 10.3 (24 Aug 2026).
 | Credentials: /admin/gateways or Backend/.env
 |   TELEGRAM_BOT_TOKEN, TELEGRAM_WEBHOOK_SECRET, TELEGRAM_BOT_USERNAME
-| Register the webhook once:  php artisan netslip:telegram-webhook
+| Register the webhook once:  php artisan vendslip:telegram-webhook
 */
 return [
     'channel' => 'TELEGRAM',

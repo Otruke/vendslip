@@ -73,10 +73,10 @@ final class BotOrchestrator
         $user = $identity->user;
         $merchant = $user->merchant;
         if (! $user->is_active || $merchant === null || $merchant->id !== $identity->merchant_id) {
-            return new SendText('This chat is no longer linked to an active NetSlip account. Ask your admin for a new link code.', true);
+            return new SendText('This chat is no longer linked to an active VendSlip account. Ask your admin for a new link code.', true);
         }
         if ($merchant->isSuspended()) {
-            return new SendText('Your NetSlip account is suspended. Contact support.', true);
+            return new SendText('Your VendSlip account is suspended. Contact support.', true);
         }
         if (! $user->can('documents.issue')) {
             return new SendText('Your role cannot issue slips. Ask the account owner.', true);
@@ -102,7 +102,7 @@ final class BotOrchestrator
 
         if (! $parsed->hasPayload()) {
             if ($parsed->unknownKeys !== []) {
-                return new SendText("/{$parsed->unknownKeys[0]} isn't a NetSlip field. Send /help for the list.", true);
+                return new SendText("/{$parsed->unknownKeys[0]} isn't a VendSlip field. Send /help for the list.", true);
             }
 
             // Free text while a draft is open is ignored silently (no fee); otherwise show help once.
@@ -122,7 +122,7 @@ final class BotOrchestrator
             'external_user_id' => $message->externalUserId,
             'status' => DraftSessionStatus::COLLECTING,
             'draft_payload_json' => DraftPayload::empty()->toArray(),
-            'expires_at' => now()->addMinutes((int) config('netslip.bots.draft_ttl_minutes', 1440)),
+            'expires_at' => now()->addMinutes((int) config('vendslip.bots.draft_ttl_minutes', 1440)),
         ]);
 
         [$payload, $errors] = DraftPayload::fromArray($session->draft_payload_json)->apply($parsed);
@@ -130,7 +130,7 @@ final class BotOrchestrator
         $wasAwaiting = $session->status === DraftSessionStatus::AWAITING_CONFIRMATION;
 
         $session->draft_payload_json = $payload->toArray();
-        $session->expires_at = now()->addMinutes((int) config('netslip.bots.draft_ttl_minutes', 1440));
+        $session->expires_at = now()->addMinutes((int) config('vendslip.bots.draft_ttl_minutes', 1440));
         $session->save();
 
         if ($errors !== []) {
@@ -172,7 +172,7 @@ final class BotOrchestrator
             case 'unlink':
                 $identity->delete();
 
-                return new SendText('This chat is unlinked from NetSlip.');
+                return new SendText('This chat is unlinked from VendSlip.');
 
             case 'clear':
                 $session?->update(['status' => DraftSessionStatus::CANCELLED]);
@@ -295,7 +295,7 @@ final class BotOrchestrator
         return new DeliverSlip(
             session: $claimed->refresh(),
             document: $document,
-            pdfUrl: URL::temporarySignedRoute('documents.public-pdf', now()->addMinutes((int) config('netslip.pdf.signed_url_minutes')), ['uid' => $document->public_uid]),
+            pdfUrl: URL::temporarySignedRoute('documents.public-pdf', now()->addMinutes((int) config('vendslip.pdf.signed_url_minutes')), ['uid' => $document->public_uid]),
             verifyUrl: Urls::verify($document->verification_hash),
             payUrl: $payUrl,
             caption: $caption,
@@ -388,7 +388,7 @@ final class BotOrchestrator
         }
 
         return Template::query()->where('slug', $slug)
-            ->orWhere('slug', 'netslip-'.$slug)->orWhereRaw('lower(name) = ?', [mb_strtolower($slug)])
+            ->orWhere('slug', 'vendslip-'.$slug)->orWhereRaw('lower(name) = ?', [mb_strtolower($slug)])
             ->value('id');
     }
 }

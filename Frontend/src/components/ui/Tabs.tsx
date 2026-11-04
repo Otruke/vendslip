@@ -25,7 +25,7 @@ export function SegmentedTabs<T extends string>({ value, onChange, options, clas
         >
           {o.icon}
           {o.label}
-          {o.count !== undefined && <span className={cn('tabular rounded-full px-1.5 text-[11px]', value === o.value ? 'bg-netslip-tint text-netslip-deep' : 'bg-white/70')}>{o.count}</span>}
+          {o.count !== undefined && <span className={cn('tabular rounded-full px-1.5 text-[11px]', value === o.value ? 'bg-vendslip-tint text-vendslip-deep' : 'bg-white/70')}>{o.count}</span>}
         </button>
       ))}
     </div>

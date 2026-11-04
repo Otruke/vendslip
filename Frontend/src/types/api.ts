@@ -52,6 +52,7 @@ export type Session = {
     name: string
     email: string
     phone: string | null
+    avatar_url: string | null
     role: string | null
     role_label: string | null
     permissions: string[]
@@ -273,7 +274,7 @@ export type PublicInvoice = {
 }
 
 export type TeamResponse = {
-  members: { id: number; name: string; email: string; phone: string | null; role: string | null; role_label: string | null; is_active: boolean; two_factor_enabled: boolean; last_login_at: string | null }[]
+  members: { id: number; name: string; email: string; phone: string | null; avatar_url: string | null; role: string | null; role_label: string | null; is_active: boolean; two_factor_enabled: boolean; last_login_at: string | null }[]
   invitations: { id: number; email: string; role: string; role_label: string; expires_at: string }[]
   seats: { used: number; max: number | null; can_invite: boolean }
   roles: { value: string; label: string }[]

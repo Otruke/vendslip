@@ -10,7 +10,7 @@
     $color = match ($tone) {
         'primary' => 'text-ink-primary',
         'muted' => 'text-ink-muted',
-        'brand' => 'text-netslip-primary',
+        'brand' => 'text-vendslip-primary',
         'danger' => 'text-[#a5341f]',
         default => 'text-ink-secondary',
     };

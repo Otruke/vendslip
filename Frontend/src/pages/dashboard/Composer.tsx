@@ -40,10 +40,10 @@ function MoneyField({ label, value, onChange, placeholder }: { label: string; va
 function SlashPane() {
   const { text, setText, appendShortcut, errors } = useComposerStore()
   return (
-    <div className="overflow-hidden rounded-xl border border-netslip-obsidian/20 bg-netslip-obsidian shadow-sm">
+    <div className="overflow-hidden rounded-xl border border-vendslip-obsidian/20 bg-vendslip-obsidian shadow-sm">
       <div className="flex items-center justify-between gap-2 px-4 py-2.5">
         <div className="flex items-center gap-2">
-          <img src="/assets/brand/netslip-icon-white.png" alt="" className="h-4 w-auto opacity-80" />
+          <img src="/assets/brand/vendslip-icon-white.png" alt="" className="h-4 w-auto opacity-80" />
           <span className="font-mono text-xs text-[#9cc3cc]">slash console</span>
         </div>
         <button type="button" onClick={() => setText('')} className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs text-[#cfe3e8] hover:bg-white/10"><Eraser className="size-3.5" />Clear</button>
@@ -178,7 +178,7 @@ export default function Composer() {
     currency: merchant?.currency ?? 'NGN',
     footer: merchant?.receipt_footer,
     bank: merchant?.bank_account_number ? { name: merchant.bank_name, number: merchant.bank_account_number, accountName: merchant.bank_account_name ?? merchant.name } : null,
-  }, { variant: activeTemplate?.slug === 'netslip-minimalist-social' ? 'minimal' : 'classic', watermark })
+  }, { variant: activeTemplate?.slug === 'vendslip-minimalist-social' ? 'minimal' : 'classic', watermark })
 
   const quotaBlocked = freeLeft === 0 && credits === 0
 
@@ -215,8 +215,8 @@ export default function Composer() {
 
             {mode === 'slash' && (
               <Card variant="tinted" padding="sm" className="flex gap-3">
-                <Keyboard className="mt-0.5 size-4 shrink-0 text-netslip-deep" />
-                <p className="text-sm text-netslip-deep">Same syntax as the WhatsApp and Telegram bots. Use <code className="font-mono">|</code> to add several items on one line.</p>
+                <Keyboard className="mt-0.5 size-4 shrink-0 text-vendslip-deep" />
+                <p className="text-sm text-vendslip-deep">Same syntax as the WhatsApp and Telegram bots. Use <code className="font-mono">|</code> to add several items on one line.</p>
               </Card>
             )}
 
@@ -234,7 +234,7 @@ export default function Composer() {
                 </div>
               </div>
               {canClean && (
-                <ToggleSwitch checked={useCredit} onChange={setUseCredit} label={<span className="inline-flex items-center gap-1.5"><Coins className="size-4 text-netslip-primary" />Spend 1 credit for a clean slip</span>} description={`No watermark. ${credits} credit(s) left.`} />
+                <ToggleSwitch checked={useCredit} onChange={setUseCredit} label={<span className="inline-flex items-center gap-1.5"><Coins className="size-4 text-vendslip-primary" />Spend 1 credit for a clean slip</span>} description={`No watermark. ${credits} credit(s) left.`} />
               )}
               {missing.length > 0 && (
                 <p className="flex items-start gap-2 text-sm text-ink-secondary"><TriangleAlert className="mt-0.5 size-4 shrink-0 text-tone-partial" />Still needed: {missing.join(', ')}</p>
@@ -259,7 +259,7 @@ export default function Composer() {
               <span className="text-xs font-semibold uppercase tracking-wider text-ink-muted">Live preview</span>
             </div>
             <PaperSlipPreview slip={slip} />
-            {watermark && <p className="mt-3 text-center text-xs text-ink-muted">Free slips carry a small “Powered by NetSlip” watermark.</p>}
+            {watermark && <p className="mt-3 text-center text-xs text-ink-muted">Free slips carry a small “Powered by VendSlip” watermark.</p>}
           </div>
         }
       />

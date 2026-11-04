@@ -26,7 +26,7 @@ export default function ForgotPassword() {
   }
 
   return (
-    <AuthLayout title="Reset your password" subtitle="We’ll email you a secure reset link." footer={<Link to="/login" className="font-semibold text-netslip-primary">Back to sign in</Link>}>
+    <AuthLayout title="Reset your password" subtitle="We’ll email you a secure reset link." footer={<Link to="/login" className="font-semibold text-vendslip-primary">Back to sign in</Link>}>
       {sent ? <Alert tone="success">{sent}</Alert> : (
         <form onSubmit={submit} className="space-y-4">
           {error && <Alert tone="danger">{error}</Alert>}

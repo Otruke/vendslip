@@ -1,9 +1,9 @@
 @props(['variant' => 'primary', 'size' => 'md', 'icon' => null, 'href' => null, 'type' => 'submit', 'fullWidth' => false, 'loading' => false])
 @php
     $variants = [
-        'primary' => 'bg-netslip-primary text-white shadow-sm hover:bg-netslip-primary-hover',
-        'deep' => 'bg-netslip-deep text-white shadow-sm hover:bg-netslip-obsidian',
-        'secondary' => 'bg-netslip-tint text-netslip-deep hover:bg-[#dbe9ed]',
+        'primary' => 'bg-vendslip-primary text-white shadow-sm hover:bg-vendslip-primary-hover',
+        'deep' => 'bg-vendslip-deep text-white shadow-sm hover:bg-vendslip-obsidian',
+        'secondary' => 'bg-vendslip-tint text-vendslip-deep hover:bg-[#dbe9ed]',
         'outline' => 'border border-slate-300 bg-white text-ink-primary hover:bg-surface-canvas',
         'ghost' => 'text-ink-secondary hover:bg-surface-subtle hover:text-ink-primary',
         'danger' => 'bg-[#a5341f] text-white shadow-sm hover:bg-[#8a2a18]',

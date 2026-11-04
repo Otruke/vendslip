@@ -8,7 +8,7 @@ final class Urls
 {
     public static function frontend(string $path = ''): string
     {
-        return rtrim((string) config('netslip.frontend_url'), '/').'/'.ltrim($path, '/');
+        return rtrim((string) config('vendslip.frontend_url'), '/').'/'.ltrim($path, '/');
     }
 
     public static function verify(string $hash): string

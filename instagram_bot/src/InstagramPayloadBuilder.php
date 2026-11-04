@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace NetSlip\Bots\Instagram;
+namespace VendSlip\Bots\Instagram;
 
 use App\Services\Bot\Actions\AskConfirmation;
 use App\Services\Bot\Actions\DeliverSlip;

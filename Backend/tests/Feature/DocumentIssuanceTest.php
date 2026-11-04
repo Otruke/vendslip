@@ -27,7 +27,7 @@ final class DocumentIssuanceTest extends TestCase
             ->assertJsonPath('data.total_minor', 3225000)
             ->assertJsonPath('data.has_watermark', true)
             ->assertJsonPath('data.consumed_paid_credit', false);
-        $this->assertMatchesRegularExpression('/^NSV-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}$/', (string) $first->json('data.verification_code'));
+        $this->assertMatchesRegularExpression('/^VSV-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}$/', (string) $first->json('data.verification_code'));
 
         $this->postJson('/api/v1/documents', $this->receiptPayload())->assertJsonPath('data.doc_number', 'RCP-'.now('Africa/Lagos')->year.'-0002');
         $this->postJson('/api/v1/documents', $this->receiptPayload(['type' => 'INVOICE']))->assertJsonPath('data.doc_number', 'INV-'.now('Africa/Lagos')->year.'-0001')

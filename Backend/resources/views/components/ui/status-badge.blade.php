@@ -34,8 +34,8 @@
     [$tone, $solid, $label] = $map[$value] ?? ['neutral', false, ucwords(strtolower(str_replace('_', ' ', $value)))];
     $inverse = $value === 'BUSINESS_PLUS';
 @endphp
-<span {{ $attributes->merge(['class' => 'ns-tag ns-tag--'.$tone.($size === 'sm' ? ' ns-tag--sm' : '').($inverse ? ' ns-tag--inverse' : '')]) }}
+<span {{ $attributes->merge(['class' => 'vs-tag vs-tag--'.$tone.($size === 'sm' ? ' vs-tag--sm' : '').($inverse ? ' vs-tag--inverse' : '')]) }}
       data-fill="{{ $solid ? 'solid' : 'hollow' }}" @if (in_array($value, ['PENDING', 'OVERDUE'], true)) data-pulse @endif>
-    @if ($value === 'IMMUTABLE')<x-ui.icon name="lock" class="size-3" />@elseif ($showDot)<span class="ns-tag__mark" aria-hidden="true"></span>@endif
+    @if ($value === 'IMMUTABLE')<x-ui.icon name="lock" class="size-3" />@elseif ($showDot)<span class="vs-tag__mark" aria-hidden="true"></span>@endif
     {{ $slot->isEmpty() ? $label : $slot }}
 </span>

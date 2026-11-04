@@ -13,13 +13,13 @@
     @endif
 
     <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <x-ui.stat-card title="Slips issued" :value="number_format($stats['documents'])" icon="file-text" />
-        <x-ui.stat-card title="Total billed" :value="\App\Support\Money::format($stats['billed'], $merchant->currency)" icon="trending-up" />
-        <x-ui.stat-card title="Quota · credits" :value="($stats['quota'] === null ? 'Unlimited' : $stats['free_used'].' / '.$stats['quota']).' · '.$merchant->paid_credits_balance" hint="free used · paid credits" icon="coins" />
-        <x-ui.stat-card title="API calls saved" :value="number_format($stats['saved_calls'])" hint="silent draft buffering" icon="message" />
+        <x-ui.stat-card variant="obsidian" title="Slips issued" :value="number_format($stats['documents'])" icon="file-text" />
+        <x-ui.stat-card variant="deep" title="Total billed" :value="\App\Support\Money::format($stats['billed'], $merchant->currency)" icon="trending-up" />
+        <x-ui.stat-card variant="teal" title="Quota · credits" :value="($stats['quota'] === null ? 'Unlimited' : $stats['free_used'].' / '.$stats['quota']).' · '.$merchant->paid_credits_balance" hint="free used · paid credits" icon="coins" />
+        <x-ui.stat-card variant="mist" title="API calls saved" :value="number_format($stats['saved_calls'])" hint="silent draft buffering" icon="message" />
     </div>
 
-    <div class="grid gap-6 lg:grid-cols-5">
+    <div class="grid grid-cols-1 gap-6 lg:grid-cols-5">
         <x-ui.card variant="elevated" class="lg:col-span-3">
             <div class="flex items-start justify-between gap-4">
                 <div>
@@ -30,22 +30,22 @@
             </div>
             <form method="POST" action="{{ route('admin.merchants.mutability', $merchant) }}" class="mt-5 space-y-5" data-confirm="Change this merchant's ledger policy? The change is audit-logged.">
                 @csrf @method('PUT')
-                <fieldset class="grid gap-3 sm:grid-cols-3">
+                <fieldset class="grid grid-cols-1 gap-3 sm:grid-cols-3">
                     <legend class="sr-only">Mode</legend>
                     @foreach ([
                         ['IMMUTABLE', 'Immutable', 'Locked after issue. Credit notes and voids only.', 'lock'],
                         ['MUTABLE_WITH_AUDIT', 'Mutable · audited', 'Edits need a reason. Before/after snapshot + IP.', 'history'],
                         ['MUTABLE_UNRESTRICTED', 'Unrestricted', 'Free edits. Still snapshotted for forensics.', 'file-edit'],
                     ] as [$value, $label, $hint, $icon])
-                        <label class="relative flex cursor-pointer flex-col rounded-xl border border-border-subtle p-4 transition has-[:checked]:border-netslip-primary has-[:checked]:bg-netslip-tint">
+                        <label class="relative flex cursor-pointer flex-col rounded-xl border border-border-subtle p-4 transition has-[:checked]:border-vendslip-primary has-[:checked]:bg-vendslip-tint">
                             <input type="radio" name="record_mutability_mode" value="{{ $value }}" class="sr-only" @checked($merchant->record_mutability_mode->value === $value)>
-                            <x-ui.icon :name="$icon" class="size-5 text-netslip-deep" />
+                            <x-ui.icon :name="$icon" class="size-5 text-vendslip-deep" />
                             <span class="mt-2 text-sm font-semibold">{{ $label }}</span>
                             <span class="mt-1 text-xs text-ink-secondary">{{ $hint }}</span>
                         </label>
                     @endforeach
                 </fieldset>
-                <div class="grid gap-5 sm:grid-cols-2">
+                <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
                     <x-ui.toggle name="allow_staff_edits" label="Allow staff edits" description="Sales agents & accountants may edit, not just owners/managers." :checked="$merchant->allow_staff_edits" />
                     <x-ui.input name="mutable_window_hours" type="number" min="0" max="8760" label="Edit window (hours)" :value="$merchant->mutable_window_hours" helper="0 = no time limit (audited mode only)." />
                 </div>

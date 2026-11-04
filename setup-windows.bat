@@ -1,10 +1,10 @@
 @echo off
 setlocal EnableExtensions
-title NetSlip - first-time setup
+title VendSlip - first-time setup
 cd /d "%~dp0"
 
 echo.
-echo  NetSlip local setup
+echo  VendSlip local setup
 echo  ===================
 echo.
 
@@ -24,7 +24,7 @@ if not exist ".env" (
     set "NEWENV=1"
     echo.
     echo [!] Created Backend\.env. Notepad will open: set DB_PASSWORD for PostgreSQL
-    echo     and NETSLIP_SUPER_ADMIN_PASSWORD, then save and close Notepad.
+    echo     and VENDSLIP_SUPER_ADMIN_PASSWORD, then save and close Notepad.
     start /wait notepad ".env"
 )
 
@@ -51,7 +51,7 @@ echo [..] Installing frontend packages (npm install)...
 call npm install --no-fund --no-audit || goto :fail
 
 echo.
-echo  [OK] Setup complete. Double-click start-netslip.bat to run NetSlip.
+echo  [OK] Setup complete. Double-click start-vendslip.bat to run VendSlip.
 echo       If a super-admin password was printed above, copy it now.
 echo.
 pause

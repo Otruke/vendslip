@@ -44,11 +44,11 @@ export default function Login() {
   }
 
   return (
-    <AuthLayout title="Welcome back" subtitle="Sign in to send slips and track payments." footer={<>New to NetSlip? <Link to="/register" className="font-semibold text-netslip-primary">Create an account</Link></>}>
+    <AuthLayout title="Welcome back" subtitle="Sign in to send slips and track payments." footer={<>New to VendSlip? <Link to="/register" className="font-semibold text-vendslip-primary">Create an account</Link></>}>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
         {formError && <Alert tone="danger">{formError}</Alert>}
         <Input label="Email" type="email" autoComplete="username" prefixIcon={<Mail />} error={errors.email?.message} {...register('email')} />
-        <Input label="Password" type="password" autoComplete="current-password" error={errors.password?.message} labelAction={<Link to="/forgot-password" className="text-xs font-semibold text-netslip-primary">Forgot?</Link>} {...register('password')} />
+        <Input label="Password" type="password" autoComplete="current-password" error={errors.password?.message} labelAction={<Link to="/forgot-password" className="text-xs font-semibold text-vendslip-primary">Forgot?</Link>} {...register('password')} />
         <Checkbox label="Keep me signed in" {...register('remember')} />
         <Button type="submit" fullWidth size="lg" isLoading={isSubmitting}>Sign in</Button>
       </form>

@@ -7,7 +7,7 @@ namespace App\Services\Slash;
 use App\Support\Money;
 
 /**
- * Parses vendor chat messages written with NetSlip /slash syntax.
+ * Parses vendor chat messages written with VendSlip /slash syntax.
  *
  *   /name = Chief Emeka, /amount = 15000
  *   /item = 2x Leather Sneakers @ 28,500 | 1x Belt @ 5k

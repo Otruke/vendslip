@@ -1,6 +1,6 @@
 @import 'tailwindcss';
 
-/* ── NetSlip brand fonts (shared with Backend/resources/css/app.css) ───────────
+/* ── VendSlip brand fonts (shared with Backend/resources/css/app.css) ───────────
    Lupio is the Fontspring DEMO cut. It is subset to letters only because the demo
    replaces "4" and most punctuation with a "DEMO" stamp; digits/punctuation fall
    back to Inter. Replace /public/assets/fonts/lupio-*.woff2 with licensed files
@@ -27,16 +27,17 @@
   --font-figures: 'Inter', ui-sans-serif, system-ui, sans-serif;
 
   /* Brand */
-  --color-netslip-primary: #377581;
-  --color-netslip-primary-hover: #2e636e;
-  --color-netslip-tint: #eaf2f4;
-  --color-netslip-deep: #265363;
-  --color-netslip-obsidian: #163540;
+  --color-vendslip-primary: #377581;
+  --color-vendslip-primary-hover: #2e636e;
+  --color-vendslip-tint: #eaf2f4;
+  --color-vendslip-mist: #e3eef1;
+  --color-vendslip-deep: #265363;
+  --color-vendslip-obsidian: #163540;
 
   /* Surfaces */
-  --color-surface-canvas: #f8fafc;
+  --color-surface-canvas: #edf3f4;
   --color-surface-card: #ffffff;
-  --color-surface-subtle: #f1f5f9;
+  --color-surface-subtle: #e6eef0;
 
   /* Text */
   --color-ink-primary: #0f172a;
@@ -47,7 +48,7 @@
   --color-border-subtle: #e2e8f0;
   --color-border-focus: #377581;
 
-  /* NetSlip status tones (see .ns-tag below). Tailwind's stock palette is not used for status. */
+  /* VendSlip status tones (see .vs-tag below). Tailwind's stock palette is not used for status. */
   --color-tone-settled: #1d6b52;
   --color-tone-settled-light: #8fd3b6;
   --color-tone-open: #a5341f;
@@ -75,8 +76,8 @@
 @layer base {
   html { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
   body { @apply bg-white text-ink-primary font-sans; }
-  :focus-visible { outline: 2px solid var(--color-netslip-primary); outline-offset: 2px; }
-  ::selection { background: #cfe3e8; color: var(--color-netslip-obsidian); }
+  :focus-visible { outline: 2px solid var(--color-vendslip-primary); outline-offset: 2px; }
+  ::selection { background: #cfe3e8; color: var(--color-vendslip-obsidian); }
 }
 
 /* Financial figures: Inter tabular numerals, aligned in tables. */
@@ -102,7 +103,7 @@
 
 /* ── Status "ledger tags" ──────────────────────────────────────────────────────
    Not pastel pills: a crisp tag on white, a thin border in the tone, small caps and a
-   diamond punch mark — filled when settled, hollow when still open. Tones are NetSlip's
+   diamond punch mark — filled when settled, hollow when still open. Tones are VendSlip's
    own palette (tuned to the teal brand), not Tailwind defaults. Mirrored in Backend/resources/css/app.css. */
 :root {
     --tone-settled: #1d6b52;
@@ -118,7 +119,7 @@
 }
 
 @layer components {
-    .ns-tag {
+    .vs-tag {
         --t: var(--tone-neutral);
         display: inline-flex; align-items: center; gap: 0.45rem; white-space: nowrap;
         padding: 0.2rem 0.55rem 0.2rem 0.5rem; border-radius: 3px;
@@ -127,80 +128,372 @@
         font-family: var(--font-figures); font-size: 10.5px; font-weight: 700; line-height: 1.35;
         letter-spacing: 0.07em; text-transform: uppercase;
     }
-    .ns-tag--sm { font-size: 9.5px; padding: 0.12rem 0.45rem 0.12rem 0.4rem; gap: 0.4rem; }
-    .ns-tag__mark { width: 6px; height: 6px; flex: none; transform: rotate(45deg); border: 1.5px solid currentColor; border-radius: 1px; }
-    .ns-tag[data-fill='solid'] .ns-tag__mark { background: currentColor; }
-    .ns-tag[data-pulse] .ns-tag__mark { animation: ns-tag-pulse 1.8s ease-in-out infinite; }
-    .ns-tag--inverse { background: var(--t); color: #fff; border-color: var(--t); }
-    .ns-tag--settled { --t: var(--tone-settled); }
-    .ns-tag--open { --t: var(--tone-open); }
-    .ns-tag--partial { --t: var(--tone-partial); }
-    .ns-tag--neutral { --t: var(--tone-neutral); }
-    .ns-tag--brand { --t: var(--tone-brand); }
-    .ns-tag--info { --t: var(--tone-info); }
-    .ns-tag--whatsapp { --t: var(--tone-whatsapp); }
-    .ns-tag--telegram { --t: var(--tone-telegram); }
-    .ns-tag--instagram { --t: var(--tone-instagram); }
-    .ns-tag--facebook { --t: var(--tone-facebook); }
+    .vs-tag--sm { font-size: 9.5px; padding: 0.12rem 0.45rem 0.12rem 0.4rem; gap: 0.4rem; }
+    .vs-tag__mark { width: 6px; height: 6px; flex: none; transform: rotate(45deg); border: 1.5px solid currentColor; border-radius: 1px; }
+    .vs-tag[data-fill='solid'] .vs-tag__mark { background: currentColor; }
+    .vs-tag[data-pulse] .vs-tag__mark { animation: vs-tag-pulse 1.8s ease-in-out infinite; }
+    .vs-tag--inverse { background: var(--t); color: #fff; border-color: var(--t); }
+    .vs-tag--settled { --t: var(--tone-settled); }
+    .vs-tag--open { --t: var(--tone-open); }
+    .vs-tag--partial { --t: var(--tone-partial); }
+    .vs-tag--neutral { --t: var(--tone-neutral); }
+    .vs-tag--brand { --t: var(--tone-brand); }
+    .vs-tag--info { --t: var(--tone-info); }
+    .vs-tag--whatsapp { --t: var(--tone-whatsapp); }
+    .vs-tag--telegram { --t: var(--tone-telegram); }
+    .vs-tag--instagram { --t: var(--tone-instagram); }
+    .vs-tag--facebook { --t: var(--tone-facebook); }
 
     /* Inline notices: white card, tone rule on the left, no tinted fill. */
-    .ns-note {
+    .vs-note {
         --t: var(--tone-brand);
         display: flex; align-items: flex-start; gap: 0.75rem;
         border: 1px solid var(--color-border-subtle); border-left: 3px solid var(--t);
         border-radius: 0.6rem; background: #fff; padding: 0.75rem 1rem;
         font-size: 0.875rem; color: var(--color-ink-primary);
     }
-    .ns-note > svg { color: var(--t); }
+    .vs-note > svg { color: var(--t); }
 
     /* Floating toasts */
-    .ns-toasts {
+    .vs-toasts {
         position: fixed; z-index: 70; top: 1rem; left: 1rem; right: 1rem;
         display: flex; flex-direction: column; align-items: stretch; gap: 0.6rem; pointer-events: none;
     }
-    @media (min-width: 640px) { .ns-toasts { left: auto; right: 1.5rem; top: 1.25rem; width: 24rem; } }
-    .ns-toast {
+    @media (min-width: 640px) { .vs-toasts { left: auto; right: 1.5rem; top: 1.25rem; width: 24rem; } }
+    .vs-toast {
         --t: var(--tone-brand);
         position: relative; overflow: hidden; pointer-events: auto;
         display: grid; grid-template-columns: auto 1fr auto; align-items: start; gap: 0.75rem;
         padding: 0.85rem 0.85rem 0.95rem 0.9rem; border-radius: 0.85rem;
-        background: var(--color-netslip-obsidian); color: #fff;
+        background: var(--color-vendslip-obsidian); color: #fff;
         box-shadow: 0 18px 40px -14px rgb(22 53 64 / 0.55), 0 2px 6px rgb(22 53 64 / 0.25);
-        animation: ns-toast-in 380ms cubic-bezier(0.2, 0.9, 0.25, 1.15) both;
+        animation: vs-toast-in 380ms cubic-bezier(0.2, 0.9, 0.25, 1.15) both;
     }
-    .ns-toast[data-leaving] { animation: ns-toast-out 260ms ease-in forwards; }
-    .ns-toast__icon {
+    .vs-toast[data-leaving] { animation: vs-toast-out 260ms ease-in forwards; }
+    .vs-toast__icon {
         display: grid; place-items: center; width: 1.9rem; height: 1.9rem; border-radius: 0.55rem;
         background: color-mix(in srgb, var(--t) 85%, #fff 15%); color: #fff;
     }
-    .ns-toast__title { font-size: 0.8rem; font-weight: 700; letter-spacing: 0.02em; color: color-mix(in srgb, var(--t) 35%, #fff 65%); }
-    .ns-toast__body { margin-top: 0.1rem; font-size: 0.875rem; line-height: 1.45; color: #e8f1f3; }
-    .ns-toast__close { border-radius: 0.4rem; padding: 0.2rem; color: #9fb9c0; }
-    .ns-toast__close:hover { color: #fff; background: rgb(255 255 255 / 0.08); }
-    .ns-toast__timer {
+    .vs-toast__title { font-size: 0.8rem; font-weight: 700; letter-spacing: 0.02em; color: color-mix(in srgb, var(--t) 35%, #fff 65%); }
+    .vs-toast__body { margin-top: 0.1rem; font-size: 0.875rem; line-height: 1.45; color: #e8f1f3; }
+    .vs-toast__close { border-radius: 0.4rem; padding: 0.2rem; color: #9fb9c0; }
+    .vs-toast__close:hover { color: #fff; background: rgb(255 255 255 / 0.08); }
+    .vs-toast__timer {
         position: absolute; left: 0; bottom: 0; height: 3px; width: 100%;
         background: color-mix(in srgb, var(--t) 70%, #fff 30%); transform-origin: left;
-        animation: ns-toast-timer var(--ns-toast-ms, 5200ms) linear forwards;
+        animation: vs-toast-timer var(--ns-toast-ms, 5200ms) linear forwards;
     }
-    .ns-toast:hover .ns-toast__timer { animation-play-state: paused; }
-    .ns-toast--success { --t: #2f8f6c; }
-    .ns-toast--error { --t: #c2412b; }
-    .ns-toast--warning { --t: #b7801f; }
-    .ns-toast--info { --t: #3d86a0; }
+    .vs-toast:hover .vs-toast__timer { animation-play-state: paused; }
+    .vs-toast--success { --t: #2f8f6c; }
+    .vs-toast--error { --t: #c2412b; }
+    .vs-toast--warning { --t: #b7801f; }
+    .vs-toast--info { --t: #3d86a0; }
 }
 
-@keyframes ns-tag-pulse { 50% { opacity: 0.35; } }
-@keyframes ns-toast-in { from { opacity: 0; transform: translateY(-10px) scale(0.97); } to { opacity: 1; transform: none; } }
-@keyframes ns-toast-out { to { opacity: 0; transform: translateX(24px) scale(0.98); } }
-@keyframes ns-toast-timer { from { transform: scaleX(1); } to { transform: scaleX(0); } }
+@keyframes vs-tag-pulse { 50% { opacity: 0.35; } }
+@keyframes vs-toast-in { from { opacity: 0; transform: translateY(-10px) scale(0.97); } to { opacity: 1; transform: none; } }
+@keyframes vs-toast-out { to { opacity: 0; transform: translateX(24px) scale(0.98); } }
+@keyframes vs-toast-timer { from { transform: scaleX(1); } to { transform: scaleX(0); } }
 @media (prefers-reduced-motion: reduce) {
-    .ns-toast, .ns-toast[data-leaving] { animation: none; }
-    .ns-tag[data-pulse] .ns-tag__mark { animation: none; }
+    .vs-toast, .vs-toast[data-leaving] { animation: none; }
+    .vs-tag[data-pulse] .vs-tag__mark { animation: none; }
 }
 
 /* Hero demo: click ripple and the "issued" stamp */
-.ns-ripple { animation: ns-ripple 520ms ease-out forwards; }
-.ns-stamp { animation: ns-stamp 420ms cubic-bezier(0.2, 1.4, 0.35, 1) both; background: rgba(255, 255, 255, 0.78); }
-@keyframes ns-ripple { from { opacity: 0.85; transform: scale(0.4); } to { opacity: 0; transform: scale(1.6); } }
-@keyframes ns-stamp { from { opacity: 0; transform: rotate(-10deg) scale(1.8); } to { opacity: 1; transform: rotate(-10deg) scale(1); } }
-@media (prefers-reduced-motion: reduce) { .ns-ripple, .ns-stamp { animation: none; } }
+.vs-ripple { animation: vs-ripple 520ms ease-out forwards; }
+.vs-stamp { animation: vs-stamp 420ms cubic-bezier(0.2, 1.4, 0.35, 1) both; background: rgba(255, 255, 255, 0.78); }
+@keyframes vs-ripple { from { opacity: 0.85; transform: scale(0.4); } to { opacity: 0; transform: scale(1.6); } }
+@keyframes vs-stamp { from { opacity: 0; transform: rotate(-10deg) scale(1.8); } to { opacity: 1; transform: rotate(-10deg) scale(1); } }
+@media (prefers-reduced-motion: reduce) { .vs-ripple, .vs-stamp { animation: none; } }
+
+/* ── Public-page motion ────────────────────────────────────────────────────────
+   A till-and-paper vocabulary instead of generic fades. Driven by src/lib/motion.ts:
+     feed   slips print out of a slot (top edge first) and feed back up when you scroll past
+     rise   copy settles onto the page            type   headings set word by word
+     stamp  tags and proofs land like a rubber stamp     rule   leaders and lines draw across
+     tear   photos are revealed along a torn, perforated edge   slide  side notes slide in
+   Hidden states apply only once JS has switched motion on (html[data-motion="on"]), so the page
+   is complete without JS and for reduced-motion users. Exits are quicker than entrances.
+   Solid colours only: no gradients anywhere. */
+@property --tear {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 115%;
+}
+
+:root {
+  --vs-ease-paper: cubic-bezier(0.22, 0.9, 0.24, 1);
+  --vs-ease-stamp: cubic-bezier(0.3, 1.5, 0.5, 1);
+  --vs-ease-out: cubic-bezier(0.4, 0, 0.7, 0.2);
+  --vs-bleed: -48px;
+}
+
+html[data-motion='on'] .vs-motion [data-reveal] {
+  transition-property: opacity, transform, clip-path;
+  transition-duration: 0.42s;
+  transition-timing-function: var(--vs-ease-out);
+}
+html[data-motion='on'] .vs-motion [data-reveal][data-inview] {
+  transition-duration: 0.85s;
+  transition-timing-function: var(--vs-ease-paper);
+  transition-delay: calc(var(--i, 0) * var(--step, 90ms) + var(--d, 0ms));
+}
+
+/* rise */
+html[data-motion='on'] .vs-motion [data-reveal='rise']:not([data-inview]) { opacity: 0; transform: translate3d(0, 28px, 0); }
+html[data-motion='on'] .vs-motion [data-reveal='rise'][data-from='above']:not([data-inview]) { transform: translate3d(0, -28px, 0); }
+
+/* slide (side notes) */
+html[data-motion='on'] .vs-motion [data-reveal='slide']:not([data-inview]) { opacity: 0; transform: translate3d(48px, 10px, 0) rotate(1.5deg); }
+
+/* feed: printed out of a slot; visible state keeps a bleed so shadows and rings are not cut */
+html[data-motion='on'] .vs-motion [data-reveal='feed'] { clip-path: inset(var(--vs-bleed)); }
+html[data-motion='on'] .vs-motion [data-reveal='feed']:not([data-inview]) { clip-path: inset(var(--vs-bleed) var(--vs-bleed) 100% var(--vs-bleed)); transform: translate3d(0, -18px, 0); }
+html[data-motion='on'] .vs-motion [data-reveal='feed'][data-from='above']:not([data-inview]) { clip-path: inset(100% var(--vs-bleed) var(--vs-bleed) var(--vs-bleed)); transform: translate3d(0, 18px, 0); }
+
+/* stamp */
+html[data-motion='on'] .vs-motion [data-reveal='stamp'][data-inview] { transition-duration: 0.55s; transition-timing-function: var(--vs-ease-stamp); }
+html[data-motion='on'] .vs-motion [data-reveal='stamp']:not([data-inview]) { opacity: 0; transform: scale(1.5) rotate(-8deg); }
+
+/* rule */
+html[data-motion='on'] .vs-motion [data-reveal='rule'] { transform-origin: 0 50%; }
+html[data-motion='on'] .vs-motion [data-reveal='rule']:not([data-inview]) { transform: scaleX(0); }
+
+/* tear: a perforated edge wipes across (only --tear transitions, so parallax stays smooth) */
+html[data-motion='on'] .vs-motion [data-reveal='tear'] {
+  transition-property: --tear;
+  clip-path: polygon(
+    -12% -12%, var(--tear) -12%, var(--tear) 0,
+    calc(var(--tear) - 14px) 8.33%, var(--tear) 16.66%, calc(var(--tear) - 14px) 25%, var(--tear) 33.33%,
+    calc(var(--tear) - 14px) 41.66%, var(--tear) 50%, calc(var(--tear) - 14px) 58.33%, var(--tear) 66.66%,
+    calc(var(--tear) - 14px) 75%, var(--tear) 83.33%, calc(var(--tear) - 14px) 91.66%, var(--tear) 100%,
+    var(--tear) 112%, -12% 112%
+  );
+}
+html[data-motion='on'] .vs-motion [data-reveal='tear'][data-inview] { transition-duration: 1.1s; }
+html[data-motion='on'] .vs-motion [data-reveal='tear']:not([data-inview]) { --tear: -2%; }
+
+/* type: each word rises out of its own line box */
+.vs-word { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.1em; margin-bottom: -0.1em; }
+.vs-word > span { display: inline-block; }
+html[data-motion='on'] .vs-motion [data-reveal='type'] { transition: none; }
+html[data-motion='on'] .vs-motion [data-reveal='type'] .vs-word > span {
+  transition: transform 0.4s var(--vs-ease-out);
+}
+html[data-motion='on'] .vs-motion [data-reveal='type'][data-inview] .vs-word > span {
+  transition: transform 0.8s var(--vs-ease-paper) calc(var(--w, 0) * 55ms + var(--i, 0) * var(--step, 90ms) + var(--d, 0ms));
+}
+html[data-motion='on'] .vs-motion [data-reveal='type']:not([data-inview]) .vs-word > span { transform: translateY(108%); }
+html[data-motion='on'] .vs-motion [data-reveal='type'][data-from='above']:not([data-inview]) .vs-word > span { transform: translateY(-108%); }
+
+/* Off-canvas start positions (slide, stamp) must never cause sideways scrolling on phones. */
+.vs-motion { overflow-x: clip; }
+
+/* Background photos that drift with scroll (transform written by motion.ts) */
+[data-parallax] { will-change: transform; }
+
+/* ── Hover: the card lifts off the counter and leans toward the cursor (tilt written by
+   motion.ts), a tear line draws across the top, and the slip inside prints a little further
+   out. A soft drop shadow (filter, so plan-card rings stay intact); no stacked second card. ── */
+.vs-slip {
+  --rx: 0deg;
+  --ry: 0deg;
+  position: relative;
+  transform: perspective(1000px) rotateX(var(--rx)) rotateY(var(--ry));
+  transition: transform 0.6s var(--vs-ease-paper), filter 0.6s var(--vs-ease-paper);
+}
+.vs-slip::after {
+  content: '';
+  position: absolute;
+  inset: 6px 18px auto;
+  border-top: 2px dashed currentColor;
+  opacity: 0;
+  transform: scaleX(0);
+  transition: transform 0.55s var(--vs-ease-paper), opacity 0.3s;
+  pointer-events: none;
+}
+.vs-slip:hover {
+  transform: perspective(1000px) translate3d(0, -8px, 0) rotateX(var(--rx)) rotateY(var(--ry));
+  filter: drop-shadow(0 22px 24px rgba(22, 53, 64, 0.28));
+  transition: transform 0.25s ease-out, filter 0.6s var(--vs-ease-paper);
+}
+.vs-slip:hover::after { opacity: 0.3; transform: scaleX(1); }
+.vs-print { transition: transform 0.7s var(--vs-ease-paper); }
+.vs-slip:hover .vs-print { transform: translateY(-14px); }
+.vs-slip:hover .vs-scan::after { animation: vs-scan 1.6s ease-in-out infinite; }
+.vs-slip:hover .vs-bob { animation: vs-bob 1.4s ease-in-out infinite; }
+@keyframes vs-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+
+/* Ledger rows: an ink bar runs down the margin and the line nudges in */
+.vs-row { position: relative; }
+.vs-row > * { transition: transform 0.35s var(--vs-ease-paper); }
+.vs-row::before {
+  content: '';
+  position: absolute;
+  left: -14px;
+  top: 18%;
+  bottom: 18%;
+  width: 3px;
+  border-radius: 2px;
+  background: var(--row, var(--color-vendslip-primary));
+  transform: scaleY(0);
+  transition: transform 0.35s var(--vs-ease-paper);
+}
+.vs-row:hover > * { transform: translateX(6px); }
+.vs-row:hover::before { transform: scaleY(1); }
+
+/* Command table rows: the key gets a typing caret, the row fills with mist */
+.vs-trow td { transition: background-color 0.3s; }
+.vs-trow:hover td { background: var(--color-vendslip-mist); }
+.vs-trow td:first-child::after {
+  content: '';
+  display: inline-block;
+  width: 2px;
+  height: 1.05em;
+  margin-left: 3px;
+  vertical-align: -0.15em;
+  background: currentColor;
+  opacity: 0;
+}
+.vs-trow:hover td:first-child::after { animation: vs-caret 0.9s steps(1) infinite; }
+@keyframes vs-caret { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+/* Receipt-tape facts: the leader inks in and the figure lifts */
+.vs-tape__lead { transition: border-color 0.3s; }
+.vs-tape__val { display: inline-block; transition: transform 0.35s var(--vs-ease-stamp); }
+.vs-tape:hover .vs-tape__lead { border-color: var(--color-vendslip-primary); }
+.vs-tape:hover .vs-tape__val { transform: translateY(-3px) scale(1.12); }
+
+/* Links: a line wells up in the middle and runs out both ways (same flow as the admin nav) */
+.vs-flowlink { position: relative; }
+.vs-flowlink::after {
+  content: '';
+  position: absolute;
+  left: var(--flow-inset, 0);
+  right: var(--flow-inset, 0);
+  bottom: var(--flow-bottom, -3px);
+  height: 2px;
+  border-radius: 999px;
+  background: currentColor;
+  transform: scale(0, 0.4);
+  transition: transform 0.4s cubic-bezier(0.62, 0.04, 0.3, 1);
+}
+.vs-flowlink:hover::after,
+.vs-flowlink:focus-visible::after,
+.vs-flowlink[aria-current='page']::after { transform: scale(1, 1); }
+
+/* QR proofs: a scan line sweeps once on arrival and keeps scanning while hovered */
+.vs-scan { position: relative; overflow: hidden; }
+.vs-scan::after {
+  content: '';
+  position: absolute;
+  left: 7%;
+  right: 7%;
+  top: 6%;
+  height: 2px;
+  background: var(--color-vendslip-primary);
+  box-shadow: 0 0 0 1px rgba(55, 117, 129, 0.18);
+  opacity: 0;
+  pointer-events: none;
+}
+.vs-scan[data-inview]::after { animation: vs-scan 1.5s var(--vs-ease-paper) 0.5s 1; }
+.vs-scan:hover::after { animation: vs-scan 1.6s ease-in-out infinite; }
+@keyframes vs-scan {
+  0% { top: 6%; opacity: 0; }
+  12% { opacity: 1; }
+  50% { top: 90%; opacity: 1; }
+  88% { opacity: 1; }
+  100% { top: 6%; opacity: 0; }
+}
+
+/* Photos in frames lean in slowly on hover */
+.vs-zoom { overflow: hidden; }
+.vs-zoom img { transition: transform 1.2s var(--vs-ease-paper); }
+.vs-zoom:hover img { transform: scale(1.045); }
+
+/* Arrows nudge toward where they point */
+.lucide-arrow-right { transition: translate 0.3s var(--vs-ease-paper); }
+a:hover > .lucide-arrow-right,
+button:hover > .lucide-arrow-right { translate: 4px 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  .vs-slip, .vs-slip:hover, .vs-row:hover > *, .vs-zoom:hover img, .vs-slip:hover .vs-print { transform: none; }
+  .vs-slip:hover .vs-bob { animation: none; }
+  .vs-scan::after, .vs-trow:hover td:first-child::after { animation: none; }
+}
+
+/* ── Dashboard navigation: same water-flow border as the admin portal (Backend/resources/css/app.css) ── */
+/*
+ * Sidebar navigation: "water-flow" border.
+ * The line wells up at the middle of the bottom edge, runs out both ways (thin, then filling
+ * out like a stream gaining volume), reaches the bottom-left corner on one side and turns the
+ * bottom-right corner on the other to climb the right edge to the top. The active item plays
+ * it once on arrival; hover plays it in and drains it back out in reverse. The lines are a
+ * light, not a fill: brightest at the bottom-right corner and fading away toward the bottom-left
+ * and the top-right (a transparency mask; the item itself has no background).
+ */
+.vs-nav {
+    --vs-flow: #9fd0da;
+    --vs-flow-ease: cubic-bezier(0.62, 0.04, 0.3, 1);
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+}
+.vs-nav::before,
+.vs-nav::after {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    background: var(--vs-flow);
+    box-shadow: 0 0 6px 0 var(--vs-flow);
+    pointer-events: none;
+}
+.vs-nav::before { /* bottom edge, from the middle out; brightest at the corner, fading to nothing at the left */
+    -webkit-mask-image: linear-gradient(to left, #000 0%, #000 12%, transparent 100%);
+    mask-image: linear-gradient(to left, #000 0%, #000 12%, transparent 100%);
+    left: 0; right: 0; bottom: 0; height: 2px;
+    border-radius: 999px;
+    transform: scale(0, 0.4);
+    transform-origin: 50% 100%;
+    transition: transform 0.38s var(--vs-flow-ease) 0.22s;
+}
+.vs-nav::after { /* right edge, from the bottom corner up; fades out toward the top */
+    -webkit-mask-image: linear-gradient(to top, #000 0%, #000 18%, transparent 100%);
+    mask-image: linear-gradient(to top, #000 0%, #000 18%, transparent 100%);
+    top: 0; bottom: 0; right: 0; width: 3px;
+    border-radius: 999px 0 0 999px;
+    transform: scale(0.4, 0);
+    transform-origin: 100% 100%;
+    transition: transform 0.28s var(--vs-flow-ease) 0s;
+}
+.vs-nav:hover::before,
+.vs-nav:focus-visible::before { transform: scale(1, 1); transition-delay: 0s; }
+.vs-nav:hover::after,
+.vs-nav:focus-visible::after { transform: scale(1, 1); transition: transform 0.42s var(--vs-flow-ease) 0.3s; }
+.vs-nav[aria-current="page"]::before { transform: scale(1, 1); animation: vs-flow-across 0.55s var(--vs-flow-ease) both; }
+.vs-nav[aria-current="page"]::after { transform: scale(1, 1); animation: vs-flow-up 0.5s var(--vs-flow-ease) 0.4s both; }
+/* On white menus (mobile) the stream is the deep brand teal. */
+.vs-nav--light { --vs-flow: #377581; }
+/* Thin at the leading edge, filling out to full depth as it arrives, like a stream gaining volume. */
+@keyframes vs-flow-across { 0% { transform: scale(0, 0.35); } 65% { transform: scale(1, 0.6); } 100% { transform: scale(1, 1); } }
+@keyframes vs-flow-up { 0% { transform: scale(0.35, 0); } 65% { transform: scale(0.65, 1); } 100% { transform: scale(1, 1); } }
+
+/* Bottom tab bar (phones and tablets): the flow runs along the top edge of the active tab. */
+.vs-tab { position: relative; }
+.vs-tab::before {
+  content: '';
+  position: absolute;
+  left: 22%;
+  right: 22%;
+  top: 0;
+  height: 3px;
+  border-radius: 0 0 999px 999px;
+  background: var(--color-vendslip-primary);
+  transform: scale(0, 0.4);
+  transform-origin: 50% 0;
+  transition: transform 0.38s cubic-bezier(0.62, 0.04, 0.3, 1);
+}
+.vs-tab[aria-current='page']::before { transform: scale(1, 1); animation: vs-flow-across 0.5s cubic-bezier(0.62, 0.04, 0.3, 1) both; }
+@media (prefers-reduced-motion: reduce) {
+  .vs-nav::before, .vs-nav::after, .vs-tab::before { transition: none; animation: none; }
+}

@@ -96,7 +96,7 @@ final class DompdfSlipRenderer implements SlipRenderer
     {
         return sprintf(
             '%s/%s/%s-r%d-%s.pdf',
-            config('netslip.pdf.directory', 'slips'),
+            config('vendslip.pdf.directory', 'slips'),
             $document->merchant_id,
             $document->doc_number,
             $document->revision_number,
@@ -106,6 +106,6 @@ final class DompdfSlipRenderer implements SlipRenderer
 
     private function disk(): string
     {
-        return (string) config('netslip.pdf.disk', 'local');
+        return (string) config('vendslip.pdf.disk', 'local');
     }
 }

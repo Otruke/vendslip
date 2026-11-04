@@ -11,7 +11,7 @@ export function PageHeader({ title, subtitle, eyebrow, actions, className }: { t
   return (
     <div className={cn('flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between', className)}>
       <div className="min-w-0">
-        {eyebrow && <p className="text-xs font-semibold uppercase tracking-[0.14em] text-netslip-primary">{eyebrow}</p>}
+        {eyebrow && <p className="text-xs font-semibold uppercase tracking-[0.14em] text-vendslip-primary">{eyebrow}</p>}
         <h1 className="mt-1 text-2xl font-bold tracking-tight text-ink-primary">{title}</h1>
         {subtitle && <p className="mt-1 text-sm text-ink-secondary">{subtitle}</p>}
       </div>
@@ -32,7 +32,7 @@ export function SplitWorkspace({ left, right, className }: { left: ReactNode; ri
 
 export function Section({ tone = 'white', className, children, id }: { tone?: 'white' | 'canvas' | 'deep'; className?: string; children: ReactNode; id?: string }) {
   return (
-    <section id={id} className={cn('py-20 lg:py-28', tone === 'canvas' && 'bg-surface-canvas', tone === 'deep' && 'bg-netslip-deep text-white', className)}>
+    <section id={id} className={cn('py-20 lg:py-28', tone === 'canvas' && 'bg-surface-canvas', tone === 'deep' && 'bg-vendslip-deep text-white', className)}>
       {children}
     </section>
   )

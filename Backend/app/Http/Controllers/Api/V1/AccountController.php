@@ -5,14 +5,18 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Api\V1;
 
 use App\Enums\AuditSeverity;
+use App\Models\User;
+use App\Services\Account\AvatarStore;
 use App\Services\Pdf\QrCodeService;
 use App\Services\Security\AuditLogger;
 use App\Services\Security\PasswordChanger;
 use App\Services\Security\TotpService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpFoundation\Response;
 
 final class AccountController extends ApiController
 {
@@ -20,6 +24,7 @@ final class AccountController extends ApiController
         private readonly TotpService $totp,
         private readonly QrCodeService $qr,
         private readonly AuditLogger $audit,
+        private readonly AvatarStore $avatars,
     ) {}
 
     public function updateProfile(Request $request): JsonResponse
@@ -32,6 +37,35 @@ final class AccountController extends ApiController
         $user->update($data);
 
         return response()->json(['ok' => true]);
+    }
+
+    public function uploadAvatar(Request $request): JsonResponse
+    {
+        $user = $this->user($request);
+        $request->validate(['avatar' => AvatarStore::rules()]);
+        /** @var UploadedFile $file */
+        $file = $request->file('avatar');
+        $this->avatars->store($user, $file);
+        $this->audit->log('account.avatar_updated', $user);
+
+        return response()->json(['ok' => true, 'avatar_url' => $this->avatars->apiUrl($user)]);
+    }
+
+    public function deleteAvatar(Request $request): JsonResponse
+    {
+        $user = $this->user($request);
+        $this->avatars->remove($user);
+        $this->audit->log('account.avatar_removed', $user);
+
+        return response()->json(['ok' => true]);
+    }
+
+    /** Streams a profile photo to the owner, their team or platform staff; 404 for everyone else. */
+    public function showAvatar(Request $request, User $user): Response
+    {
+        abort_unless($this->avatars->canView($this->user($request), $user), 404);
+
+        return $this->avatars->response($user);
     }
 
     public function updatePassword(Request $request, PasswordChanger $passwords): JsonResponse

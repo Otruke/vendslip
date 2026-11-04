@@ -178,7 +178,7 @@ final class DocumentController extends ApiController
     {
         $this->authorizePermission($request, Permission::DOCUMENTS_VIEW);
         $document = $this->find($request, $id);
-        $pdfUrl = URL::temporarySignedRoute('documents.public-pdf', now()->addMinutes((int) config('netslip.pdf.signed_url_minutes')), ['uid' => $document->public_uid]);
+        $pdfUrl = URL::temporarySignedRoute('documents.public-pdf', now()->addMinutes((int) config('vendslip.pdf.signed_url_minutes')), ['uid' => $document->public_uid]);
         $total = Money::format($document->total_minor, $document->currency);
         $label = $document->doc_type === DocumentType::INVOICE ? 'invoice' : ($document->doc_type === DocumentType::RECEIPT ? 'receipt' : 'credit note');
         $text = "Hi {$document->customer_name}, here is your {$label} {$document->doc_number} from {$document->merchant->name} ({$total}).\n{$pdfUrl}\nVerify: ".Urls::verify($document->verification_hash);
@@ -229,7 +229,7 @@ final class DocumentController extends ApiController
                 }
             });
             fclose($out);
-        }, 'netslip-ledger-'.now()->format('Ymd-His').'.csv', ['Content-Type' => 'text/csv; charset=UTF-8']);
+        }, 'vendslip-ledger-'.now()->format('Ymd-His').'.csv', ['Content-Type' => 'text/csv; charset=UTF-8']);
     }
 
     /** Neutralise spreadsheet formula injection (OWASP CSV injection). */
@@ -261,7 +261,7 @@ final class DocumentController extends ApiController
         if (! empty($filters['outstanding'])) {
             $query->whereIn('status', [DocumentStatus::UNPAID->value, DocumentStatus::PARTIAL->value, DocumentStatus::OVERDUE->value]);
         }
-        $tz = (string) config('netslip.timezone');
+        $tz = (string) config('vendslip.timezone');
         if (! empty($filters['from'])) {
             $query->where('issued_at', '>=', CarbonImmutable::createFromFormat('Y-m-d', $filters['from'], $tz)?->startOfDay());
         }

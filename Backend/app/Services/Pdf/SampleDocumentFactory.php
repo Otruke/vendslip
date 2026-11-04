@@ -32,7 +32,7 @@ final class SampleDocumentFactory
         ];
         $paid = $type === DocumentType::RECEIPT ? PHP_INT_MAX : 2000000;
         $totals = $this->calculator->calculate($lines, 0, 350000, $merchant->vat_rate_bps, $merchant->vat_inclusive, $paid);
-        $now = CarbonImmutable::now(config('netslip.timezone'));
+        $now = CarbonImmutable::now(config('vendslip.timezone'));
 
         $document = new Document([
             'merchant_id' => $merchant->id,

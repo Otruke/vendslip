@@ -11,30 +11,30 @@ use Illuminate\Support\Facades\Crypt;
 
 /**
  * Runtime platform configuration editable by Super-Admins (/admin/gateways, /admin/monetization).
- * DB values override config/netslip.php. Secrets are encrypted with APP_KEY at rest.
+ * DB values override config/vendslip.php. Secrets are encrypted with APP_KEY at rest.
  */
 final class PlatformSettings
 {
-    private const string CACHE_KEY = 'netslip.platform_settings';
+    private const string CACHE_KEY = 'vendslip.platform_settings';
 
     /** key => [config fallback path|null, is_secret, type] */
     public const array DEFINITIONS = [
         'billing.remove_watermark_on_paid_credit' => [null, false, 'bool'],
         'billing.yearly_discount_label' => [null, false, 'string'],
-        'flutterwave.public_key' => ['netslip.flutterwave.public_key', false, 'string'],
-        'flutterwave.secret_key' => ['netslip.flutterwave.secret_key', true, 'string'],
-        'flutterwave.secret_hash' => ['netslip.flutterwave.secret_hash', true, 'string'],
-        'nowpayments.api_key' => ['netslip.nowpayments.api_key', true, 'string'],
-        'nowpayments.ipn_secret' => ['netslip.nowpayments.ipn_secret', true, 'string'],
-        'telegram.bot_token' => ['netslip.telegram.bot_token', true, 'string'],
-        'telegram.webhook_secret' => ['netslip.telegram.webhook_secret', true, 'string'],
-        'telegram.bot_username' => ['netslip.telegram.bot_username', false, 'string'],
-        'twilio.account_sid' => ['netslip.twilio.account_sid', false, 'string'],
-        'twilio.auth_token' => ['netslip.twilio.auth_token', true, 'string'],
-        'twilio.whatsapp_from' => ['netslip.twilio.whatsapp_from', false, 'string'],
-        'twilio.instagram_from' => ['netslip.twilio.instagram_from', false, 'string'],
-        'twilio.facebook_from' => ['netslip.twilio.facebook_from', false, 'string'],
-        'twilio.whatsapp_confirm_content_sid' => ['netslip.twilio.whatsapp_confirm_content_sid', false, 'string'],
+        'flutterwave.public_key' => ['vendslip.flutterwave.public_key', false, 'string'],
+        'flutterwave.secret_key' => ['vendslip.flutterwave.secret_key', true, 'string'],
+        'flutterwave.secret_hash' => ['vendslip.flutterwave.secret_hash', true, 'string'],
+        'nowpayments.api_key' => ['vendslip.nowpayments.api_key', true, 'string'],
+        'nowpayments.ipn_secret' => ['vendslip.nowpayments.ipn_secret', true, 'string'],
+        'telegram.bot_token' => ['vendslip.telegram.bot_token', true, 'string'],
+        'telegram.webhook_secret' => ['vendslip.telegram.webhook_secret', true, 'string'],
+        'telegram.bot_username' => ['vendslip.telegram.bot_username', false, 'string'],
+        'twilio.account_sid' => ['vendslip.twilio.account_sid', false, 'string'],
+        'twilio.auth_token' => ['vendslip.twilio.auth_token', true, 'string'],
+        'twilio.whatsapp_from' => ['vendslip.twilio.whatsapp_from', false, 'string'],
+        'twilio.instagram_from' => ['vendslip.twilio.instagram_from', false, 'string'],
+        'twilio.facebook_from' => ['vendslip.twilio.facebook_from', false, 'string'],
+        'twilio.whatsapp_confirm_content_sid' => ['vendslip.twilio.whatsapp_confirm_content_sid', false, 'string'],
     ];
 
     private const array DEFAULTS = [

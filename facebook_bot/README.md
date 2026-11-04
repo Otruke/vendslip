@@ -1,6 +1,6 @@
-# NetSlip · Facebook Messenger bot module
+# VendSlip · Facebook Messenger bot module
 
-Namespace `NetSlip\Bots\Facebook\`. Shares `BotOrchestrator` with the other channels.
+Namespace `VendSlip\Bots\Facebook\`. Shares `BotOrchestrator` with the other channels.
 
 - `/slash` fields one-by-one or in one message → silent draft buffer (`bot_draft_sessions`).
 - One consolidated confirmation (`1` Confirm · `2` Edit · `3` Cancel, or `/confirm`).

@@ -2,13 +2,13 @@
     <x-ui.page-header eyebrow="Super-Admin" title="Command Center" subtitle="Revenue, merchants and platform health at a glance." />
 
     <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <x-ui.stat-card variant="deep" title="Platform MRR" :value="\App\Support\Money::format($mrr)" :hint="'ARR '.\App\Support\Money::format($arr)" icon="trending-up" />
-        <x-ui.stat-card title="Merchants" :value="number_format($merchantsTotal)" :trend="'+'.$merchantsNew30" hint="joined in 30 days" icon="store" />
-        <x-ui.stat-card title="Credit packs · this month" :value="\App\Support\Money::format($packFiat + $packCrypto)" :hint="'Fiat '.\App\Support\Money::format($packFiat).' · Crypto '.\App\Support\Money::format($packCrypto)" icon="coins" />
-        <x-ui.stat-card title="Slips · 30 days" :value="number_format($slips30)" :hint="'Queue: '.$queue['pending'].' pending · '.$queue['failed'].' failed'" icon="file-text" />
+        <x-ui.stat-card variant="obsidian" title="Platform MRR" :value="\App\Support\Money::format($mrr)" :hint="'ARR '.\App\Support\Money::format($arr)" icon="trending-up" />
+        <x-ui.stat-card variant="deep" title="Merchants" :value="number_format($merchantsTotal)" :trend="'+'.$merchantsNew30" hint="joined in 30 days" icon="store" />
+        <x-ui.stat-card variant="teal" title="Credit packs · this month" :value="\App\Support\Money::format($packFiat + $packCrypto)" :hint="'Fiat '.\App\Support\Money::format($packFiat).' · Crypto '.\App\Support\Money::format($packCrypto)" icon="coins" />
+        <x-ui.stat-card variant="mist" title="Slips · 30 days" :value="number_format($slips30)" :hint="'Queue: '.$queue['pending'].' pending · '.$queue['failed'].' failed'" icon="file-text" />
     </div>
 
-    <div class="grid gap-6 lg:grid-cols-3">
+    <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
         <x-ui.card>
             <x-ui.heading level="2" variant="card">Merchants by plan</x-ui.heading>
             <ul class="mt-4 space-y-3">
@@ -16,7 +16,7 @@
                     @php $n = (int) ($tiers[$tier->value] ?? 0); $pct = $merchantsTotal > 0 ? round($n / $merchantsTotal * 100) : 0; @endphp
                     <li>
                         <div class="flex items-center justify-between text-sm"><x-ui.status-badge :status="$tier" size="sm" /><span class="tabular font-semibold">{{ $n }}</span></div>
-                        <div class="mt-1.5 h-1.5 rounded-full bg-surface-subtle"><div class="h-1.5 rounded-full bg-netslip-primary" style="width: {{ $pct }}%"></div></div>
+                        <div class="mt-1.5 h-1.5 rounded-full bg-surface-subtle"><div class="h-1.5 rounded-full bg-vendslip-primary" style="width: {{ $pct }}%"></div></div>
                     </li>
                 @endforeach
             </ul>
@@ -28,7 +28,7 @@
                     @php $pct = $slips30 > 0 ? round($n / $slips30 * 100) : 0; @endphp
                     <li>
                         <div class="flex items-center justify-between text-sm"><x-ui.status-badge :status="$channel" size="sm" /><span class="tabular font-semibold">{{ number_format($n) }}</span></div>
-                        <div class="mt-1.5 h-1.5 rounded-full bg-surface-subtle"><div class="h-1.5 rounded-full bg-netslip-deep" style="width: {{ $pct }}%"></div></div>
+                        <div class="mt-1.5 h-1.5 rounded-full bg-surface-subtle"><div class="h-1.5 rounded-full bg-vendslip-deep" style="width: {{ $pct }}%"></div></div>
                     </li>
                 @empty
                     <li class="text-sm text-ink-muted">No slips yet.</li>
@@ -47,7 +47,7 @@
                     <li class="py-2.5 text-sm text-ink-muted">All quiet.</li>
                 @endforelse
             </ul>
-            <a href="{{ route('admin.security.index') }}" class="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-netslip-primary">All logs <x-ui.icon name="chevron-right" /></a>
+            <a href="{{ route('admin.security.index') }}" class="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-vendslip-primary">All logs <x-ui.icon name="chevron-right" /></a>
         </x-ui.card>
     </div>
 

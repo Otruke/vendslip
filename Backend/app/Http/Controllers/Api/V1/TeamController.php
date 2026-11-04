@@ -10,6 +10,7 @@ use App\Exceptions\DomainRuleException;
 use App\Models\StaffInvitation;
 use App\Models\User;
 use App\Notifications\StaffInvitationNotification;
+use App\Services\Account\AvatarStore;
 use App\Services\Billing\PlanEntitlements;
 use App\Services\Security\AuditLogger;
 use App\Support\Urls;
@@ -37,11 +38,12 @@ final class TeamController extends ApiController
             ->where('expires_at', '>', now())->orderByDesc('created_at')->get();
 
         return response()->json([
-            'members' => $members->map(static fn (User $u): array => [
+            'members' => $members->map(fn (User $u): array => [
                 'id' => $u->id,
                 'name' => $u->name,
                 'email' => $u->email,
                 'phone' => $u->phone,
+                'avatar_url' => app(AvatarStore::class)->apiUrl($u),
                 'role' => $u->merchantRole()?->value,
                 'role_label' => $u->merchantRole()?->label(),
                 'is_active' => $u->is_active,

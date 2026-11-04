@@ -1,8 +1,9 @@
 import { ArrowRight, Menu, X } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
 import { Button, Container, Logo, Tagline } from '@/components/ui'
 import { cn } from '@/lib/cn'
+import { useScrollMotion } from '@/lib/motion'
 import { useAuthStore } from '@/stores/auth'
 
 const links = [
@@ -34,7 +35,7 @@ export function PublicNavbar() {
         <Logo />
         <nav className="hidden items-center gap-1 md:flex" aria-label="Main">
           {links.map((l) => (
-            <NavLink key={l.to} to={l.to} className={({ isActive }) => cn('rounded-lg px-3 py-2 text-sm font-medium transition', isActive ? 'text-netslip-deep' : 'text-ink-secondary hover:text-ink-primary')}>
+            <NavLink key={l.to} to={l.to} className={({ isActive }) => cn('vs-flowlink rounded-lg px-3 py-2 text-sm font-medium transition-colors [--flow-bottom:2px] [--flow-inset:0.75rem]', isActive ? 'text-vendslip-deep' : 'text-ink-secondary hover:text-ink-primary')}>
               {l.label}
             </NavLink>
           ))}
@@ -70,9 +71,9 @@ export function PublicNavbar() {
 
 export function PublicFooter() {
   return (
-    <footer className="bg-netslip-obsidian text-[#cfe3e8]">
-      <Container className="grid gap-10 py-14 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
-        <div>
+    <footer className="bg-vendslip-obsidian text-[#cfe3e8]">
+      <Container className="grid gap-10 py-14 md:grid-cols-[1.4fr_1fr_1fr_1fr]" data-stagger>
+        <div data-reveal="rise">
           <Logo variant="light" />
           <p className="mt-3 max-w-xs text-sm">Receipts and invoices for businesses that sell in chat.</p>
           <Tagline className="mt-4 block text-2xl text-white/80" />
@@ -82,17 +83,17 @@ export function PublicFooter() {
           ['Company', [['Trust & security', '/about'], ['Sign in', '/login'], ['Create account', '/register']]],
           ['Channels', [['WhatsApp', '/how-it-works'], ['Telegram', '/how-it-works'], ['Instagram & Facebook', '/how-it-works']]],
         ].map(([title, items]) => (
-          <div key={title as string}>
+          <div key={title as string} data-reveal="rise">
             <p className="text-sm font-semibold text-white">{title as string}</p>
             <ul className="mt-3 space-y-2 text-sm">
-              {(items as string[][]).map(([label, to]) => <li key={label}><Link to={to ?? '/'} className="hover:text-white">{label}</Link></li>)}
+              {(items as string[][]).map(([label, to]) => <li key={label}><Link to={to ?? '/'} className="vs-flowlink transition-colors hover:text-white">{label}</Link></li>)}
             </ul>
           </div>
         ))}
       </Container>
       <div className="border-t border-white/10">
         <Container className="flex flex-col gap-2 py-5 text-xs sm:flex-row sm:items-center sm:justify-between">
-          <p>© {new Date().getFullYear()} NetSlip by Techberryz Futurecore Limited. Lagos, Nigeria.</p>
+          <p>© {new Date().getFullYear()} VendSlip developed by Techberryz . Lagos, Nigeria.</p>
           <p>NDPA-aligned · HMAC-signed slips · Encrypted at rest</p>
         </Container>
       </div>
@@ -102,12 +103,14 @@ export function PublicFooter() {
 
 export function PublicLayout() {
   const { pathname } = useLocation()
+  const shell = useRef<HTMLDivElement>(null)
+  useScrollMotion(shell, pathname)
   // Block body on purpose: scrollTo returns a Promise in newer Chromium, and an effect may only return a cleanup function.
   useEffect(() => {
     window.scrollTo(0, 0)
   }, [pathname])
   return (
-    <div className="flex min-h-dvh flex-col">
+    <div ref={shell} className="vs-motion flex min-h-dvh flex-col">
       <PublicNavbar />
       <main className="flex-1">
         <Outlet />

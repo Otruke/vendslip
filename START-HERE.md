@@ -1,16 +1,16 @@
-# NetSlip: start here
+# VendSlip: start here
 
 *Close the sale. Send the slip.*
 
 ## 1. Folder layout
 
-Unzip so these sit **directly** inside `C:\Users\rufus.otolorin\Documents\Ampps\netSlip\`:
+These sit **directly** inside your project folder (`C:\Users\rufus.otolorin\Documents\Ampps\netSlip\` today). You can rename that folder to `vendSlip`: nothing inside depends on its name. After renaming, run `php artisan optimize:clear` in `Backend`.
 
 ```
-netSlip\
+vendSlip\
 ├── START-HERE.md            ← this file
 ├── setup-windows.bat        ← run once (installs packages, builds the database)
-├── start-netslip.bat        ← run every time you want to use NetSlip
+├── start-vendslip.bat        ← run every time you want to use VendSlip
 ├── SETUP.md                 ← full developer + production guide
 ├── ARCHITECTURE_AND_PLAN.md
 ├── GOOGLE_STITCH_UI_UX_PROMPT.md
@@ -22,22 +22,22 @@ netSlip\
 └── google_stitch_ui_ux\
 ```
 
-If Windows unzipped into `netSlip\netSlip\…`, move the inner contents up one level.
+If an unzip ever creates a folder inside a folder (`vendSlip\vendSlip\…`), move the inner contents up one level.
 Your existing `Backend\.env`, `Backend\vendor` and `Frontend\node_modules` are not in the zip,
 so unzipping over the folder keeps them.
 
 ## 2. You need
 
 - **PHP 8.4.1+** on PATH, with `pdo_pgsql, mbstring, openssl, fileinfo, gd, dom, zip, curl` enabled
-- **Composer**, **Node.js 20+**, **PostgreSQL** with a database called `netslip_db`
+- **Composer**, **Node.js 20+**, **PostgreSQL** with a database called `vendslip_db`
 
 ## 3. Run it
 
-1. Double-click **`setup-windows.bat`**. It checks the tools, installs packages, resets `netslip_db`
+1. Double-click **`setup-windows.bat`**. It checks the tools, installs packages, resets `vendslip_db`
    with demo data, and links storage. On a brand-new folder it opens `Backend\.env` in
-   Notepad first: set `DB_PASSWORD` and `NETSLIP_SUPER_ADMIN_PASSWORD`, then save and close.
-2. Double-click **`start-netslip.bat`**. Three windows start (API, scheduler, web app) and
-   your browser opens. Close those windows to stop NetSlip.
+   Notepad first: set `DB_PASSWORD` and `VENDSLIP_SUPER_ADMIN_PASSWORD`, then save and close.
+2. Double-click **`start-vendslip.bat`**. Three windows start (API, scheduler, web app) and
+   your browser opens. Close those windows to stop VendSlip.
 
 | What | Address |
 |---|---|
@@ -50,7 +50,7 @@ so unzipping over the folder keeps them.
 |---|---|---|
 | Shop owner (Business Plus) | `owner@aminaluxury.test` | `password` |
 | Sales agent | `sales@aminaluxury.test` | `password` |
-| Super-Admin | `NETSLIP_SUPER_ADMIN_EMAIL` in `.env` (default `superadmin@netslip.test`) | `NETSLIP_SUPER_ADMIN_PASSWORD`, or the one printed during setup |
+| Super-Admin | `VENDSLIP_SUPER_ADMIN_EMAIL` in `.env` (default `superadmin@vendslip.test`) | `VENDSLIP_SUPER_ADMIN_PASSWORD`, or the one printed during setup |
 
 ## 5. What to test
 
@@ -83,7 +83,21 @@ plans and credit pack prices, templates, gateway keys, payments, security log, a
 | `SQLSTATE … password authentication failed` | Fix `DB_*` in `Backend\.env`, then rerun setup |
 | `could not find driver` | Enable `extension=pdo_pgsql` in php.ini |
 | Changed `.env` but nothing happens | `cd Backend` then `php artisan optimize:clear` |
-| Port 8000 or 5173 busy | Close the old NetSlip windows, then start again |
+| Port 8000 or 5173 busy | Close the old VendSlip windows, then start again |
 | Red `401 /api/v1/auth/me` in browser DevTools | Normal before you log in; the app is checking for a session |
 
-Quality checks: `cd Backend && php artisan test` (63 tests, needs a `netslip_test` database).
+Quality checks: `cd Backend && php artisan test` (73 tests, needs a `vendslip_test` database).
+
+## 7. Coming from NetSlip?
+
+The product was renamed **VendSlip**. If you set it up before the rename:
+
+1. Rename your databases in PostgreSQL (pgAdmin → Query Tool, connected to the `postgres` database):
+   ```sql
+   ALTER DATABASE netslip_db RENAME TO vendslip_db;
+   ALTER DATABASE netslip_test RENAME TO vendslip_test;
+   ```
+   Then set `DB_DATABASE=vendslip_db` in `Backend\.env`.
+2. In `Backend`, run `composer dump-autoload`, `php artisan migrate` and `php artisan optimize:clear`.
+   The migration renames the template, plan and admin names already stored in the database.
+3. Slips issued before the rename carry `NSV-` codes. They still verify; new slips get `VSV-` codes.

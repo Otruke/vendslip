@@ -101,9 +101,9 @@ final class DocumentLifecycleService
                 ? $this->templates->resolve($merchant, $locked->doc_type, $draft->template_id)
                 : $locked->template;
 
-            $now = CarbonImmutable::now(config('netslip.timezone'));
+            $now = CarbonImmutable::now(config('vendslip.timezone'));
             $dueDate = $locked->doc_type === DocumentType::INVOICE && $draft->due_date !== null
-                ? CarbonImmutable::createFromFormat('Y-m-d', $draft->due_date, config('netslip.timezone'))?->startOfDay()
+                ? CarbonImmutable::createFromFormat('Y-m-d', $draft->due_date, config('vendslip.timezone'))?->startOfDay()
                 : $locked->due_date;
             $balance = $totals->totalMinor - $paid - $credited;
 
@@ -315,7 +315,7 @@ final class DocumentLifecycleService
                 throw new DomainRuleException('Payment must be between '.Money::format(1, $locked->currency).' and the balance due of '.Money::format($locked->balance_due_minor, $locked->currency).'.', 'invalid_amount');
             }
             $before = DocumentSnapshot::of($locked);
-            $paidAt ??= CarbonImmutable::now(config('netslip.timezone'));
+            $paidAt ??= CarbonImmutable::now(config('vendslip.timezone'));
 
             $locked->amount_paid_minor += $amountMinor;
             $this->recalculateBalance($locked);
@@ -381,7 +381,7 @@ final class DocumentLifecycleService
         $balance = max(0, $document->total_minor - $document->amount_paid_minor - $credited);
         $document->balance_due_minor = $balance;
         $document->status = $this->statusFor(
-            $document->doc_type, $balance, $document->amount_paid_minor, $document->due_date, CarbonImmutable::now(config('netslip.timezone')),
+            $document->doc_type, $balance, $document->amount_paid_minor, $document->due_date, CarbonImmutable::now(config('vendslip.timezone')),
         );
         $document->save();
     }

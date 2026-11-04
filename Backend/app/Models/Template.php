@@ -35,11 +35,11 @@ class Template extends Model
 
     public const string ENGINE_HTML = 'html';
 
-    public const string CLASSIC_EXECUTIVE = 'netslip-classic-executive';
+    public const string CLASSIC_EXECUTIVE = 'vendslip-classic-executive';
 
-    public const string MINIMALIST_SOCIAL = 'netslip-minimalist-social';
+    public const string MINIMALIST_SOCIAL = 'vendslip-minimalist-social';
 
-    /** The two designs NetSlip ships with. They can be edited and hidden, never deleted. */
+    /** The two designs VendSlip ships with. They can be edited and hidden, never deleted. */
     public const array SYSTEM_SLUGS = [self::CLASSIC_EXECUTIVE, self::MINIMALIST_SOCIAL];
 
     /** Tokens available to admin-authored HTML templates. */

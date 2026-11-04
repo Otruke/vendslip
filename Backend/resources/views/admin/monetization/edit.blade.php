@@ -1,7 +1,7 @@
 <x-admin.layout title="Pricing Engine">
     <x-ui.page-header eyebrow="Super-Admin" title="Pricing Engine" subtitle="Plans, quotas, features and PAYG credit packs. Changes apply instantly." />
 
-    <div class="grid gap-6 xl:grid-cols-3">
+    <div class="grid grid-cols-1 gap-6 xl:grid-cols-3">
         @foreach ($plans as $plan)
             <x-ui.card variant="elevated">
                 <form method="POST" action="{{ route('admin.monetization.plans.update', $plan) }}" class="space-y-4">
@@ -19,9 +19,9 @@
                     </div>
                     <fieldset>
                         <legend class="mb-2 text-sm font-medium">Features</legend>
-                        <div class="grid gap-2">
+                        <div class="grid grid-cols-1 gap-2">
                             @foreach ($features as $key => $label)
-                                <label class="flex items-center gap-2 text-sm"><input type="checkbox" name="features[]" value="{{ $key }}" @checked($plan->features[$key] ?? false) class="size-4 rounded border-slate-300 text-netslip-primary focus:ring-netslip-primary/30">{{ ucfirst($label) }}</label>
+                                <label class="flex items-center gap-2 text-sm"><input type="checkbox" name="features[]" value="{{ $key }}" @checked($plan->features[$key] ?? false) class="size-4 rounded border-slate-300 text-vendslip-primary focus:ring-vendslip-primary/30">{{ ucfirst($label) }}</label>
                             @endforeach
                         </div>
                     </fieldset>
@@ -33,7 +33,7 @@
         @endforeach
     </div>
 
-    <div class="grid gap-6 lg:grid-cols-2">
+    <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <x-ui.card>
             <x-ui.heading level="2" variant="card">Non-expiring PAYG credit packs</x-ui.heading>
             <div class="mt-4 space-y-4">
@@ -60,7 +60,7 @@
             <x-ui.heading level="2" variant="card">Billing rules</x-ui.heading>
             <form method="POST" action="{{ route('admin.monetization.rules') }}" class="mt-4 space-y-5">
                 @csrf @method('PUT')
-                <x-ui.toggle name="remove_watermark_on_paid_credit" label="Paid credit removes watermark" description="When a Free merchant spends a PAYG credit, the slip has no 'Powered by NetSlip' watermark." :checked="$removeWatermarkOnCredit" />
+                <x-ui.toggle name="remove_watermark_on_paid_credit" label="Paid credit removes watermark" description="When a Free merchant spends a PAYG credit, the slip has no 'Powered by VendSlip' watermark." :checked="$removeWatermarkOnCredit" />
                 <x-ui.input name="yearly_discount_label" label="Yearly toggle label" :value="$yearlyLabel" placeholder="Save 20%" />
                 <x-ui.button>Save rules</x-ui.button>
             </form>

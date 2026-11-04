@@ -60,9 +60,9 @@ final class SlipViewModel
             'primary' => self::safeColor($merchant->primary_color, '#377581'),
             'secondary' => self::safeColor($merchant->secondary_color, '#265363'),
             'logo' => $logo,
-            'netslip_logo' => 'data:image/png;base64,'.base64_encode((string) file_get_contents(resource_path('brand/netslip-icon.png'))),
-            'issued_at' => $document->issued_at->setTimezone(config('netslip.timezone'))->format('d M Y, g:i A'),
-            'issued_date' => $document->issued_at->setTimezone(config('netslip.timezone'))->format('d M Y'),
+            'vendslip_logo' => 'data:image/png;base64,'.base64_encode((string) file_get_contents(resource_path('brand/vendslip-icon.png'))),
+            'issued_at' => $document->issued_at->setTimezone(config('vendslip.timezone'))->format('d M Y, g:i A'),
+            'issued_date' => $document->issued_at->setTimezone(config('vendslip.timezone'))->format('d M Y'),
             'due_date' => $document->due_date?->format('d M Y'),
             'parent_number' => $document->parent?->doc_number,
             'items' => $document->items->map(static fn ($item): array => [

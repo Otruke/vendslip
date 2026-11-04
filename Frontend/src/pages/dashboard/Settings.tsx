@@ -36,7 +36,7 @@ export default function Settings() {
         { value: 'branding', label: 'Branding', icon: <Palette /> },
         { value: 'payments', label: 'Payment links', icon: <CreditCard /> },
       ]} />
-      <p className="text-sm text-ink-secondary">Your own name, password and two-factor live in <Link to="/dashboard/profile" className="font-semibold text-netslip-primary hover:underline">My profile</Link>.</p>
+      <p className="text-sm text-ink-secondary">Your own name, password and two-factor live in <Link to="/dashboard/profile" className="font-semibold text-vendslip-primary hover:underline">My profile</Link>.</p>
       <div className="max-w-3xl">
         {tab === 'business' && <BusinessSettings />}
         {tab === 'branding' && <BrandingSettings />}
@@ -149,7 +149,7 @@ export function BrandingSettings() {
             </label>
           ))}
         </div>
-        <Button variant="ghost" size="sm" onClick={() => { setPrimary('#377581'); setSecondary('#265363') }}>Reset to NetSlip teal</Button>
+        <Button variant="ghost" size="sm" onClick={() => { setPrimary('#377581'); setSecondary('#265363') }}>Reset to VendSlip teal</Button>
       </Section>
     </div>
   )

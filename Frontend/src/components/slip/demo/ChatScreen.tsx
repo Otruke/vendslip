@@ -10,15 +10,15 @@ function Ticks({ color }: { color: string }) {
   )
 }
 
-/** File glyph for the PDF bubble: a small serrated slip (NetSlip's motif), not a generic icon. */
+/** File glyph for the PDF bubble: a small serrated slip (VendSlip's motif), not a generic icon. */
 function SlipGlyph() {
   return (
     <span className="relative block h-10 w-8 shrink-0 drop-shadow-[0_2px_3px_rgba(0,0,0,0.12)]" aria-hidden>
       <span className="serrated absolute inset-0 rounded-t-[4px] bg-white [--tooth:6px]">
-        <span className="absolute inset-x-0 top-0 h-3 rounded-t-[4px] bg-netslip-deep" />
+        <span className="absolute inset-x-0 top-0 h-3 rounded-t-[4px] bg-vendslip-deep" />
         <span className="absolute left-1.5 right-2 top-4.5 h-[2px] rounded bg-slate-300" />
         <span className="absolute left-1.5 right-3.5 top-6.5 h-[2px] rounded bg-slate-300" />
-        <span className="absolute bottom-2 right-1.5 text-[6px] font-black text-netslip-deep">PDF</span>
+        <span className="absolute bottom-2 right-1.5 text-[6px] font-black text-vendslip-deep">PDF</span>
       </span>
     </span>
   )
@@ -54,10 +54,10 @@ export function ChatScreen({
       <div className="relative z-10 flex items-center gap-2.5 px-3 pb-2.5 pt-1 transition-colors duration-500" style={{ background: t.header, color: t.headerText }}>
         <svg viewBox="0 0 24 24" className="size-5 opacity-90" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" aria-hidden><path d="m15 18-6-6 6-6" /></svg>
         <span className="flex size-8 items-center justify-center rounded-full bg-white">
-          <img src="/assets/brand/netslip-icon.png" alt="" className="h-[18px] w-auto" />
+          <img src="/assets/brand/vendslip-icon.png" alt="" className="h-[18px] w-auto" />
         </span>
         <div className="min-w-0 flex-1 leading-tight">
-          <p className="truncate text-[13.5px] font-semibold">NetSlip</p>
+          <p className="truncate text-[13.5px] font-semibold">VendSlip</p>
           <p className="truncate text-[11px]" style={{ color: t.sub }}>{typingName ? 'typing…' : 'business account'}</p>
         </div>
       </div>
@@ -70,7 +70,7 @@ export function ChatScreen({
           }
           if (m.kind === 'typing') {
             return (
-              <div key={m.id} className="w-fit rounded-xl rounded-tl-sm bg-white px-3 py-2.5 shadow-sm animate-fade-up" aria-label="NetSlip is typing">
+              <div key={m.id} className="w-fit rounded-xl rounded-tl-sm bg-white px-3 py-2.5 shadow-sm animate-fade-up" aria-label="VendSlip is typing">
                 <span className="flex gap-1">{[0, 1, 2].map((i) => <span key={i} className="size-1.5 animate-bounce rounded-full bg-slate-400" style={{ animationDelay: `${i * 140}ms` }} />)}</span>
               </div>
             )

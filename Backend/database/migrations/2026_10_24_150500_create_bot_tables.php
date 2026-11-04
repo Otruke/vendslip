@@ -10,7 +10,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        // Maps a chat-platform sender (WhatsApp number, Telegram user id, IG/FB scoped id) to a NetSlip user.
+        // Maps a chat-platform sender (WhatsApp number, Telegram user id, IG/FB scoped id) to a VendSlip user.
         Schema::create('channel_identities', function (Blueprint $table): void {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();

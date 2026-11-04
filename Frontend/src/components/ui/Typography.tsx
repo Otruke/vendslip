@@ -6,7 +6,7 @@ const headingStyles: Record<HeadingVariant, string> = {
   display: 'text-4xl font-extrabold tracking-tight text-ink-primary sm:text-5xl lg:text-6xl text-balance',
   section: 'text-3xl font-extrabold tracking-tight text-ink-primary sm:text-4xl text-balance',
   card: 'text-base font-semibold text-ink-primary',
-  script: 'font-script text-2xl font-normal text-netslip-deep',
+  script: 'font-script text-2xl font-normal text-vendslip-deep',
 }
 
 export function Heading({ level = 2, variant = 'section', className, children, ...rest }: { level?: 1 | 2 | 3 | 4 | 5 | 6; variant?: HeadingVariant; children: ReactNode } & HTMLAttributes<HTMLHeadingElement>) {
@@ -28,7 +28,7 @@ const tones: Record<TextTone, string> = {
   primary: 'text-ink-primary',
   secondary: 'text-ink-secondary',
   muted: 'text-ink-muted',
-  brand: 'text-netslip-primary',
+  brand: 'text-vendslip-primary',
   danger: 'text-tone-open',
   inverse: 'text-[#cfe3e8]',
 }

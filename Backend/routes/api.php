@@ -63,6 +63,9 @@ Route::prefix('v1')->group(function (): void {
 
         Route::put('account/profile', [AccountController::class, 'updateProfile']);
         Route::put('account/password', [AccountController::class, 'updatePassword']);
+        Route::post('account/avatar', [AccountController::class, 'uploadAvatar'])->middleware('throttle:10,1');
+        Route::delete('account/avatar', [AccountController::class, 'deleteAvatar']);
+        Route::get('users/{user}/avatar', [AccountController::class, 'showAvatar'])->whereNumber('user');
         Route::post('account/two-factor', [AccountController::class, 'enableTwoFactor']);
         Route::post('account/two-factor/confirm', [AccountController::class, 'confirmTwoFactor']);
         Route::delete('account/two-factor', [AccountController::class, 'disableTwoFactor']);

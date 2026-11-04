@@ -3,7 +3,7 @@
         <x-slot:actions><x-ui.button icon="plus" :href="route('admin.templates.create')">New HTML template</x-ui.button></x-slot:actions>
     </x-ui.page-header>
 
-    <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
         @foreach ($templates as $t)
             <x-ui.card variant="interactive" padding="none" class="overflow-hidden">
                 <div class="aspect-[4/3] bg-surface-subtle">

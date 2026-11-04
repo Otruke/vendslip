@@ -1,11 +1,9 @@
 /**
- * NetSlip imagery. Every photo is NetSlip's own brand photography; every slip is real output
- * from the NetSlip PDF engine. Each image ships in two widths for responsive `srcSet`s.
+ * VendSlip imagery. Every photo is VendSlip's own brand photography; every slip is real output
+ * from the VendSlip PDF engine. Each image ships in two widths for responsive `srcSet`s.
  */
-import heroLandscape1280 from './backgrounds/hero-landscape-1280.webp'
-import heroLandscape1920 from './backgrounds/hero-landscape-1920.webp'
-import heroPortrait720 from './backgrounds/hero-portrait-720.webp'
-import heroPortrait1080 from './backgrounds/hero-portrait-1080.webp'
+import heroReceiptLandscape from './backgrounds/hero-receipt-landscape.svg'
+import heroReceiptPortrait from './backgrounds/hero-receipt-portrait.svg'
 import dashLedger900 from './images/dash-ledger-900.webp'
 import dashLedger1600 from './images/dash-ledger-1600.webp'
 import desk900 from './images/desk-900.webp'
@@ -34,15 +32,16 @@ const img = (small: string, smallW: number, large: string, largeW: number, ratio
   height: Math.round(largeW * ratio),
 })
 
+/** Hero art: VendSlip's own flat vector illustration (ledger paper + a giant receipt in the logo's shape). */
 export const heroBackground = {
-  landscape: { src: heroLandscape1280, srcSet: `${heroLandscape1280} 1280w, ${heroLandscape1920} 1672w` },
-  portrait: { src: heroPortrait720, srcSet: `${heroPortrait720} 720w, ${heroPortrait1080} 1080w` },
+  landscape: heroReceiptLandscape,
+  portrait: heroReceiptPortrait,
 }
 
 export const photos = {
   desk: img(desk900, 900, desk1600, 1600, 1178 / 1600),
   wallLight: img(wallLight900, 900, wallLight1600, 1600, 0.75),
-  wallDark: img(wallDark900, 900, wallDark1600, 1600, 1178 / 1600),
+  wallDark: img(wallDark900, 900, wallDark1600, 1600, 1190 / 2048),
   wallGlass: img(wallGlass900, 900, wallGlass1600, 1600, 0.75),
   logo3d: { src: logo3d900, srcSet: `${logo3d900} 900w`, width: 900, height: 900 } satisfies ResponsiveImage,
 }
@@ -53,7 +52,7 @@ export const slips = {
   receiptMinimal: img(slipReceiptMinimal600, 600, slipReceiptMinimal1000, 1000, 1362 / 1000),
 }
 
-/** Real NetSlip product captures (dashboard screenshot, QR proof cropped from a real PDF). */
+/** Real VendSlip product captures (dashboard screenshot, QR proof cropped from a real PDF). */
 export const product = {
   ledger: img(dashLedger900, 900, dashLedger1600, 1600, 0.625),
   qrProof: { src: qrProof400, srcSet: `${qrProof400} 390w`, width: 390, height: 250 } satisfies ResponsiveImage,

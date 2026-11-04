@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\DB;
 
 final class ExpireDraftSessions extends Command
 {
-    protected $signature = 'netslip:expire-drafts';
+    protected $signature = 'vendslip:expire-drafts';
 
     protected $description = 'Expire stale bot drafts and prune old idempotency keys / link codes';
 

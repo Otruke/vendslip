@@ -27,7 +27,7 @@ final class StaffInvitationNotification extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->subject("You're invited to {$this->merchantName} on NetSlip")
+            ->subject("You're invited to {$this->merchantName} on VendSlip")
             ->greeting('Hello!')
             ->line("{$this->merchantName} added you as {$this->roleLabel}.")
             ->action('Accept invitation', $this->url)

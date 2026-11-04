@@ -24,7 +24,7 @@ final class NowPaymentsClient
         $key = $credentials->nowPaymentsApiKey ?? throw PaymentGatewayException::notConfigured('Crypto payments');
 
         try {
-            $response = Http::baseUrl((string) config('netslip.nowpayments.base_url'))
+            $response = Http::baseUrl((string) config('vendslip.nowpayments.base_url'))
                 ->withHeaders(['x-api-key' => $key])->acceptJson()->timeout(20)
                 ->post('/invoice', [
                     'price_amount' => round($amountMinor / 100, 2),

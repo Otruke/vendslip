@@ -3,8 +3,8 @@ import { useId, type InputHTMLAttributes, type ReactNode, type SelectHTMLAttribu
 import { cn } from '@/lib/cn'
 
 const fieldBase =
-  'block w-full rounded-lg border bg-white text-sm text-ink-primary placeholder:text-ink-muted transition focus:outline-none focus:ring-2 focus:ring-netslip-primary/20 disabled:bg-surface-subtle disabled:text-ink-muted'
-const stateClasses = (error?: string) => (error ? 'border-tone-open focus:border-tone-open' : 'border-slate-300 focus:border-netslip-primary')
+  'block w-full rounded-lg border bg-white text-sm text-ink-primary placeholder:text-ink-muted transition focus:outline-none focus:ring-2 focus:ring-vendslip-primary/20 disabled:bg-surface-subtle disabled:text-ink-muted'
+const stateClasses = (error?: string) => (error ? 'border-tone-open focus:border-tone-open' : 'border-slate-300 focus:border-vendslip-primary')
 
 export function Field({ id, label, error, helperText, children, className, labelAction }: { id: string; label?: ReactNode; error?: string; helperText?: ReactNode; children: ReactNode; className?: string; labelAction?: ReactNode }) {
   return (
@@ -111,7 +111,7 @@ export function ToggleSwitch({ checked, onChange, label, description, disabled, 
         aria-checked={checked}
         disabled={disabled}
         onClick={() => onChange(!checked)}
-        className={cn('relative mt-0.5 inline-flex h-6 w-11 shrink-0 items-center rounded-full transition disabled:opacity-50', checked ? 'bg-netslip-primary' : 'bg-slate-300')}
+        className={cn('relative mt-0.5 inline-flex h-6 w-11 shrink-0 items-center rounded-full transition disabled:opacity-50', checked ? 'bg-vendslip-primary' : 'bg-slate-300')}
       >
         <span className={cn('inline-block size-5 rounded-full bg-white shadow transition', checked ? 'translate-x-5.5' : 'translate-x-0.5')} />
       </button>
@@ -122,7 +122,7 @@ export function ToggleSwitch({ checked, onChange, label, description, disabled, 
 export function Checkbox({ label, className, ...rest }: InputHTMLAttributes<HTMLInputElement> & { label: ReactNode }) {
   return (
     <label className={cn('flex cursor-pointer items-center gap-2 text-sm text-ink-primary', className)}>
-      <input type="checkbox" className="size-4 rounded border-slate-300 accent-netslip-primary" {...rest} />
+      <input type="checkbox" className="size-4 rounded border-slate-300 accent-vendslip-primary" {...rest} />
       {label}
     </label>
   )

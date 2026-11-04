@@ -46,7 +46,7 @@ class DomainRuleException extends RuntimeException
 
     public static function suspended(): self
     {
-        return new self('This merchant account is suspended. Contact NetSlip support.', 'merchant_suspended', 423);
+        return new self('This merchant account is suspended. Contact VendSlip support.', 'merchant_suspended', 423);
     }
 
     public function render(): JsonResponse

@@ -89,12 +89,12 @@ final class AdminPortalTest extends TestCase
     public function test_gateway_secrets_are_encrypted_and_never_echoed(): void
     {
         $this->actingAs($this->admin());
-        $this->put(route('admin.gateways.update'), ['settings' => ['telegram__bot_token' => '999:SUPERSECRETTOKEN', 'telegram__bot_username' => 'NetSlipBot']])->assertRedirect();
+        $this->put(route('admin.gateways.update'), ['settings' => ['telegram__bot_token' => '999:SUPERSECRETTOKEN', 'telegram__bot_username' => 'VendSlipBot']])->assertRedirect();
 
         $raw = \DB::table('platform_settings')->where('key', 'telegram.bot_token')->value('value');
         $this->assertNotSame('999:SUPERSECRETTOKEN', $raw);
         $this->assertSame('999:SUPERSECRETTOKEN', app(PlatformSettings::class)->string('telegram.bot_token'));
-        $this->get(route('admin.gateways.edit'))->assertDontSee('SUPERSECRETTOKEN')->assertSee('NetSlipBot');
+        $this->get(route('admin.gateways.edit'))->assertDontSee('SUPERSECRETTOKEN')->assertSee('VendSlipBot');
     }
 
     public function test_custom_html_template_is_sanitised_and_renders(): void

@@ -67,7 +67,7 @@ final class SlashParserTest extends TestCase
         $this->assertSame('confirm', $this->parser->parse('/confirm')->command);
         $link = $this->parser->parse('/link AB12CD34');
         $this->assertSame(['link', 'AB12CD34'], [$link->command, $link->commandArgument]);
-        $this->assertSame('help', $this->parser->parse('/start@NetSlipBot')->command);
+        $this->assertSame('help', $this->parser->parse('/start@VendSlipBot')->command);
         $this->assertNull($this->parser->parse('hello')->command);
     }
 

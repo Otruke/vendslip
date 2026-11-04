@@ -33,18 +33,18 @@ function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
   const unlimited = usage?.monthly_quota === null
 
   return (
-    <div className="flex h-full flex-col bg-netslip-deep text-white">
+    <div className="flex h-full flex-col bg-vendslip-deep text-white">
       <div className="px-5 pb-4 pt-5">
         <div className="flex items-center gap-2.5">
-          <img src="/assets/brand/netslip-icon-white.png" alt="" className="h-7 w-auto" />
-          <span className="text-lg font-extrabold tracking-tight">NetSlip</span>
+          <img src="/assets/brand/vendslip-icon-white.png" alt="" className="h-7 w-auto" />
+          <span className="text-lg font-extrabold tracking-tight">VendSlip</span>
         </div>
         <div className="mt-5 rounded-xl bg-white/[0.07] px-3 py-2.5">
           <p className="truncate text-sm font-semibold">{merchant?.name}</p>
           <p className="text-xs text-[#cfe3e8]">{merchant?.effective_tier === 'BUSINESS_PLUS' ? 'Business Plus' : merchant?.effective_tier === 'PRO' ? 'Pro Merchant' : 'Free plan'}</p>
         </div>
       </div>
-      <nav className="no-scrollbar flex-1 space-y-0.5 overflow-y-auto px-3" aria-label="Dashboard">
+      <nav className="no-scrollbar flex-1 space-y-0.5 overflow-y-auto pl-3" aria-label="Dashboard">
         {NAV.map((item) => (
           <NavLink
             key={item.to}
@@ -52,8 +52,8 @@ function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
             end={item.end}
             onClick={onNavigate}
             className={({ isActive }) => cn(
-              'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition [&>svg]:size-4 [&>svg]:shrink-0',
-              isActive ? 'bg-white/[0.12] text-white' : 'text-[#cfe3e8] hover:bg-white/[0.06] hover:text-white',
+              'vs-nav flex items-center gap-3 rounded-l-lg px-3 py-2 text-sm font-medium transition-colors duration-300 [&>svg]:size-4 [&>svg]:shrink-0',
+              isActive ? 'text-white' : 'text-[#cfe3e8] hover:text-white',
             )}
           >
             {item.icon}{item.label}
@@ -99,7 +99,7 @@ function UserMenu() {
   return (
     <details className="relative">
       <summary className="flex cursor-pointer list-none items-center gap-2 rounded-lg p-1 hover:bg-surface-subtle [&::-webkit-details-marker]:hidden">
-        <Avatar name={session.user.name} />
+        <Avatar name={session.user.name} src={session.user.avatar_url} />
         <span className="hidden text-left text-sm leading-tight sm:block">
           <span className="block font-semibold text-ink-primary">{session.user.name}</span>
           <span className="block text-xs text-ink-muted">{session.user.role_label}</span>
@@ -113,6 +113,30 @@ function UserMenu() {
         <button type="button" onClick={logout} className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm text-tone-open hover:bg-tone-open/10"><LogOut className="size-4" />Sign out</button>
       </div>
     </details>
+  )
+}
+
+/**
+ * Phones and tablets: a tab bar along the bottom (thumb reach) with the everyday destinations,
+ * a raised "New slip" in the middle, and Menu for everything else. The active tab's top edge
+ * gets the same water-flow line as the sidebar.
+ */
+function BottomNav({ onMenu, menuOpen }: { onMenu: () => void; menuOpen: boolean }) {
+  const tab = 'vs-tab flex flex-col items-center justify-center gap-1 pt-2 pb-1.5 text-[10.5px] font-semibold transition-colors [&>svg]:size-5'
+  const tone = ({ isActive }: { isActive: boolean }) => cn(tab, isActive ? 'text-vendslip-deep' : 'text-ink-muted hover:text-ink-primary')
+  return (
+    <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-border-subtle bg-white pb-[env(safe-area-inset-bottom)] lg:hidden" aria-label="Quick navigation">
+      <div className="mx-auto grid h-16 max-w-xl grid-cols-5">
+        <NavLink to="/dashboard" end className={tone}><LayoutDashboard />Home</NavLink>
+        <NavLink to="/dashboard/documents" className={tone}><FileText />Slips</NavLink>
+        <NavLink to="/dashboard/composer" className={({ isActive }) => cn('group flex flex-col items-center justify-end gap-1 pb-1.5 text-[10.5px] font-semibold', isActive ? 'text-vendslip-deep' : 'text-ink-secondary')} aria-label="New slip">
+          <span className="-mt-6 flex size-13 items-center justify-center rounded-2xl bg-vendslip-deep text-white ring-4 ring-white transition-transform duration-300 group-hover:-translate-y-0.5 group-active:scale-95 [&>svg]:size-6"><Plus /></span>
+          New slip
+        </NavLink>
+        <NavLink to="/dashboard/profile" className={tone}><UserRound />Profile</NavLink>
+        <button type="button" onClick={onMenu} aria-expanded={menuOpen} aria-label="Open the full menu" className={cn(tab, menuOpen ? 'text-vendslip-deep' : 'text-ink-muted hover:text-ink-primary')}><Menu />Menu</button>
+      </div>
+    </nav>
   )
 }
 
@@ -144,20 +168,21 @@ export default function DashboardLayout() {
         <header className="sticky top-0 z-30 border-b border-border-subtle bg-white/90 backdrop-blur">
           <div className="flex h-16 items-center justify-between gap-3 px-4 sm:px-6 lg:px-8">
             <div className="flex items-center gap-3">
-              <button type="button" onClick={() => setSidebarOpen(true)} className="inline-flex size-9 items-center justify-center rounded-lg hover:bg-surface-subtle lg:hidden" aria-label="Open navigation"><Menu className="size-5" /></button>
+              <img src="/assets/brand/vendslip-icon.png" alt="VendSlip" className="h-7 w-auto lg:hidden" />
               {merchant && <StatusBadge status={merchant.record_mutability_mode} size="sm" showIcon className="hidden sm:inline-flex" />}
               {merchant?.status === 'SUSPENDED' && <StatusBadge status="SUSPENDED" size="sm" />}
             </div>
             <div className="flex items-center gap-2 sm:gap-3">
-              <Button to="/dashboard/composer" size="sm" leftIcon={<Plus className="size-4" />}>New slip</Button>
+              <Button to="/dashboard/composer" size="sm" leftIcon={<Plus className="size-4" />} className="hidden lg:inline-flex">New slip</Button>
               <UserMenu />
             </div>
           </div>
         </header>
-        <main className="mx-auto w-full max-w-[1440px] px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
+        <main className="mx-auto w-full max-w-[1440px] px-4 pt-6 pb-28 sm:px-6 lg:px-8 lg:py-8">
           <Outlet />
         </main>
       </div>
+      <BottomNav onMenu={() => setSidebarOpen(!sidebarOpen)} menuOpen={sidebarOpen} />
     </div>
   )
 }
