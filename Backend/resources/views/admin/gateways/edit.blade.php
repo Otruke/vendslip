@@ -1,8 +1,42 @@
 <x-admin.layout title="Gateways & Bots">
     <x-ui.page-header eyebrow="Super-Admin" title="Gateways & bot credentials" subtitle="Stored encrypted. Leave a field blank to keep its current value." />
 
+    @php
+        $routes = [
+            'meta' => ['Meta Cloud API', '', 'Direct to Meta: WhatsApp buttons, PDFs, Instagram DMs.'],
+            'twilio' => ['Twilio', '', 'Backup route for WhatsApp and Messenger.'],
+        ];
+    @endphp
+    <x-ui.card >
+        <div class="flex flex-col gap-4 md:items-center md:justify-between">
+            <div class="min-w-0">
+                <x-ui.heading level="2" variant="card">WhatsApp · Messenger · Instagram route</x-ui.heading>
+            </div>
+            <div class="grid shrink-0 grid-cols-2 gap-1 rounded-xl border border-border-subtle bg-surface-canvas p-1" role="group" aria-label="Messaging route">
+                @foreach ($routes as $value => [$name, $rank, $hint])
+                    @php $on = $provider === $value; @endphp
+                    <form method="POST" action="{{ route('admin.gateways.provider') }}" @if (! $on) data-confirm="Switch WhatsApp, Messenger and Instagram to {{ $name }} ({{ strtolower($rank) }})? This is logged as a critical event." @endif>
+                        @csrf @method('PUT')
+                        <input type="hidden" name="provider" value="{{ $value }}">
+                        <button type="submit" title="{{ $hint }}" aria-pressed="{{ $on ? 'true' : 'false' }}" @class([
+                            'flex w-full min-w-[8.5rem] flex-col items-start rounded-lg px-3 py-2 text-left transition-colors duration-200',
+                            'bg-vendslip-deep text-white' => $on,
+                            'text-ink-secondary hover:bg-white hover:text-ink-primary' => ! $on,
+                        ])>
+                            <span class="flex items-center gap-1.5 text-sm font-semibold">
+                                <span @class(['size-2 rounded-full', 'bg-emerald-300' => $on, 'bg-slate-300' => ! $on]) aria-hidden="true"></span>{{ $name }}
+                            </span>
+                            <span @class(['text-[11px] font-semibold uppercase tracking-wider', 'text-[#cfe3e8]' => $on, 'text-ink-muted' => ! $on])>{{ $rank }}{{ $on ? ' live' : '' }}</span>
+                        </button>
+                    </form>
+                @endforeach
+            </div>
+        </div>
+    </x-ui.card>
+
     <x-ui.card>
         <x-ui.heading level="2" variant="card">Webhook URLs</x-ui.heading>
+        <p class="mt-1 text-xs text-ink-muted">Meta: use the Meta app URL as the callback URL for WhatsApp, Messenger and Instagram, with the webhook verify token below. Telegram registers itself with the button.</p>
         <ul class="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
             @foreach ($webhooks as $label => $url)
                 <li class="flex min-w-0 items-center justify-between gap-2 rounded-lg bg-surface-canvas px-3 py-2">

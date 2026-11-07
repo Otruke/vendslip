@@ -8,6 +8,7 @@ use App\Enums\Channel;
 use App\Services\Bot\Actions\AskConfirmation;
 use App\Services\Bot\Actions\DeliverSlip;
 use App\Services\Bot\BotOrchestrator;
+use App\Services\Bot\ChannelProviders;
 use App\Services\Bot\InboundMessage;
 use App\Services\Bot\Twilio\AbstractTwilioWebhookHandler;
 use App\Services\Bot\Twilio\TwilioGateway;
@@ -17,7 +18,8 @@ use App\Services\Settings\PlatformSettings;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * POST /api/v1/webhooks/whatsapp  (Twilio "A message comes in" webhook)
+ * POST /api/v1/webhooks/whatsapp  (Twilio "A message comes in" webhook): the secondary route.
+ * The primary route is Meta's Cloud API (WhatsAppCloudSender via /api/v1/webhooks/meta).
  *
  * - Validates X-Twilio-Signature.
  * - Partial /slash messages → empty <Response/> (₦0 outbound).
@@ -33,9 +35,10 @@ final class WhatsAppWebhookHandler extends AbstractTwilioWebhookHandler
         BotOrchestrator $orchestrator,
         TwilioGateway $twilio,
         AuditLogger $audit,
+        ChannelProviders $providers,
         private readonly PlatformSettings $settings,
     ) {
-        parent::__construct($orchestrator, $twilio, $audit);
+        parent::__construct($orchestrator, $twilio, $audit, $providers);
         $this->config = require dirname(__DIR__).'/config.php';
     }
 

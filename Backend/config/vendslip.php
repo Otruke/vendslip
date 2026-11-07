@@ -24,6 +24,12 @@ return [
         'signed_url_minutes' => (int) env('VENDSLIP_PDF_LINK_MINUTES', 60 * 24 * 7),
     ],
 
+    // Super-Admin support access to a business dashboard (code emailed to the business owner).
+    'support_access' => [
+        'code_minutes' => (int) env('VENDSLIP_SUPPORT_CODE_MINUTES', 10),
+        'session_minutes' => (int) env('VENDSLIP_SUPPORT_SESSION_MINUTES', 60),
+    ],
+
     'bots' => [
         // Twilio/Meta free-form replies are only allowed inside the 24h customer-service window.
         'draft_ttl_minutes' => (int) env('VENDSLIP_DRAFT_TTL_MINUTES', 60 * 24),
@@ -40,6 +46,33 @@ return [
         'bot_username' => env('TELEGRAM_BOT_USERNAME'),
         'api_base' => env('TELEGRAM_API_BASE', 'https://api.telegram.org'),
         'rich_messages' => (bool) env('TELEGRAM_RICH_MESSAGES', true),
+    ],
+
+    /*
+    | Which route carries WhatsApp, Messenger and Instagram: 'meta' (primary, Meta Cloud API /
+    | Messenger Platform direct) or 'twilio' (secondary). Switchable at /admin/gateways.
+    */
+    'channels' => [
+        'meta_provider' => env('VENDSLIP_META_CHANNELS_PROVIDER', 'meta'),
+    ],
+
+    'meta' => [
+        'graph_base' => env('META_GRAPH_BASE', 'https://graph.facebook.com'),
+        'instagram_base' => env('META_INSTAGRAM_BASE', 'https://graph.instagram.com'),
+        'graph_version' => env('META_GRAPH_VERSION', 'v24.0'),
+        'app_secret' => env('META_APP_SECRET'),                  // signs X-Hub-Signature-256
+        'verify_token' => env('META_VERIFY_TOKEN'),              // webhook GET handshake
+        'whatsapp_phone_number_id' => env('META_WHATSAPP_PHONE_NUMBER_ID'),
+        'whatsapp_token' => env('META_WHATSAPP_TOKEN'),          // system-user token
+        'whatsapp_number' => env('META_WHATSAPP_NUMBER'),        // e.g. +2348012345678 (shown to vendors)
+        'page_id' => env('META_PAGE_ID'),
+        'page_token' => env('META_PAGE_TOKEN'),
+        'instagram_account_id' => env('META_INSTAGRAM_ACCOUNT_ID'),
+        'instagram_username' => env('META_INSTAGRAM_USERNAME'),
+        'instagram_token' => env('META_INSTAGRAM_TOKEN'),        // optional: Instagram Login token (else page token)
+        'instagram_app_secret' => env('META_INSTAGRAM_APP_SECRET'), // optional: Instagram Login app secret
+        'validate_signature' => (bool) env('META_VALIDATE_SIGNATURE', true),
+        'timeout' => (int) env('META_HTTP_TIMEOUT', 15),
     ],
 
     'twilio' => [

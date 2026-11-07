@@ -35,7 +35,10 @@ final class ProfileAndPasswordTest extends TestCase
         foreach ([Role::ADMIN, Role::SUPER_ADMIN] as $role) {
             $user = $this->admin($role);
             $this->actingAs($user)->get(route('admin.profile.show'))->assertOk()->assertSee('My profile')->assertSee($user->email);
-            $this->put(route('admin.profile.update'), ['name' => 'Ngozi Admin', 'phone' => '08030000000'])->assertSessionHas('status');
+            // Details only change after the current password is re-entered (named bag: two forms share the page).
+            $this->put(route('admin.profile.update'), ['name' => 'Ngozi Admin', 'email' => $user->email, 'phone' => '08030000000'])
+                ->assertSessionHasErrorsIn('profile', 'current_password');
+            $this->put(route('admin.profile.update'), ['name' => 'Ngozi Admin', 'email' => $user->email, 'phone' => '08030000000', 'current_password' => 'Old-password-1'])->assertSessionHas('status');
             $this->assertSame('Ngozi Admin', $user->fresh()?->name);
         }
     }
@@ -108,6 +111,7 @@ final class ProfileAndPasswordTest extends TestCase
 
         $this->assertTrue(Hash::check('New-password-2', (string) $agent->fresh()?->password));
         $this->assertSame(0, $agent->tokens()->count());
-        $this->putJson('/api/v1/account/profile', ['name' => 'Tobi Sales', 'phone' => null])->assertOk();
+        $this->putJson('/api/v1/account/profile', ['name' => 'Tobi Sales', 'email' => $agent->email, 'phone' => null])->assertUnprocessable()->assertJsonValidationErrors('current_password');
+        $this->putJson('/api/v1/account/profile', ['name' => 'Tobi Sales', 'email' => $agent->email, 'phone' => null, 'current_password' => 'New-password-2'])->assertOk();
     }
 }

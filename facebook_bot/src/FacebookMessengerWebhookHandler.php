@@ -8,6 +8,7 @@ use App\Enums\Channel;
 use App\Services\Bot\Actions\AskConfirmation;
 use App\Services\Bot\Actions\DeliverSlip;
 use App\Services\Bot\BotOrchestrator;
+use App\Services\Bot\ChannelProviders;
 use App\Services\Bot\InboundMessage;
 use App\Services\Bot\Twilio\AbstractTwilioWebhookHandler;
 use App\Services\Bot\Twilio\TwilioGateway;
@@ -20,9 +21,9 @@ final class FacebookMessengerWebhookHandler extends AbstractTwilioWebhookHandler
     /** @var array<string, mixed> */
     private array $config;
 
-    public function __construct(BotOrchestrator $orchestrator, TwilioGateway $twilio, AuditLogger $audit)
+    public function __construct(BotOrchestrator $orchestrator, TwilioGateway $twilio, AuditLogger $audit, ChannelProviders $providers)
     {
-        parent::__construct($orchestrator, $twilio, $audit);
+        parent::__construct($orchestrator, $twilio, $audit, $providers);
         $this->config = require dirname(__DIR__).'/config.php';
     }
 

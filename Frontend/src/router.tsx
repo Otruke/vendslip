@@ -18,6 +18,7 @@ const TwoFactor = lazy(() => import('@/pages/auth/TwoFactor'))
 const ForgotPassword = lazy(() => import('@/pages/auth/ForgotPassword'))
 const ResetPassword = lazy(() => import('@/pages/auth/ResetPassword'))
 const AcceptInvite = lazy(() => import('@/pages/auth/AcceptInvite'))
+const SupportAccess = lazy(() => import('@/pages/auth/SupportAccess'))
 
 const DashboardLayout = lazy(() => import('@/components/layout/DashboardLayout'))
 const Onboarding = lazy(() => import('@/pages/dashboard/Onboarding'))
@@ -57,6 +58,7 @@ export const router = createBrowserRouter([
       { path: '/forgot-password', element: page(<ForgotPassword />) },
       { path: '/reset-password', element: page(<ResetPassword />) },
       { path: '/accept-invite/:token', element: page(<AcceptInvite />) },
+      { path: '/support-access', element: page(<SupportAccess />) },
       {
         path: '/dashboard',
         element: <RequireAuth>{page(<DashboardLayout />)}</RequireAuth>,

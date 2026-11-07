@@ -63,13 +63,13 @@ export default function Team() {
               <div className="flex flex-wrap items-center gap-2">
                 {m.two_factor_enabled && <StatusBadge status="PAID" label="2FA" size="sm" showIcon={false} />}
                 {!m.is_active && <StatusBadge status="SUSPENDED" label="Disabled" size="sm" />}
-                {canManage && m.role !== 'Owner' && m.id !== me ? (
+                {canManage && m.can_manage ? (
                   <>
-                    <Select aria-label="Role" value={m.role ?? ''} onChange={(e) => update(m.id, { role: e.target.value })} options={data.roles} className="h-8 text-xs" />
-                    <Button size="xs" variant="outline" onClick={() => update(m.id, { is_active: !m.is_active })}>{m.is_active ? 'Disable' : 'Enable'}</Button>
-                    <Button size="xs" variant="ghost" className="text-tone-open" onClick={() => remove(m.id, m.name)}>Remove</Button>
+                    <Select aria-label="Role" value={m.role ?? ''} disabled={m.is_last_owner} onChange={(e) => update(m.id, { role: e.target.value })} options={data.roles.some((r) => r.value === m.role) ? data.roles : [{ value: m.role ?? '', label: m.role_label ?? '' }, ...data.roles]} className="h-8 text-xs" />
+                    <Button size="xs" variant="outline" disabled={m.is_active && m.is_last_owner} onClick={() => update(m.id, { is_active: !m.is_active })}>{m.is_active ? 'Disable' : 'Enable'}</Button>
+                    <Button size="xs" variant="ghost" className="text-tone-open" disabled={m.is_last_owner} onClick={() => remove(m.id, m.name)}>Remove</Button>
                   </>
-                ) : <StatusBadge status={m.role === 'Owner' ? 'BUSINESS_PLUS' : 'PRO'} label={m.role_label ?? m.role ?? ''} size="sm" />}
+                ) : <StatusBadge status={m.role === 'Owner' ? 'BUSINESS_PLUS' : 'PRO'} label={m.is_last_owner && m.id === me ? `${m.role_label ?? 'Owner'} · only owner` : m.role_label ?? m.role ?? ''} size="sm" />}
               </div>
             </li>
           ))}
@@ -94,7 +94,7 @@ export default function Team() {
 
       <Card variant="tinted" padding="sm" className="flex gap-3 text-sm text-vendslip-deep">
         <ShieldCheck className="mt-0.5 size-4 shrink-0" />
-        <p><strong>Owners</strong> control everything. <strong>Managers</strong> issue, edit and void. <strong>Sales agents</strong> issue slips and record payments. <strong>Accountants</strong> view, void and record payments.</p>
+        <p><strong>Owners</strong> control everything, and every business keeps at least one active owner. Only an owner can make someone else an owner. <strong>Managers</strong> issue, edit and void. <strong>Sales agents</strong> issue slips and record payments. <strong>Accountants</strong> view, void and record payments.</p>
       </Card>
 
       <Modal isOpen={inviting} onClose={() => setInviting(false)} title="Invite a teammate"

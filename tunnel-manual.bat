@@ -1,0 +1,1 @@
+powershell -Command "Set-Service cloudflared -StartupType Manual"

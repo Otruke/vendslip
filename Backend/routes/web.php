@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\MonetizationController;
 use App\Http\Controllers\Admin\PaymentController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\SecurityLogController;
+use App\Http\Controllers\Admin\SupportAccessController;
 use App\Http\Controllers\Admin\TemplateController;
 use App\Support\Urls;
 use Illuminate\Support\Facades\Route;
@@ -66,10 +67,17 @@ Route::prefix('admin')->name('admin.')->group(function (): void {
 
             Route::get('gateways', [GatewayController::class, 'edit'])->name('gateways.edit');
             Route::put('gateways', [GatewayController::class, 'update'])->name('gateways.update');
+            Route::put('gateways/provider', [GatewayController::class, 'provider'])->name('gateways.provider');
             Route::post('gateways/telegram-webhook', [GatewayController::class, 'registerTelegram'])->name('gateways.telegram');
+
+            Route::post('merchants/{merchant}/support-access', [SupportAccessController::class, 'send'])->middleware('throttle:3,10,support-send')->name('merchants.support.send');
+            Route::post('merchants/{merchant}/support-access/verify', [SupportAccessController::class, 'verify'])->middleware('throttle:6,1,support-verify')->name('merchants.support.verify');
+            Route::delete('merchants/{merchant}/support-access/{grant}', [SupportAccessController::class, 'revoke'])->name('merchants.support.revoke');
 
             Route::get('admins', [AdminUserController::class, 'index'])->name('admins.index');
             Route::post('admins', [AdminUserController::class, 'store'])->name('admins.store');
+            Route::get('admins/{admin}/edit', [AdminUserController::class, 'edit'])->name('admins.edit');
+            Route::put('admins/{admin}', [AdminUserController::class, 'update'])->middleware('throttle:10,1')->name('admins.update');
             Route::put('admins/{admin}/toggle', [AdminUserController::class, 'toggle'])->name('admins.toggle');
         });
     });

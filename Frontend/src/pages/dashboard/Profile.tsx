@@ -33,7 +33,8 @@ export default function Profile() {
     if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }, [hash])
 
-  const [profile, setProfile] = useState({ name: user?.name ?? '', phone: user?.phone ?? '' })
+  const [profile, setProfile] = useState({ name: user?.name ?? '', email: user?.email ?? '', phone: user?.phone ?? '', current_password: '' })
+  const [profileErrors, setProfileErrors] = useState<Record<string, string>>({})
   const [pw, setPw] = useState({ current_password: '', password: '', password_confirmation: '' })
   const [pwErrors, setPwErrors] = useState<Record<string, string>>({})
   const [enroll, setEnroll] = useState<{ secret: string; qr_svg: string } | null>(null)
@@ -74,6 +75,21 @@ export default function Profile() {
     setError(null)
     setBusy(key)
     try { await fn(); await refresh(); toast(message); return true } catch (e) { setError(errorMessage(e)); return false } finally { setBusy(null) }
+  }
+
+  const saveDetails = async () => {
+    setProfileErrors({})
+    setError(null)
+    setBusy('profile')
+    try {
+      const res = await apiPut<{ changed: string[] }>('/account/profile', { name: profile.name, email: profile.email, phone: profile.phone || null, current_password: profile.current_password })
+      setProfile((p) => ({ ...p, current_password: '' }))
+      await refresh()
+      toast(res.changed.length > 0 ? 'Details saved' : 'Nothing changed')
+    } catch (e) {
+      if (e instanceof ApiError && Object.keys(e.fieldErrors).length > 0) setProfileErrors(Object.fromEntries(Object.entries(e.fieldErrors).map(([k, v]) => [k, v[0] ?? ''])))
+      else toast(errorMessage(e), 'error')
+    } finally { setBusy(null) }
   }
 
   const changePassword = async () => {
@@ -126,16 +142,18 @@ export default function Profile() {
         </aside>
 
         <div className="space-y-6">
+          {session?.support && <Alert tone="info">You’re in a support session. Password, email, photo and two-factor belong to the owner and can’t be changed from here.</Alert>}
           {error && <Alert tone="danger">{error}</Alert>}
 
-          <Section title="Details" description="Shown to your team and on slips you issue." footer={
-            <Button isLoading={busy === 'profile'} onClick={() => run('profile', () => apiPut('/account/profile', { name: profile.name, phone: profile.phone || null }), 'Profile saved')}>Save details</Button>
+          <Section title="Details" description="Shown to your team and on slips you issue. Confirm with your current password to save." footer={
+            <Button isLoading={busy === 'profile'} disabled={!profile.current_password} onClick={() => void saveDetails()}>Save details</Button>
           }>
             <div className="grid gap-4 sm:grid-cols-2">
-              <Input label="Full name" autoComplete="name" value={profile.name} onChange={(e) => setProfile({ ...profile, name: e.target.value })} />
-              <Input label="Phone" autoComplete="tel" value={profile.phone} onChange={(e) => setProfile({ ...profile, phone: e.target.value })} />
+              <Input label="Full name" autoComplete="name" value={profile.name} error={profileErrors.name} onChange={(e) => setProfile({ ...profile, name: e.target.value })} />
+              <Input label="Phone" autoComplete="tel" value={profile.phone} error={profileErrors.phone} onChange={(e) => setProfile({ ...profile, phone: e.target.value })} />
             </div>
-            <Input label="Email" value={user.email} disabled helperText="Ask your business owner to change the sign-in email." />
+            <Input label="Email" type="email" autoComplete="email" value={profile.email} error={profileErrors.email} helperText={profileErrors.email ? undefined : 'You sign in with this email.'} onChange={(e) => setProfile({ ...profile, email: e.target.value })} />
+            <Input label="Current password" type="password" autoComplete="current-password" value={profile.current_password} error={profileErrors.current_password} helperText={profileErrors.current_password ? undefined : 'Needed to save any change to your details.'} onChange={(e) => setProfile({ ...profile, current_password: e.target.value })} />
           </Section>
 
           <Section id="password" title="Change password" description="Your other devices are signed out when you change it." footer={

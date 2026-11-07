@@ -1,8 +1,8 @@
 import { useQueryClient } from '@tanstack/react-query'
 import {
-  Bot, Coins, CreditCard, FileText, KeyRound, LayoutDashboard, LayoutTemplate, LogOut, Menu, Package, Plus, Settings, Sparkles, UserRound, Users, UsersRound, X,
+  Bot, Coins, CreditCard, FileText, KeyRound, LayoutDashboard, LayoutTemplate, LifeBuoy, LogOut, Menu, Package, Plus, Settings, Sparkles, UserRound, Users, UsersRound, X,
 } from 'lucide-react'
-import { useEffect, type ReactNode } from 'react'
+import { useCallback, useEffect, useState, type ReactNode } from 'react'
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { Avatar, Button, StatusBadge } from '@/components/ui'
 import { apiPost } from '@/hooks/queries'
@@ -88,11 +88,13 @@ function UserMenu() {
   if (!session) return null
 
   const logout = async () => {
+    const supportReturn = session.support?.return_url
     try { await apiPost('/auth/logout') } finally {
       resetCsrf()
       queryClient.clear()
       setSession(null)
-      navigate('/login', { replace: true })
+      if (supportReturn) window.location.assign(supportReturn)
+      else navigate('/login', { replace: true })
     }
   }
 
@@ -140,6 +142,51 @@ function BottomNav({ onMenu, menuOpen }: { onMenu: () => void; menuOpen: boolean
   )
 }
 
+/**
+ * Shown for the whole of an owner-approved support session so nobody mistakes support for the owner.
+ * Ends the session (and returns to the admin portal) on demand or when the time runs out.
+ */
+function SupportBanner() {
+  const support = useAuthStore((s) => s.session?.support)
+  const merchantName = useAuthStore((s) => s.session?.merchant?.name)
+  const setSession = useAuthStore((s) => s.setSession)
+  const queryClient = useQueryClient()
+  const [busy, setBusy] = useState(false)
+
+  const end = useCallback(async () => {
+    if (!support) return
+    setBusy(true)
+    try { await apiPost('/auth/logout') } catch { /* the session may already be gone */ } finally {
+      resetCsrf()
+      queryClient.clear()
+      setSession(null)
+      window.location.assign(support.return_url)
+    }
+  }, [queryClient, setSession, support])
+
+  useEffect(() => {
+    if (!support) return
+    const ms = new Date(support.expires_at).getTime() - Date.now()
+    const timer = window.setTimeout(() => { void end() }, Math.max(ms, 0))
+    return () => window.clearTimeout(timer)
+  }, [end, support])
+
+  if (!support) return null
+  const ends = new Date(support.expires_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+
+  return (
+    <div role="status" className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 bg-vendslip-obsidian px-4 py-2 text-sm text-white sm:px-6 lg:px-8">
+      <p className="flex min-w-0 flex-1 items-start gap-2">
+        <LifeBuoy className="mt-0.5 size-4 shrink-0 text-[#9cc3cc]" aria-hidden />
+        <span className="min-w-0"><strong className="font-semibold">Support session</strong><span className="text-[#cfe3e8]"> · {support.admin_name}, VendSlip · owner-approved{merchantName ? ` for ${merchantName}` : ''} · ends {ends}</span></span>
+      </p>
+      <button type="button" disabled={busy} onClick={() => void end()} className="shrink-0 rounded-md bg-white px-3 py-1 text-xs font-semibold text-vendslip-deep hover:bg-[#e3eef1] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white disabled:opacity-60">
+        {busy ? 'Ending…' : 'End support session'}
+      </button>
+    </div>
+  )
+}
+
 export default function DashboardLayout() {
   const sidebarOpen = useUiStore((s) => s.sidebarOpen)
   const setSidebarOpen = useUiStore((s) => s.setSidebarOpen)
@@ -166,6 +213,7 @@ export default function DashboardLayout() {
 
       <div className="min-w-0">
         <header className="sticky top-0 z-30 border-b border-border-subtle bg-white/90 backdrop-blur">
+          <SupportBanner />
           <div className="flex h-16 items-center justify-between gap-3 px-4 sm:px-6 lg:px-8">
             <div className="flex items-center gap-3">
               <img src="/assets/brand/vendslip-icon.png" alt="VendSlip" className="h-7 w-auto lg:hidden" />

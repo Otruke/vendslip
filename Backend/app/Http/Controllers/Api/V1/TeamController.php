@@ -21,6 +21,11 @@ use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 
+/**
+ * Team members and invitations. Every business always keeps at least one active Owner (its admin):
+ * only an Owner can promote someone to Owner or change another Owner, and an Owner can only be
+ * demoted, disabled or removed while another active Owner remains.
+ */
 final class TeamController extends ApiController
 {
     private const array INVITABLE = ['Manager', 'SalesAgent', 'Accountant'];
@@ -33,7 +38,9 @@ final class TeamController extends ApiController
     public function index(Request $request): JsonResponse
     {
         $merchant = $this->merchant($request);
+        $actor = $this->user($request);
         $members = User::query()->where('merchant_id', $merchant->id)->with('roles')->orderBy('created_at')->get();
+        $activeOwners = $members->filter(static fn (User $u): bool => $u->is_active && $u->hasRole(Role::OWNER->value))->count();
         $invitations = StaffInvitation::query()->forMerchant($merchant)->whereNull('accepted_at')
             ->where('expires_at', '>', now())->orderByDesc('created_at')->get();
 
@@ -49,6 +56,9 @@ final class TeamController extends ApiController
                 'is_active' => $u->is_active,
                 'two_factor_enabled' => $u->hasTwoFactorEnabled(),
                 'last_login_at' => $u->last_login_at?->toIso8601String(),
+                // Whether the signed-in user may change this member at all (UI hint; enforced on write).
+                'can_manage' => $u->id !== $actor->id && (! $u->hasRole(Role::OWNER->value) || $actor->hasRole(Role::OWNER->value)),
+                'is_last_owner' => $u->is_active && $u->hasRole(Role::OWNER->value) && $activeOwners <= 1,
             ]),
             'invitations' => $invitations->map(static fn (StaffInvitation $i): array => [
                 'id' => $i->id,
@@ -62,7 +72,7 @@ final class TeamController extends ApiController
                 'max' => $this->entitlements->maxTeamMembers($merchant),
                 'can_invite' => $this->entitlements->has($merchant, PlanEntitlements::MULTI_USER),
             ],
-            'roles' => array_map(static fn (string $r): array => ['value' => $r, 'label' => Role::from($r)->label()], self::INVITABLE),
+            'roles' => array_map(static fn (string $r): array => ['value' => $r, 'label' => Role::from($r)->label()], $this->assignable($actor)),
         ]);
     }
 
@@ -73,7 +83,7 @@ final class TeamController extends ApiController
         $this->entitlements->ensure($merchant, PlanEntitlements::MULTI_USER);
         $data = $request->validate([
             'email' => ['required', 'email:rfc', 'max:255', Rule::unique('users', 'email')],
-            'role' => ['required', Rule::in(self::INVITABLE)],
+            'role' => ['required', Rule::in($this->assignable($this->user($request)))],
         ]);
         $email = mb_strtolower($data['email']);
 
@@ -107,22 +117,31 @@ final class TeamController extends ApiController
     public function updateMember(Request $request, int $id): JsonResponse
     {
         $this->authorizePermission($request, Permission::TEAM_MANAGE);
+        $actor = $this->user($request);
         $member = $this->member($request, $id);
         $data = $request->validate([
-            'role' => ['sometimes', Rule::in(self::INVITABLE)],
+            'role' => ['sometimes', Rule::in($this->assignable($actor))],
             'is_active' => ['sometimes', 'boolean'],
         ]);
-        if (isset($data['role'])) {
-            $member->syncRoles([$data['role']]);
-        }
-        if (array_key_exists('is_active', $data)) {
-            $member->update(['is_active' => (bool) $data['is_active']]);
-            if (! $data['is_active']) {
-                DB::table('sessions')->where('user_id', $member->id)->delete();
-                $member->tokens()->delete();
+
+        DB::transaction(function () use ($member, $data): void {
+            $losesOwner = (isset($data['role']) && $data['role'] !== Role::OWNER->value)
+                || (array_key_exists('is_active', $data) && ! $data['is_active']);
+            if ($losesOwner) {
+                $this->ensureAnotherOwner($member);
             }
-        }
-        $this->audit->log('team.member_updated', $this->user($request), $member->merchant_id, ['member_id' => $member->id, ...$data]);
+            if (isset($data['role'])) {
+                $member->syncRoles([$data['role']]);
+            }
+            if (array_key_exists('is_active', $data)) {
+                $member->update(['is_active' => (bool) $data['is_active']]);
+                if (! $data['is_active']) {
+                    DB::table('sessions')->where('user_id', $member->id)->delete();
+                    $member->tokens()->delete();
+                }
+            }
+        });
+        $this->audit->log('team.member_updated', $actor, $member->merchant_id, ['member_id' => $member->id, ...$data]);
 
         return response()->json(['ok' => true]);
     }
@@ -132,7 +151,8 @@ final class TeamController extends ApiController
         $this->authorizePermission($request, Permission::TEAM_MANAGE);
         $member = $this->member($request, $id);
         $merchantId = $member->merchant_id;
-        DB::transaction(static function () use ($member): void {
+        DB::transaction(function () use ($member): void {
+            $this->ensureAnotherOwner($member);
             DB::table('sessions')->where('user_id', $member->id)->delete();
             $member->tokens()->delete();
             $member->channelIdentities()->delete();
@@ -152,10 +172,39 @@ final class TeamController extends ApiController
         if ($member->id === $actor->id) {
             throw new DomainRuleException('You cannot change your own access.', 'self_change', 403);
         }
-        if ($member->hasRole(Role::OWNER->value)) {
-            throw new DomainRuleException('The owner cannot be changed or removed.', 'owner_locked', 403);
+        if ($member->hasRole(Role::OWNER->value) && ! $actor->hasRole(Role::OWNER->value)) {
+            throw new DomainRuleException('Only an owner can change another owner.', 'owner_locked', 403);
         }
 
         return $member;
+    }
+
+    /**
+     * Owners can hand out every role, including Owner; managers can't create owners.
+     *
+     * @return list<string>
+     */
+    private function assignable(User $actor): array
+    {
+        return $actor->hasRole(Role::OWNER->value) ? [Role::OWNER->value, ...self::INVITABLE] : self::INVITABLE;
+    }
+
+    /**
+     * Call inside a transaction before an Owner loses owner access (demoted, disabled or removed).
+     * Locks the business's owner rows so two owners can't remove each other at the same moment.
+     */
+    private function ensureAnotherOwner(User $member): void
+    {
+        if (! $member->hasRole(Role::OWNER->value)) {
+            return;
+        }
+        $owners = User::query()->role(Role::OWNER->value)
+            ->where('merchant_id', $member->merchant_id)
+            ->where('is_active', true)
+            ->lockForUpdate()
+            ->pluck('id');
+        if ($owners->reject(static fn (int $id): bool => $id === $member->id)->isEmpty()) {
+            throw new DomainRuleException('Every business needs at least one active owner. Make someone else an owner first.', 'last_owner', 422);
+        }
     }
 }

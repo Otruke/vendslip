@@ -12,9 +12,14 @@
                 <td class="px-4 py-3 text-ink-secondary">{{ $admin->last_login_at?->diffForHumans() ?? 'Never' }}</td>
                 <td class="px-4 py-3"><x-ui.status-badge :status="$admin->is_active ? 'ACTIVE' : 'SUSPENDED'" size="sm">{{ $admin->is_active ? 'Active' : 'Disabled' }}</x-ui.status-badge></td>
                 <td class="px-4 py-3 text-right">
-                    @if (auth()->id() !== $admin->id)
-                        <form method="POST" action="{{ route('admin.admins.toggle', $admin) }}" data-confirm="Change this admin's access?">@csrf @method('PUT')<x-ui.button size="xs" :variant="$admin->is_active ? 'outline' : 'success'">{{ $admin->is_active ? 'Disable' : 'Enable' }}</x-ui.button></form>
-                    @endif
+                    <div class="flex items-center justify-end gap-2">
+                        @if (auth()->id() !== $admin->id)
+                            <x-ui.button size="xs" variant="ghost" icon="file-edit" :href="route('admin.admins.edit', $admin)">Edit</x-ui.button>
+                            <form method="POST" action="{{ route('admin.admins.toggle', $admin) }}" data-confirm="Change this admin's access?">@csrf @method('PUT')<x-ui.button size="xs" :variant="$admin->is_active ? 'outline' : 'success'">{{ $admin->is_active ? 'Disable' : 'Enable' }}</x-ui.button></form>
+                        @else
+                            <x-ui.button size="xs" variant="ghost" icon="user" :href="route('admin.profile.show')">My profile</x-ui.button>
+                        @endif
+                    </div>
                 </td>
             </tr>
         @endforeach

@@ -77,6 +77,57 @@
         </x-ui.card>
     </div>
 
+    @if ($support !== null)
+        <x-ui.card id="support-access" variant="elevated" class="scroll-mt-24">
+            <div class="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
+                <div class="max-w-xl">
+                    <x-ui.heading level="2" variant="card">Support access</x-ui.heading>
+                    <x-ui.text variant="small" class="mt-1">Open this business's dashboard to help them. A one-time code goes to the owner's email; they read it to you, and you get {{ \App\Services\Security\SupportAccess::sessionMinutes() }} minutes in their dashboard. Passwords, sign-in security, team access, linked chats and payout keys stay off-limits, and every action is logged under your name.</x-ui.text>
+                    @if ($support['owners'] === [])
+                        <x-ui.alert tone="warning" class="mt-3">This business has no active owner, so nobody can approve access.</x-ui.alert>
+                    @else
+                        <p class="mt-3 text-xs text-ink-muted">Code goes to: <span class="font-medium text-ink-secondary">{{ implode(', ', $support['owners']) }}</span></p>
+                    @endif
+                </div>
+                <div class="w-full shrink-0 space-y-3 lg:w-80">
+                    @if ($support['pending'] !== null)
+                        <form method="POST" action="{{ route('admin.merchants.support.verify', $merchant) }}" class="space-y-3">
+                            @csrf
+                            <x-ui.input name="code" label="Code from the owner" inputmode="numeric" maxlength="7" placeholder="123456" autocomplete="one-time-code" class="tabular tracking-[0.3em]" required helper="Expires {{ $support['pending']->otp_expires_at->diffForHumans() }} · {{ 5 - $support['pending']->attempts }} tries left" />
+                            <x-ui.button icon="key" full-width>Verify and open dashboard</x-ui.button>
+                        </form>
+                    @endif
+                    @if ($support['owners'] !== [])
+                        <form method="POST" action="{{ route('admin.merchants.support.send', $merchant) }}" data-confirm="Email a one-time support access code to this business's owner?">
+                            @csrf
+                            <x-ui.button :variant="$support['pending'] !== null ? 'ghost' : 'primary'" icon="send" full-width>{{ $support['pending'] !== null ? 'Send a new code' : 'Send access code to owner' }}</x-ui.button>
+                        </form>
+                    @endif
+                </div>
+            </div>
+            @if ($support['recent']->isNotEmpty())
+                <div class="mt-5 border-t border-border-subtle pt-4">
+                    <p class="text-xs font-semibold uppercase tracking-wider text-ink-muted">Recent support sessions</p>
+                    <ul class="mt-2 divide-y divide-border-subtle text-sm">
+                        @foreach ($support['recent'] as $grant)
+                            <li class="flex flex-wrap items-center justify-between gap-2 py-2">
+                                <span>{{ $grant->admin->name }} · <span class="tabular text-ink-secondary">{{ $grant->started_at?->timezone(config('vendslip.timezone'))->format('j M Y, H:i') }}</span></span>
+                                @if ($grant->isLive())
+                                    <span class="flex items-center gap-2">
+                                        <x-ui.status-badge status="ACTIVE" size="sm">Live until {{ $grant->expires_at?->timezone(config('vendslip.timezone'))->format('H:i') }}</x-ui.status-badge>
+                                        <form method="POST" action="{{ route('admin.merchants.support.revoke', [$merchant, $grant]) }}" data-confirm="End this support session now?">@csrf @method('DELETE')<x-ui.button size="xs" variant="outline">End now</x-ui.button></form>
+                                    </span>
+                                @else
+                                    <span class="text-xs text-ink-muted">{{ match ($grant->end_reason) { 'signed_out' => 'Signed out', 'expired' => 'Timed out', 'revoked' => 'Ended by admin', default => 'Ended' } }}</span>
+                                @endif
+                            </li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+        </x-ui.card>
+    @endif
+
     <div>
         <x-ui.heading level="2" variant="card" class="mb-3">Recent slips & forensic revisions</x-ui.heading>
         <x-ui.data-table :headers="['Number', 'Customer', 'Channel', ['label' => 'Total', 'align' => 'right'], 'Status', 'Rev', '']" empty="No slips yet.">

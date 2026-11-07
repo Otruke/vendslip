@@ -12,6 +12,7 @@ use App\Models\Template;
 use App\Models\User;
 use App\Services\Security\AuditLogger;
 use App\Services\Security\SessionPayload;
+use App\Services\Security\SupportAccess;
 use App\Services\Security\TotpService;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\JsonResponse;
@@ -133,9 +134,23 @@ final class AuthController extends Controller
         return response()->json($this->payload->for($user));
     }
 
+    /** Opens a support session from the one-time link a Super-Admin got after the owner's code. */
+    public function supportAccess(Request $request, SupportAccess $support): JsonResponse
+    {
+        $data = $request->validate(['token' => ['required', 'string', 'size:64']]);
+        // Any existing sign-in in this browser is replaced, never mixed with the support session.
+        if (Auth::guard('web')->check()) {
+            Auth::guard('web')->logout();
+        }
+        $owner = $support->redeem($request, $data['token']);
+
+        return response()->json($this->payload->for($owner));
+    }
+
     public function logout(Request $request): JsonResponse
     {
         $user = $request->user();
+        app(SupportAccess::class)->end($request, 'signed_out');
         Auth::guard('web')->logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
@@ -183,6 +198,7 @@ final class AuthController extends Controller
     {
         Auth::guard('web')->login($user, $remember);
         $request->session()->regenerate();
+        $request->session()->forget(SupportAccess::SESSION_KEY); // a real sign-in is never a support session
         $user->forceFill(['last_login_at' => now()])->save();
         $this->audit->log('auth.login', $user);
 

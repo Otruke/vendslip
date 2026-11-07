@@ -8,10 +8,10 @@ import { toast } from '@/stores/ui'
 import type { Channel } from '@/types/generated'
 
 const ICONS: Record<string, { icon: ReactNode; color: string; hint: string }> = {
-  WHATSAPP: { icon: <MessageCircle />, color: 'bg-tone-settled', hint: 'Quick-reply confirm inside the free 24h window.' },
+  WHATSAPP: { icon: <MessageCircle />, color: 'bg-tone-settled', hint: 'Tap-to-confirm buttons and the PDF as a document.' },
   TELEGRAM: { icon: <Send />, color: 'bg-tone-telegram', hint: 'Rich tables, ephemeral group drafts, PDF inline.' },
-  INSTAGRAM: { icon: <Camera />, color: 'bg-tone-instagram', hint: 'DM orders with a signed PDF link.' },
-  FACEBOOK: { icon: <Users />, color: 'bg-tone-facebook', hint: 'Messenger orders with the PDF attached.' },
+  INSTAGRAM: { icon: <Camera />, color: 'bg-tone-instagram', hint: 'DM orders with quick-reply confirm and the PDF.' },
+  FACEBOOK: { icon: <Users />, color: 'bg-tone-facebook', hint: 'Messenger orders with quick-reply confirm and the PDF.' },
 }
 
 type LinkCode = { code: string; expires_at: string; telegram_deep_link: string | null; whatsapp_deep_link: string | null }
@@ -58,6 +58,8 @@ export default function Channels() {
                 <p className="tabular mt-2 text-xs text-ink-muted">{c.slips_30d} slips in 30 days</p>
                 {c.channel === 'WHATSAPP' && data.handles.whatsapp_link && <Button href={data.handles.whatsapp_link} target="_blank" size="xs" variant="ghost" className="mt-2 -ml-2" rightIcon={<ExternalLink className="size-3.5" />}>{data.handles.whatsapp_number}</Button>}
                 {c.channel === 'TELEGRAM' && data.handles.telegram_link && <Button href={data.handles.telegram_link} target="_blank" size="xs" variant="ghost" className="mt-2 -ml-2" rightIcon={<ExternalLink className="size-3.5" />}>@{data.handles.telegram_username?.replace(/^@/, '')}</Button>}
+                {c.channel === 'FACEBOOK' && data.handles.messenger_link && <Button href={data.handles.messenger_link} target="_blank" size="xs" variant="ghost" className="mt-2 -ml-2" rightIcon={<ExternalLink className="size-3.5" />}>Open Messenger</Button>}
+                {c.channel === 'INSTAGRAM' && data.handles.instagram_link && <Button href={data.handles.instagram_link} target="_blank" size="xs" variant="ghost" className="mt-2 -ml-2" rightIcon={<ExternalLink className="size-3.5" />}>@{data.handles.instagram_username}</Button>}
               </div>
             </Card>
           )
@@ -97,7 +99,13 @@ export default function Channels() {
               {code.whatsapp_deep_link && <Button href={code.whatsapp_deep_link} target="_blank" variant="success" leftIcon={<MessageCircle className="size-4" />}>Open in WhatsApp</Button>}
               <Button variant="ghost" leftIcon={<Copy className="size-4" />} onClick={() => { void navigator.clipboard.writeText(`/link ${code.code}`); toast('Copied') }}>Copy command</Button>
             </div>
-            <Alert tone="info">Instagram and Messenger: DM your business account with the same command.</Alert>
+            {(data.handles.messenger_link || data.handles.instagram_link) && (
+              <div className="grid gap-2 sm:grid-cols-2">
+                {data.handles.messenger_link && <Button href={data.handles.messenger_link} target="_blank" variant="outline" leftIcon={<Users className="size-4" />}>Open Messenger</Button>}
+                {data.handles.instagram_link && <Button href={data.handles.instagram_link} target="_blank" variant="outline" leftIcon={<Camera className="size-4" />}>Open Instagram</Button>}
+              </div>
+            )}
+            <Alert tone="info">Instagram and Messenger: send the same command in a DM to the business account.</Alert>
           </div>
         )}
       </Modal>

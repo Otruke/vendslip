@@ -63,6 +63,8 @@ export type Session = {
   merchant: Merchant | null
   entitlements: Entitlements
   usage: { monthly_quota: number | null; free_used: number; free_remaining: number | null; paid_credits: number; period: string } | null
+  /** Present while a VendSlip Super-Admin is in this account through an owner-approved support session. */
+  support?: { admin_name: string; expires_at: string; return_url: string } | null
 }
 
 export type DocumentItem = { id: number; sku_id: string | null; description: string; quantity: number; unit_price_minor: number; line_total_minor: number }
@@ -274,7 +276,7 @@ export type PublicInvoice = {
 }
 
 export type TeamResponse = {
-  members: { id: number; name: string; email: string; phone: string | null; avatar_url: string | null; role: string | null; role_label: string | null; is_active: boolean; two_factor_enabled: boolean; last_login_at: string | null }[]
+  members: { id: number; name: string; email: string; phone: string | null; avatar_url: string | null; role: string | null; role_label: string | null; is_active: boolean; two_factor_enabled: boolean; last_login_at: string | null; can_manage: boolean; is_last_owner: boolean }[]
   invitations: { id: number; email: string; role: string; role_label: string; expires_at: string }[]
   seats: { used: number; max: number | null; can_invite: boolean }
   roles: { value: string; label: string }[]
@@ -284,7 +286,15 @@ export type ChannelsResponse = {
   channels: { channel: Channel; label: string; configured: boolean; slips_30d: number }[]
   identities: { id: number; channel: Channel; display_name: string | null; external_user_id: string; user_name: string; is_mine: boolean; linked_at: string }[]
   stats: { drafts_30d: number; confirmed_30d: number; api_calls_saved_30d: number }
-  handles: { whatsapp_number: string | null; whatsapp_link: string | null; telegram_username: string | null; telegram_link: string | null }
+  handles: {
+    whatsapp_number: string | null
+    whatsapp_link: string | null
+    telegram_username: string | null
+    telegram_link: string | null
+    messenger_link: string | null
+    instagram_username: string | null
+    instagram_link: string | null
+  }
 }
 
 export type ShareLinks = { pdf_url: string; verify_url: string; pay_url: string | null; message: string; whatsapp_url: string; telegram_url: string }

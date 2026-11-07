@@ -8,6 +8,7 @@ use App\Enums\AuditSeverity;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Services\Account\AvatarStore;
+use App\Services\Account\ProfileUpdater;
 use App\Services\Pdf\QrCodeService;
 use App\Services\Security\AuditLogger;
 use App\Services\Security\PasswordChanger;
@@ -44,16 +45,12 @@ final class ProfileController extends Controller
         ]);
     }
 
-    public function update(Request $request): RedirectResponse
+    /** Name, email and phone, confirmed with the current password. */
+    public function update(Request $request, ProfileUpdater $profiles): RedirectResponse
     {
-        $user = $this->user($request);
-        $data = $request->validate([
-            'name' => ['required', 'string', 'max:120'],
-            'phone' => ['nullable', 'string', 'max:32'],
-        ]);
-        $user->update($data);
+        $changed = $profiles->update($request, $this->user($request), 'profile');
 
-        return back()->with('status', 'Profile saved.');
+        return back()->with($changed === [] ? 'info' : 'status', $changed === [] ? 'Nothing changed.' : 'Profile saved.');
     }
 
     public function uploadAvatar(Request $request): RedirectResponse

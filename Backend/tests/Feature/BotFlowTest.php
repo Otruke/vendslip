@@ -8,6 +8,7 @@ use App\Enums\DraftSessionStatus;
 use App\Models\BotDraftSession;
 use App\Models\ChannelIdentity;
 use App\Models\Document;
+use App\Services\Settings\PlatformSettings;
 use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
 use Twilio\Security\RequestValidator;
@@ -15,6 +16,13 @@ use Twilio\Security\RequestValidator;
 final class BotFlowTest extends TestCase
 {
     private int $sid = 0;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        // These tests drive the Twilio (secondary) route; MetaWebhookTest covers the primary one.
+        app(PlatformSettings::class)->set('channels.meta_provider', 'twilio');
+    }
 
     private function whatsapp(string $body, string $from = 'whatsapp:+2348031234567', array $extra = [])
     {

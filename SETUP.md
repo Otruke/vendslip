@@ -8,10 +8,10 @@
 vendSlip/
 ├── Backend/         Laravel 13 API (/api/v1) + Blade Admin & Super-Admin portal (/admin)
 ├── Frontend/        React 19 + Vite public site and merchant dashboard
-├── whatsapp_bot/    Twilio WhatsApp handler (interactive confirm buttons)
+├── whatsapp_bot/    WhatsApp: Meta Cloud API sender (primary) + Twilio handler (secondary)
 ├── telegram_bot/    Telegram Bot API 10.3 handler (rich tables, ephemeral drafts)
-├── instagram_bot/   Twilio Instagram DM handler
-└── facebook_bot/    Twilio Facebook Messenger handler
+├── instagram_bot/   Instagram DMs: Meta sender (primary) + Twilio handler (secondary)
+└── facebook_bot/    Messenger: Meta sender (primary) + Twilio handler (secondary)
 ```
 
 The four bot folders are PSR-4 autoloaded by the backend (`VendSlip\Bots\…`), so they share one
@@ -73,11 +73,16 @@ with a tunnel (e.g. ngrok) and set `APP_URL` to the tunnel URL and `TRUSTED_PROX
 | Channel   | Webhook                  | Notes |
 |-----------|--------------------------|-------|
 | Telegram  | `/webhooks/telegram`     | Set `TELEGRAM_BOT_TOKEN`, `TELEGRAM_WEBHOOK_SECRET`, then `php artisan vendslip:telegram-webhook` |
-| WhatsApp  | `/webhooks/whatsapp`     | Twilio console → Messaging → sender webhook. Optional quick-reply Content template SID in `TWILIO_WHATSAPP_CONFIRM_CONTENT_SID` |
-| Instagram | `/webhooks/instagram`    | Twilio Instagram sender (`TWILIO_INSTAGRAM_FROM`) |
-| Messenger | `/webhooks/facebook`     | Twilio Messenger sender (`TWILIO_FACEBOOK_FROM`) |
+| WhatsApp · Messenger · Instagram (primary) | `/webhooks/meta` (GET + POST) | One Meta app. Callback URL + `META_VERIFY_TOKEN`; signed with `META_APP_SECRET`. See `whatsapp_bot/README.md` |
+| WhatsApp (secondary)  | `/webhooks/whatsapp`  | Twilio sender webhook. Optional quick-reply Content template SID in `TWILIO_WHATSAPP_CONFIRM_CONTENT_SID` |
+| Messenger (secondary) | `/webhooks/facebook`  | Twilio Messenger sender (`TWILIO_FACEBOOK_FROM`) |
+| Instagram (secondary) | `/webhooks/instagram` | Twilio does not offer Instagram today; dormant |
 
-Twilio signatures are always validated (`TWILIO_VALIDATE_SIGNATURE=true`). Merchants link a chat
+Which route answers WhatsApp, Messenger and Instagram is a switch in **/admin/gateways**
+(Meta = primary, Twilio = secondary). Only the selected route replies; the other acknowledges its
+webhooks silently, so a page or number wired to both never double-replies. Linked chats survive a switch.
+
+Meta (`X-Hub-Signature-256`) and Twilio (`X-Twilio-Signature`) signatures are always validated. Merchants link a chat
 from **Dashboard → Bot Channels** by sending the one-time `/link CODE` to the bot.
 
 ## 4. Payments

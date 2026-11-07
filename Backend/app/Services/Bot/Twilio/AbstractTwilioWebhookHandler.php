@@ -11,13 +11,14 @@ use App\Services\Bot\Actions\BotAction;
 use App\Services\Bot\Actions\DeliverSlip;
 use App\Services\Bot\Actions\SendText;
 use App\Services\Bot\BotOrchestrator;
+use App\Services\Bot\ChannelProviders;
 use App\Services\Bot\InboundMessage;
 use App\Services\Security\AuditLogger;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Template method for Twilio-delivered channels. Each bot module supplies the channel,
+ * Template method for Twilio-delivered channels (the secondary route; see ChannelProviders). Each bot module supplies the channel,
  * how to read the sender, and how to render the summary / slip for that platform.
  */
 abstract class AbstractTwilioWebhookHandler
@@ -26,6 +27,7 @@ abstract class AbstractTwilioWebhookHandler
         protected readonly BotOrchestrator $orchestrator,
         protected readonly TwilioGateway $twilio,
         protected readonly AuditLogger $audit,
+        protected readonly ChannelProviders $providers,
     ) {}
 
     abstract protected function channel(): Channel;
@@ -40,6 +42,12 @@ abstract class AbstractTwilioWebhookHandler
             $this->audit->log('webhook.twilio_bad_signature', null, null, ['channel' => $this->channel()->value, 'ip' => $request->ip()], AuditSeverity::CRITICAL);
 
             return response('Forbidden', 403);
+        }
+
+        // Meta is the selected route: acknowledge Twilio (no retries) but stay quiet, so a page or
+        // number still connected to both providers never gets two replies.
+        if (! $this->providers->usesTwilio()) {
+            return TwiML::empty();
         }
 
         $message = $this->toInbound($request);

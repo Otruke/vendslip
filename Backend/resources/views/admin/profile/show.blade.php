@@ -55,11 +55,13 @@
             <x-ui.card padding="none">
                 <form method="POST" action="{{ route('admin.profile.update') }}">
                     @csrf @method('PUT')
-                    <div class="border-b border-border-subtle px-5 py-4"><h2 class="font-semibold">Details</h2><p class="text-sm text-ink-secondary">How you appear in audit logs.</p></div>
+                    <div class="border-b border-border-subtle px-5 py-4"><h2 class="font-semibold">Details</h2><p class="text-sm text-ink-secondary">How you appear in audit logs. Confirm with your current password to save.</p></div>
                     <div class="grid grid-cols-1 gap-4 px-5 py-5 sm:grid-cols-2">
-                        <x-ui.input name="name" label="Full name" :value="$user->name" required maxlength="120" autocomplete="name" />
-                        <x-ui.input name="phone" label="Phone" :value="$user->phone" maxlength="32" autocomplete="tel" />
-                        <div class="sm:col-span-2"><x-ui.input name="email_display" label="Email" :value="$user->email" disabled helper="Ask a Super-Admin to change the sign-in email." /></div>
+                        @php $pe = $errors->profile; @endphp
+                        <x-ui.input name="name" label="Full name" :value="$user->name" :error="$pe->first('name') ?: null" required maxlength="120" autocomplete="name" />
+                        <x-ui.input name="phone" label="Phone" :value="$user->phone" :error="$pe->first('phone') ?: null" maxlength="32" autocomplete="tel" />
+                        <div class="sm:col-span-2"><x-ui.input name="email" type="email" label="Email" :value="$user->email" :error="$pe->first('email') ?: null" required maxlength="255" autocomplete="email" helper="Your sign-in email." /></div>
+                        <div class="sm:col-span-2"><x-ui.input name="current_password" id="details_current_password" type="password" label="Current password" :error="$pe->first('current_password') ?: null" required autocomplete="current-password" helper="Needed to save any change to your details." /></div>
                     </div>
                     <div class="flex justify-end border-t border-border-subtle px-5 py-3"><x-ui.button>Save details</x-ui.button></div>
                 </form>

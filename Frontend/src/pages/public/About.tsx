@@ -10,7 +10,7 @@ const CONTROLS = [
   ['Forensic history', 'Every edit records the actor, IP, reason and before and after.'],
   ['Two-factor sign-in', 'Authenticator-app 2FA for owners, staff and platform admins.'],
   ['Tenant isolation', 'Each business only ever sees its own records.'],
-  ['Verified webhooks', 'Twilio, Telegram and payment callbacks are signature-checked.'],
+  ['Verified webhooks', 'Meta, Telegram, Twilio and payment callbacks are signature-checked.'],
 ]
 
 export default function About() {

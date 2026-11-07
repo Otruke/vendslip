@@ -69,7 +69,7 @@ export default function Landing() {
               Type <code className="rounded-sm border border-vendslip-primary/25 bg-white px-1.5 py-0.5 font-mono text-[0.9em] text-vendslip-deep">/slash</code> commands in WhatsApp or Telegram. Confirm once, and your customer gets a signed slip.
             </Text>
             <div className="mt-8 flex flex-wrap gap-3">
-              <Button to="/register" size="lg" rightIcon={<ArrowRight className="size-5" />}>Start free, 15 slips a month</Button>
+              <Button to="/register" size="lg" rightIcon={<ArrowRight className="size-5" />}>Start free</Button>
               <Button to="/how-it-works" size="lg" variant="outline" className="bg-white/80">How it works</Button>
             </div>
             <ChannelStrip className="mt-9" />

@@ -70,7 +70,7 @@ plans and credit pack prices, templates, gateway keys, payments, security log, a
 
 **Needs external accounts (not testable offline):**
 - Real card/crypto checkout needs Flutterwave or NOWPayments keys in `.env` or `/admin/gateways`.
-- The chat bots need a public HTTPS URL (e.g. `ngrok http 8000`) plus Telegram or Twilio
+- The chat bots need a public HTTPS URL (e.g. `ngrok http 8000`) plus Telegram, Meta (or Twilio)
   credentials. See `SETUP.md` §3.
 - Emails (password reset, staff invites) are written to `Backend\storage\logs\laravel.log`
   while `MAIL_MAILER=log`.

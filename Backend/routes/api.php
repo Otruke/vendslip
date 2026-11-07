@@ -18,6 +18,7 @@ use App\Http\Controllers\Api\V1\PublicController;
 use App\Http\Controllers\Api\V1\SettingsController;
 use App\Http\Controllers\Api\V1\TeamController;
 use App\Http\Controllers\Api\V1\TemplateController;
+use App\Http\Middleware\SupportSessionGuard;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->group(function (): void {
@@ -44,6 +45,10 @@ Route::prefix('v1')->group(function (): void {
 
     // ── Webhooks (signature-verified inside each handler) ────────────────────
     Route::middleware('throttle:webhooks')->prefix('webhooks')->group(function (): void {
+        // Meta Cloud API + Messenger Platform (primary): WhatsApp, Messenger and Instagram in one app.
+        Route::get('meta', [BotWebhookController::class, 'metaVerify']);
+        Route::post('meta', [BotWebhookController::class, 'meta']);
+        // Twilio (secondary).
         Route::post('whatsapp', [BotWebhookController::class, 'whatsapp']);
         Route::post('telegram', [BotWebhookController::class, 'telegram']);
         Route::post('instagram', [BotWebhookController::class, 'instagram']);
@@ -57,18 +62,23 @@ Route::prefix('v1')->group(function (): void {
         ->middleware('throttle:public')->name('payments.flutterwave.return');
 
     // ── Authenticated merchant workspace (Sanctum SPA session) ───────────────
-    Route::middleware(['auth:sanctum', 'throttle:api'])->group(function (): void {
+    Route::post('auth/support-access', [AuthController::class, 'supportAccess'])->middleware('throttle:10,1,support-handoff');
+
+    Route::middleware(['auth:sanctum', 'throttle:api', SupportSessionGuard::class])->group(function (): void {
         Route::get('auth/me', [AuthController::class, 'me']);
         Route::post('auth/logout', [AuthController::class, 'logout']);
 
-        Route::put('account/profile', [AccountController::class, 'updateProfile']);
-        Route::put('account/password', [AccountController::class, 'updatePassword']);
-        Route::post('account/avatar', [AccountController::class, 'uploadAvatar'])->middleware('throttle:10,1');
-        Route::delete('account/avatar', [AccountController::class, 'deleteAvatar']);
+        // The account holder's own security: never available to a support session.
+        Route::middleware(SupportSessionGuard::class.':forbid')->group(function (): void {
+            Route::put('account/profile', [AccountController::class, 'updateProfile']);
+            Route::put('account/password', [AccountController::class, 'updatePassword']);
+            Route::post('account/avatar', [AccountController::class, 'uploadAvatar'])->middleware('throttle:10,1');
+            Route::delete('account/avatar', [AccountController::class, 'deleteAvatar']);
+            Route::post('account/two-factor', [AccountController::class, 'enableTwoFactor']);
+            Route::post('account/two-factor/confirm', [AccountController::class, 'confirmTwoFactor']);
+            Route::delete('account/two-factor', [AccountController::class, 'disableTwoFactor']);
+        });
         Route::get('users/{user}/avatar', [AccountController::class, 'showAvatar'])->whereNumber('user');
-        Route::post('account/two-factor', [AccountController::class, 'enableTwoFactor']);
-        Route::post('account/two-factor/confirm', [AccountController::class, 'confirmTwoFactor']);
-        Route::delete('account/two-factor', [AccountController::class, 'disableTwoFactor']);
 
         Route::middleware('merchant')->group(function (): void {
             Route::get('dashboard/overview', [DashboardController::class, 'overview']);
@@ -98,18 +108,22 @@ Route::prefix('v1')->group(function (): void {
             Route::put('settings/branding', [SettingsController::class, 'updateBranding']);
             Route::post('settings/logo', [SettingsController::class, 'uploadLogo']);
             Route::delete('settings/logo', [SettingsController::class, 'deleteLogo']);
-            Route::put('settings/gateways', [SettingsController::class, 'updateGateways']);
+            Route::put('settings/gateways', [SettingsController::class, 'updateGateways'])->middleware(SupportSessionGuard::class.':forbid');
             Route::post('onboarding/complete', [SettingsController::class, 'completeOnboarding']);
 
             Route::get('team', [TeamController::class, 'index']);
-            Route::post('team/invitations', [TeamController::class, 'invite']);
-            Route::delete('team/invitations/{id}', [TeamController::class, 'revokeInvitation'])->whereNumber('id');
-            Route::put('team/members/{id}', [TeamController::class, 'updateMember'])->whereNumber('id');
-            Route::delete('team/members/{id}', [TeamController::class, 'removeMember'])->whereNumber('id');
+            Route::middleware(SupportSessionGuard::class.':forbid')->group(function (): void {
+                Route::post('team/invitations', [TeamController::class, 'invite']);
+                Route::delete('team/invitations/{id}', [TeamController::class, 'revokeInvitation'])->whereNumber('id');
+                Route::put('team/members/{id}', [TeamController::class, 'updateMember'])->whereNumber('id');
+                Route::delete('team/members/{id}', [TeamController::class, 'removeMember'])->whereNumber('id');
+            });
 
             Route::get('channels', [ChannelController::class, 'index']);
-            Route::post('channels/link-code', [ChannelController::class, 'linkCode']);
-            Route::delete('channels/identities/{id}', [ChannelController::class, 'unlink'])->whereNumber('id');
+            Route::middleware(SupportSessionGuard::class.':forbid')->group(function (): void {
+                Route::post('channels/link-code', [ChannelController::class, 'linkCode']);
+                Route::delete('channels/identities/{id}', [ChannelController::class, 'unlink'])->whereNumber('id');
+            });
 
             Route::get('billing', [BillingController::class, 'show']);
             Route::post('billing/checkout', [BillingController::class, 'checkout']);

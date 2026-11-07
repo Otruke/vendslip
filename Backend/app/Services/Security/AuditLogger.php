@@ -31,11 +31,25 @@ final class AuditLogger
                 'severity' => $severity,
                 'ip' => $this->request?->ip(),
                 'user_agent' => mb_substr((string) $this->request?->userAgent(), 0, 500) ?: null,
-                'context' => $context === [] ? null : $context,
+                'context' => ($context = $this->withSupport($context)) === [] ? null : $context,
             ]);
         } catch (Throwable $e) {
             // Audit logging must never break the business transaction; surface via the app log.
             report($e);
         }
+    }
+
+    /**
+     * Anything done during a support session is stamped with the Super-Admin behind it, so the
+     * business's audit trail never attributes support's actions to the owner alone.
+     *
+     * @param  array<string, mixed>  $context
+     * @return array<string, mixed>
+     */
+    private function withSupport(array $context): array
+    {
+        $support = $this->request !== null ? SupportAccess::current($this->request) : null;
+
+        return $support === null ? $context : $context + ['support_admin_id' => (int) $support['admin_id'], 'support_grant_id' => (int) $support['grant_id']];
     }
 }

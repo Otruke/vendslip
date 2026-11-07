@@ -7,6 +7,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Enums\AuditSeverity;
 use App\Models\User;
 use App\Services\Account\AvatarStore;
+use App\Services\Account\ProfileUpdater;
 use App\Services\Pdf\QrCodeService;
 use App\Services\Security\AuditLogger;
 use App\Services\Security\PasswordChanger;
@@ -27,16 +28,12 @@ final class AccountController extends ApiController
         private readonly AvatarStore $avatars,
     ) {}
 
-    public function updateProfile(Request $request): JsonResponse
+    /** Name, email and phone, confirmed with the current password. */
+    public function updateProfile(Request $request, ProfileUpdater $profiles): JsonResponse
     {
-        $user = $this->user($request);
-        $data = $request->validate([
-            'name' => ['required', 'string', 'max:120'],
-            'phone' => ['nullable', 'string', 'max:32'],
-        ]);
-        $user->update($data);
+        $changed = $profiles->update($request, $this->user($request));
 
-        return response()->json(['ok' => true]);
+        return response()->json(['ok' => true, 'changed' => $changed]);
     }
 
     public function uploadAvatar(Request $request): JsonResponse

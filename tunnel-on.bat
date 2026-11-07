@@ -1,0 +1,1 @@
+  powershell -Command "Start-Process powershell -Verb RunAs -ArgumentList '-NoProfile -Command Start-Service cloudflared'"

@@ -10,6 +10,7 @@ use App\Enums\Permission;
 use App\Models\BotDraftSession;
 use App\Models\ChannelIdentity;
 use App\Models\Document;
+use App\Services\Bot\ChannelProviders;
 use App\Services\Bot\IdentityLinker;
 use App\Services\Settings\PlatformSettings;
 use App\Support\Phone;
@@ -18,17 +19,10 @@ use Illuminate\Http\Request;
 
 final class ChannelController extends ApiController
 {
-    /** Platform setting that must be present for each bot channel to be live. */
-    private const array SETTING_KEYS = [
-        'WHATSAPP' => 'twilio.whatsapp_from',
-        'TELEGRAM' => 'telegram.bot_token',
-        'INSTAGRAM' => 'twilio.instagram_from',
-        'FACEBOOK' => 'twilio.facebook_from',
-    ];
-
     public function __construct(
         private readonly IdentityLinker $linker,
         private readonly PlatformSettings $settings,
+        private readonly ChannelProviders $providers,
     ) {}
 
     public function index(Request $request): JsonResponse
@@ -40,8 +34,9 @@ final class ChannelController extends ApiController
         $identities = ChannelIdentity::query()->forMerchant($merchant)->with('user')->orderByDesc('linked_at')->get();
         $sessions = BotDraftSession::query()->forMerchant($merchant)->where('created_at', '>=', $since);
 
-        $whatsappFrom = $this->settings->string('twilio.whatsapp_from');
+        $whatsappFrom = $this->providers->whatsappNumber();
         $telegramUser = $this->settings->string('telegram.bot_username');
+        $instagramUser = $this->providers->instagramUsername();
 
         return response()->json([
             'channels' => array_map(function (Channel $channel) use ($merchant, $since): array {
@@ -50,7 +45,7 @@ final class ChannelController extends ApiController
                 return [
                     'channel' => $channel->value,
                     'label' => $channel->label(),
-                    'configured' => $this->settings->isConfigured(self::SETTING_KEYS[$channel->value] ?? 'telegram.bot_token'),
+                    'configured' => $this->providers->isConfigured($channel),
                     'slips_30d' => $count,
                 ];
             }, array_filter(Channel::cases(), static fn (Channel $c): bool => $c !== Channel::WEB)),
@@ -73,6 +68,9 @@ final class ChannelController extends ApiController
                 'whatsapp_link' => $whatsappFrom !== null ? 'https://wa.me/'.Phone::internationalDigits($whatsappFrom) : null,
                 'telegram_username' => $telegramUser,
                 'telegram_link' => $telegramUser !== null ? 'https://t.me/'.ltrim($telegramUser, '@') : null,
+                'messenger_link' => $this->providers->messengerLink(),
+                'instagram_username' => $instagramUser,
+                'instagram_link' => $instagramUser !== null ? 'https://ig.me/m/'.$instagramUser : null,
             ],
         ]);
     }
@@ -82,7 +80,7 @@ final class ChannelController extends ApiController
         $this->authorizePermission($request, Permission::DOCUMENTS_ISSUE);
         $code = $this->linker->issueCode($this->user($request));
         $telegramUser = $this->settings->string('telegram.bot_username');
-        $whatsappFrom = $this->settings->string('twilio.whatsapp_from');
+        $whatsappFrom = $this->providers->whatsappNumber();
 
         return response()->json([
             'code' => $code->code,

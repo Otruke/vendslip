@@ -1,10 +1,14 @@
 # VendSlip · WhatsApp bot module
 
-Twilio Programmable Messaging adapter. Namespace `VendSlip\Bots\WhatsApp\` (autoloaded by `Backend/composer.json`).
+Namespace `VendSlip\Bots\WhatsApp\` (autoloaded by `Backend/composer.json`). Two routes, switchable at `/admin/gateways`:
+
+- **Primary: Meta Cloud API** (`WhatsAppCloudSender`, webhook `/api/v1/webhooks/meta`): native reply buttons, PDF as a document, no template needed inside the 24h window.
+- **Secondary: Twilio** (`WhatsAppWebhookHandler`, webhook `/api/v1/webhooks/whatsapp`).
 
 | File | Role |
 | --- | --- |
-| `src/WhatsAppWebhookHandler.php` | Validates `X-Twilio-Signature`, hands the message to `App\Services\Bot\BotOrchestrator`, renders TwiML |
+| `src/WhatsAppCloudSender.php` | Meta route: text, reply-button summary, PDF document (falls back to the link) |
+| `src/WhatsAppWebhookHandler.php` | Twilio route: validates `X-Twilio-Signature`, hands the message to `App\Services\Bot\BotOrchestrator`, renders TwiML |
 | `src/WhatsAppInteractiveSummary.php` | The single consolidated pre-confirmation summary |
 | `src/WhatsAppPayloadBuilder.php` | Quick-reply REST options and PDF slip TwiML |
 | `config.php` | Button ids, summary length, PDF attachment toggle |
@@ -19,7 +23,34 @@ Twilio Programmable Messaging adapter. Namespace `VendSlip\Bots\WhatsApp\` (auto
 
 Every silent buffer increments `saved_outbound_calls_count`, shown as *API calls saved* on the dashboard.
 
-## Setup
+## Setup: Meta Cloud API (primary)
+
+### Meta app (one-time, shared by WhatsApp, Messenger and Instagram)
+
+1. developers.facebook.com → **My Apps → Create app** → type *Business*.
+2. App settings → Basic → copy **App secret** → `/admin/gateways` → *App secret*.
+3. Make up a long random **verify token** (e.g. `php -r "echo bin2hex(random_bytes(24));"`) →
+   *Webhook verify token*.
+4. For each product below, set the webhook **Callback URL** to
+   `https://YOUR-API-DOMAIN/api/v1/webhooks/meta` with the same verify token, then subscribe the
+   `messages` field (Messenger/Instagram: also `messaging_postbacks`).
+5. `/admin/gateways` → *WhatsApp · Messenger · Instagram route* → **Meta Cloud API** (default).
+
+While the app is in development mode only people with a role on the app (and, for WhatsApp, up to
+five verified test numbers) can message it. Business verification and App Review are needed
+before the public can.
+
+### WhatsApp
+
+1. In the app, add **WhatsApp** → *API Setup*. Meta gives you a free test number.
+2. Copy **Phone number ID** → *WhatsApp phone number ID*.
+3. Business settings → System users → add one, assign the app and the WhatsApp account, generate a
+   token with `whatsapp_business_messaging` → *WhatsApp access token* (the 24h temporary token on
+   API Setup works for a first test).
+4. *WhatsApp display number*: the number vendors message, e.g. `+2348012345678`.
+5. Add your own phone as a test recipient on API Setup, then send `/link CODE` from it.
+
+## Setup: Twilio (secondary)
 
 1. Twilio Console → Messaging → WhatsApp sender (or the Sandbox).
 2. *A message comes in* webhook: `POST https://YOUR-API-DOMAIN/api/v1/webhooks/whatsapp`

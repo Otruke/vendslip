@@ -13,10 +13,12 @@ use App\Http\Controllers\Controller;
 use App\Models\BotDraftSession;
 use App\Models\Document;
 use App\Models\Merchant;
+use App\Models\SupportAccessGrant;
 use App\Models\User;
 use App\Services\Billing\PlanEntitlements;
 use App\Services\Billing\QuotaService;
 use App\Services\Security\AuditLogger;
+use App\Services\Security\SupportAccess;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -54,8 +56,10 @@ final class MerchantController extends Controller
         return view('admin.merchants.index', ['merchants' => $query->paginate(25)->withQueryString(), 'filters' => $filters]);
     }
 
-    public function show(Merchant $merchant): View
+    public function show(Request $request, Merchant $merchant, SupportAccess $support): View
     {
+        $viewer = $request->user();
+        $isSuper = $viewer instanceof User && $viewer->isSuperAdmin();
         $documents = Document::query()->forMerchant($merchant)->withCount('revisions')
             ->with(['revisions' => static fn ($q) => $q->with('actor')->limit(20)])
             ->latest('issued_at')->limit(20)->get();
@@ -65,6 +69,12 @@ final class MerchantController extends Controller
             'owner' => User::query()->where('merchant_id', $merchant->id)->role('Owner')->first(),
             'members' => User::query()->where('merchant_id', $merchant->id)->count(),
             'documents' => $documents,
+            'support' => $isSuper ? [
+                'pending' => $support->pending($merchant, $viewer),
+                'owners' => $support->owners($merchant)->map(static fn (User $u): string => SupportAccess::maskEmail($u->email))->all(),
+                'recent' => SupportAccessGrant::query()->where('merchant_id', $merchant->id)->whereNotNull('started_at')
+                    ->with('admin')->latest('id')->limit(5)->get(),
+            ] : null,
             'stats' => [
                 'documents' => Document::query()->forMerchant($merchant)->count(),
                 'billed' => (int) Document::query()->forMerchant($merchant)->whereNull('parent_document_id')->where('doc_type', '!=', 'CREDIT_NOTE')->where('status', '!=', 'VOID')->sum('total_minor'),
