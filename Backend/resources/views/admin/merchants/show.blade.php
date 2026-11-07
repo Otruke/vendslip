@@ -46,7 +46,7 @@
                     @endforeach
                 </fieldset>
                 <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
-                    <x-ui.toggle name="allow_staff_edits" label="Allow staff edits" description="Sales agents & accountants may edit, not just owners/managers." :checked="$merchant->allow_staff_edits" />
+                    <x-ui.toggle name="allow_staff_edits" label="Allow staff edits" description="Sales Agents may also edit issued slips. Owners and Managers always can; Accountants can’t edit slips. No effect in Immutable mode." :checked="$merchant->allow_staff_edits" />
                     <x-ui.input name="mutable_window_hours" type="number" min="0" max="8760" label="Edit window (hours)" :value="$merchant->mutable_window_hours" helper="0 = no time limit (audited mode only)." />
                 </div>
                 <div class="flex justify-end"><x-ui.button icon="shield">Save policy</x-ui.button></div>

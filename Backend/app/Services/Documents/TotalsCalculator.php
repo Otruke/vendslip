@@ -19,7 +19,10 @@ use InvalidArgumentException;
 final class TotalsCalculator
 {
     /**
-     * @param  list<array{description: string, quantity: int, unit_price_minor: int, sku_id?: string|null}>  $lines
+     * Each line is sold at unit_price_minor. An optional list_price_minor (the normal price) above the
+     * selling price records a per-line discount; it never changes the maths, only what is traced.
+     *
+     * @param  list<array{description: string, quantity: int, unit_price_minor: int, list_price_minor?: int|null, sku_id?: string|null}>  $lines
      * @param  int|null  $amountPaidMinor  null = nothing paid
      */
     public function calculate(
@@ -36,6 +39,7 @@ final class TotalsCalculator
 
         $resolved = [];
         $subtotal = 0;
+        $lineDiscount = 0;
         foreach ($lines as $line) {
             if ($line['quantity'] < 1 || $line['unit_price_minor'] < 0) {
                 throw new InvalidArgumentException('Each line needs quantity ≥ 1 and a non-negative price.');
@@ -45,10 +49,17 @@ final class TotalsCalculator
                 throw new InvalidArgumentException('Line total exceeds the supported maximum.');
             }
             $subtotal += $lineTotal;
+            // A list price only counts when it is above the selling price (a real discount).
+            $list = $line['list_price_minor'] ?? null;
+            $list = is_int($list) && $list > $line['unit_price_minor'] && $list * $line['quantity'] <= Money::MAX_MINOR ? $list : null;
+            if ($list !== null) {
+                $lineDiscount += ($list - $line['unit_price_minor']) * $line['quantity'];
+            }
             $resolved[] = [
                 'description' => $line['description'],
                 'quantity' => $line['quantity'],
                 'unit_price_minor' => $line['unit_price_minor'],
+                'list_price_minor' => $list,
                 'line_total_minor' => $lineTotal,
                 'sku_id' => $line['sku_id'] ?? null,
             ];
@@ -85,6 +96,7 @@ final class TotalsCalculator
             totalMinor: $total,
             amountPaidMinor: $paid,
             balanceDueMinor: $total - $paid,
+            lineDiscountMinor: $lineDiscount,
         );
     }
 }

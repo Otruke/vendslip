@@ -19,7 +19,7 @@ final class AuthTest extends TestCase
     {
         $this->spa()->postJson('/api/v1/auth/register', [
             'business_name' => 'Kemi Fabrics', 'name' => 'Kemi', 'email' => 'Kemi@Example.com',
-            'password' => 'secret123A', 'password_confirmation' => 'secret123A',
+            'password' => 'Secret-123A!', 'password_confirmation' => 'Secret-123A!',
         ])->assertCreated()
             ->assertJsonPath('user.email', 'kemi@example.com')
             ->assertJsonPath('user.role', 'Owner')

@@ -33,8 +33,17 @@ final class SlashParserTest extends TestCase
         $this->assertSame('3500', $r->fields['shipping']);
         $this->assertSame('7.5', $r->fields['vat']);
         $this->assertCount(2, $r->items);
-        $this->assertSame(['description' => 'Leather Sneakers', 'quantity' => 2, 'unit_price_minor' => 2850000], $r->items[0]->toArray());
+        $this->assertSame(['description' => 'Leather Sneakers', 'quantity' => 2, 'unit_price_minor' => 2850000, 'list_price_minor' => null], $r->items[0]->toArray());
         $this->assertSame(500000, $r->items[1]->unitPriceMinor);
+    }
+
+    public function test_item_list_price_suffix(): void
+    {
+        $r = $this->parser->parse('/item = 2x Sneakers @ 25,000 was 30,000 | Cap @ 4k rrp 5k | Belt @ 6k was 5k');
+        $this->assertSame(2500000, $r->items[0]->unitPriceMinor);
+        $this->assertSame(3000000, $r->items[0]->listPriceMinor);
+        $this->assertSame('Sneakers', $r->items[0]->description);
+        $this->assertSame(500000, $r->items[1]->listPriceMinor);
     }
 
     public function test_item_shapes(): void

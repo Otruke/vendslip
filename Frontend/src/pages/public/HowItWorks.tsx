@@ -104,7 +104,7 @@ export default function HowItWorks() {
             <table className="w-full text-sm">
               <tbody className="divide-y divide-border-subtle" data-stagger="45" style={{ '--d': '250ms' } as CSSProperties}>
                 {[
-                  ['/name', 'Ada Obi'], ['/item', '2x Shoe @ 15000 | Belt @ 5k'], ['/amount', '30000 (instead of items)'],
+                  ['/name', 'Ada Obi'], ['/item', '2x Shoe @ 15000 | Belt @ 5k'], ['/item', 'Cap @ 4000 was 5000 (shows the saving)'], ['/amount', '30000 (instead of items)'],
                   ['/type', 'receipt or invoice'], ['/discount', '10% or 2000'], ['/shipping', '3500'], ['/vat', '7.5, off, 7.5 incl'],
                   ['/paid', 'full or 20000'], ['/due', '7d or 30/11/2026'], ['/phone · /address · /note', 'free text'],
                 ].map(([k, v]) => (

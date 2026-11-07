@@ -10,7 +10,8 @@ use App\Enums\DocumentType;
 final readonly class Totals
 {
     /**
-     * @param  list<array{description: string, quantity: int, unit_price_minor: int, line_total_minor: int, sku_id: string|null}>  $lines
+     * @param  list<array{description: string, quantity: int, unit_price_minor: int, list_price_minor: int|null, line_total_minor: int, sku_id: string|null}>  $lines
+     * @param  int  $lineDiscountMinor  savings given on individual lines (list price − selling price), already inside the subtotal
      */
     public function __construct(
         public array $lines,
@@ -23,6 +24,7 @@ final readonly class Totals
         public int $totalMinor,
         public int $amountPaidMinor,
         public int $balanceDueMinor,
+        public int $lineDiscountMinor = 0,
     ) {}
 
     public function statusFor(DocumentType $type, ?\DateTimeInterface $dueDate = null, ?\DateTimeInterface $today = null): DocumentStatus

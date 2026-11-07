@@ -83,7 +83,7 @@ export function PaperSlipPreview({ slip, compact = false, className }: { slip: S
                   <li key={i} className="grid grid-cols-[1fr_auto] gap-2 px-2 py-2 animate-fade-up">
                     <div className="min-w-0">
                       <p className="truncate text-xs font-semibold text-ink-primary">{line.description || 'Item'}</p>
-                      <p className="tabular text-[11px] text-ink-muted">{line.quantity} × {m(line.unit_minor)}</p>
+                      <p className="tabular text-[11px] text-ink-muted">{line.quantity} × {m(line.unit_minor)}{line.was_minor != null && line.was_minor > line.unit_minor && <> <s className="text-ink-muted/80">{m(line.was_minor)}</s></>}</p>
                     </div>
                     <p className="tabular text-xs font-bold text-ink-primary">{m(line.total_minor)}</p>
                   </li>
@@ -95,6 +95,7 @@ export function PaperSlipPreview({ slip, compact = false, className }: { slip: S
           {/* Totals */}
           <dl className="tabular mt-2 space-y-1 border-t border-border-subtle px-2 pt-2 text-xs">
             <div className="flex justify-between text-ink-secondary"><dt>Subtotal</dt><dd>{m(slip.subtotal)}</dd></div>
+            {(slip.lineDiscount ?? 0) > 0 && <div className="flex justify-between text-tone-settled"><dt>You saved on items (included)</dt><dd>{m(slip.lineDiscount ?? 0)}</dd></div>}
             {slip.discount > 0 && <div className="flex justify-between text-ink-secondary"><dt>Discount</dt><dd>-{m(slip.discount)}</dd></div>}
             {slip.tax > 0 && <div className="flex justify-between text-ink-secondary"><dt>{slip.taxLabel}</dt><dd>{m(slip.tax)}</dd></div>}
             {slip.shipping > 0 && <div className="flex justify-between text-ink-secondary"><dt>Shipping</dt><dd>{m(slip.shipping)}</dd></div>}

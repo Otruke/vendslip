@@ -8,6 +8,8 @@ use App\Enums\Channel;
 use App\Models\ChannelIdentity;
 use App\Models\ChannelLinkCode;
 use App\Models\User;
+use App\Services\Notifications\AlertCatalog;
+use App\Services\Notifications\MerchantAlerts;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
@@ -44,7 +46,7 @@ final class IdentityLinker
     {
         $code = Str::upper((string) preg_replace('/[^A-Za-z0-9]/', '', $code));
 
-        return DB::transaction(static function () use ($channel, $externalUserId, $displayName, $code): ?ChannelIdentity {
+        $identity = DB::transaction(static function () use ($channel, $externalUserId, $displayName, $code): ?ChannelIdentity {
             $link = ChannelLinkCode::query()->where('code', $code)->whereNull('used_at')->where('expires_at', '>', now())->lockForUpdate()->first();
             if ($link === null || ! $link->user->is_active || $link->user->merchant_id !== $link->merchant_id) {
                 return null;
@@ -56,5 +58,24 @@ final class IdentityLinker
                 ['user_id' => $link->user_id, 'merchant_id' => $link->merchant_id, 'display_name' => $displayName ? mb_substr($displayName, 0, 255) : null, 'linked_at' => now()],
             );
         });
+
+        // Security alert: the owner always learns when a chat starts issuing slips for the business.
+        if ($identity !== null) {
+            $identity->loadMissing('user.merchant');
+            $merchant = $identity->user->merchant;
+            if ($merchant !== null) {
+                $who = $identity->user->name;
+                $chat = $channel->label().($identity->display_name ? ' ('.$identity->display_name.')' : '');
+                app(MerchantAlerts::class)->send(
+                    $merchant,
+                    AlertCatalog::CHANNEL_LINKED,
+                    "{$chat} linked to {$merchant->name}",
+                    "{$who} linked {$chat}. It can now issue slips for the business. If you don't recognise this, unlink it in Bot Channels.",
+                    '/dashboard/channels',
+                );
+            }
+        }
+
+        return $identity;
     }
 }

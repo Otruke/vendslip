@@ -30,6 +30,15 @@
         'INSTAGRAM' => ['instagram', true, 'Instagram'],
         'FACEBOOK' => ['facebook', true, 'Facebook'],
         'WEB' => ['neutral', true, 'Web'],
+        // Support tickets
+        'OPEN' => ['partial', false, 'Waiting for support'],
+        'AWAITING_CUSTOMER' => ['info', false, 'Waiting for customer'],
+        'RESOLVED' => ['settled', true, 'Resolved'],
+        'CLOSED' => ['neutral', true, 'Closed'],
+        'URGENT' => ['open', true, 'Urgent'],
+        'HIGH' => ['partial', true, 'High'],
+        'NORMAL' => ['neutral', false, 'Normal'],
+        'LOW' => ['neutral', false, 'Low'],
     ];
     [$tone, $solid, $label] = $map[$value] ?? ['neutral', false, ucwords(strtolower(str_replace('_', ' ', $value)))];
     $inverse = $value === 'BUSINESS_PLUS';

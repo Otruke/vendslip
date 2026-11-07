@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $stock_quantity
  * @property int $low_stock_threshold
  * @property bool $track_stock
+ * @property bool $block_overselling
  * @property bool $is_active
  */
 class InventorySku extends Model
@@ -29,7 +30,7 @@ class InventorySku extends Model
     /** @var list<string> */
     protected $fillable = [
         'merchant_id', 'sku', 'name', 'description', 'unit_price_minor', 'stock_quantity',
-        'low_stock_threshold', 'track_stock', 'is_active',
+        'low_stock_threshold', 'track_stock', 'block_overselling', 'is_active',
     ];
 
     /** @return array<string, string> */
@@ -40,6 +41,7 @@ class InventorySku extends Model
             'stock_quantity' => 'integer',
             'low_stock_threshold' => 'integer',
             'track_stock' => 'boolean',
+            'block_overselling' => 'boolean',
             'is_active' => 'boolean',
         ];
     }

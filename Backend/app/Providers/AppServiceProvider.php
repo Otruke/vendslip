@@ -31,9 +31,13 @@ class AppServiceProvider extends ServiceProvider
 
         ResetPassword::createUrlUsing(static fn ($user, string $token): string => Urls::frontend('reset-password?token='.$token.'&email='.urlencode((string) $user->getEmailForPasswordReset())));
 
-        Password::defaults(static fn () => app()->isProduction()
-            ? Password::min(10)->letters()->mixedCase()->numbers()->uncompromised()
-            : Password::min(8)->letters()->numbers());
+        // Same strength everywhere (sign-up, invites, resets, changes). Production also refuses passwords
+        // seen in public breaches (k-anonymity lookup: only a hash prefix leaves the server).
+        Password::defaults(static function () {
+            $rule = Password::min(10)->max(128)->letters()->mixedCase()->numbers()->symbols();
+
+            return app()->isProduction() ? $rule->uncompromised() : $rule;
+        });
 
         RateLimiter::for('api', static fn (Request $request) => Limit::perMinute(120)->by($request->user()?->id ?: $request->ip()));
         RateLimiter::for('auth', static fn (Request $request) => [

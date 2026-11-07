@@ -9,12 +9,13 @@ use App\Models\BotDraftSession;
 /**
  * The single consolidated pre-confirmation summary.
  *
- * @param  list<array{description: string, quantity: int, unit_minor: int, total_minor: int}>  $lines
+ * @param  list<array{description: string, quantity: int, unit_minor: int, total_minor: int, list_minor?: int|null}>  $lines
  */
 final readonly class AskConfirmation implements BotAction
 {
     /**
-     * @param  list<array{description: string, quantity: int, unit_minor: int, total_minor: int}>  $lines
+     * @param  list<array{description: string, quantity: int, unit_minor: int, total_minor: int, list_minor?: int|null}>  $lines
+     * @param  int  $lineDiscountMinor  savings on individual lines, already inside the subtotal
      */
     public function __construct(
         public BotDraftSession $session,
@@ -35,5 +36,6 @@ final readonly class AskConfirmation implements BotAction
         public bool $willWatermark,
         public bool $canUseCleanCredit,
         public bool $isUpdate = false,
+        public int $lineDiscountMinor = 0,
     ) {}
 }

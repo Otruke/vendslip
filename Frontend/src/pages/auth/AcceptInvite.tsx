@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 import { useState, type FormEvent } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { AuthLayout } from '@/components/layout/AuthLayout'
-import { Alert, Button, Input, PageLoader } from '@/components/ui'
+import { Alert, Button, Input, PageLoader, PasswordChecklist } from '@/components/ui'
 import { apiPost } from '@/hooks/queries'
 import { api, errorMessage, resetCsrf } from '@/lib/api'
 import { useAuthStore } from '@/stores/auth'
@@ -45,7 +45,10 @@ export default function AcceptInvite() {
         {error && <Alert tone="danger">{error}</Alert>}
         <Input label="Email" value={invite.data.email} disabled />
         <Input label="Your name" required value={name} onChange={(e) => setName(e.target.value)} />
-        <Input label="Password" type="password" autoComplete="new-password" required value={password} onChange={(e) => setPassword(e.target.value)} />
+        <div>
+          <Input label="Password" type="password" autoComplete="new-password" required value={password} onChange={(e) => setPassword(e.target.value)} />
+          <PasswordChecklist value={password} />
+        </div>
         <Input label="Confirm password" type="password" autoComplete="new-password" required value={confirmation} onChange={(e) => setConfirmation(e.target.value)} />
         <Button type="submit" fullWidth size="lg" isLoading={busy}>Accept & continue</Button>
       </form>

@@ -75,7 +75,7 @@
                     <div class="space-y-4 px-5 py-5">
                         <x-ui.input name="current_password" type="password" label="Current password" required autocomplete="current-password" />
                         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                            <x-ui.input name="password" type="password" label="New password" required autocomplete="new-password" helper="At least 8 characters." />
+                            <x-ui.input name="password" type="password" label="New password" required autocomplete="new-password" helper="10+ characters with upper and lower case, a number and a symbol." />
                             <x-ui.input name="password_confirmation" type="password" label="Confirm new password" required autocomplete="new-password" />
                         </div>
                     </div>

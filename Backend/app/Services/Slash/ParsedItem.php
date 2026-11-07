@@ -11,15 +11,17 @@ final readonly class ParsedItem
         public int $quantity,
         public ?int $unitPriceMinor,
         public string $raw,
+        public ?int $listPriceMinor = null,
     ) {}
 
-    /** @return array{description: string, quantity: int, unit_price_minor: int|null} */
+    /** @return array{description: string, quantity: int, unit_price_minor: int|null, list_price_minor: int|null} */
     public function toArray(): array
     {
         return [
             'description' => $this->description,
             'quantity' => $this->quantity,
             'unit_price_minor' => $this->unitPriceMinor,
+            'list_price_minor' => $this->listPriceMinor,
         ];
     }
 }

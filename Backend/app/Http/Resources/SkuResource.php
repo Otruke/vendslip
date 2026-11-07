@@ -26,6 +26,7 @@ class SkuResource extends JsonResource
             'stock_quantity' => $s->stock_quantity,
             'low_stock_threshold' => $s->low_stock_threshold,
             'track_stock' => $s->track_stock,
+            'block_overselling' => $s->block_overselling,
             'is_active' => $s->is_active,
             'is_low_stock' => $s->isLowStock(),
         ];

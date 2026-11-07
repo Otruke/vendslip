@@ -33,6 +33,8 @@ const Channels = lazy(() => import('@/pages/dashboard/Channels'))
 const Billing = lazy(() => import('@/pages/dashboard/Billing'))
 const Settings = lazy(() => import('@/pages/dashboard/Settings'))
 const Profile = lazy(() => import('@/pages/dashboard/Profile'))
+const Activity = lazy(() => import('@/pages/dashboard/Activity'))
+const Support = lazy(() => import('@/pages/dashboard/Support'))
 
 const page = (node: ReactNode) => <Suspense fallback={<PageLoader />}>{node}</Suspense>
 
@@ -77,6 +79,9 @@ export const router = createBrowserRouter([
           { path: 'billing', element: page(<Billing />) },
           { path: 'settings', element: page(<Settings />) },
           { path: 'profile', element: page(<Profile />) },
+          { path: 'activity', element: page(<Activity />) },
+          { path: 'support', element: page(<Support />) },
+          { path: 'support/:reference', element: page(<Support />) },
         ],
       },
       { path: '*', element: page(<NotFound />) },

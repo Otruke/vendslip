@@ -29,7 +29,7 @@ final class AuthController extends Controller
     public function show(Request $request): View|RedirectResponse
     {
         $user = $request->user();
-        if ($user instanceof User && $user->isPlatformAdmin()) {
+        if ($user instanceof User && $user->isPlatformStaff()) {
             return redirect()->route('admin.dashboard');
         }
 
@@ -45,7 +45,7 @@ final class AuthController extends Controller
         }
 
         $user = User::query()->where('email', mb_strtolower($data['email']))->first();
-        if ($user === null || ! Hash::check($data['password'], $user->password) || ! $user->is_active || ! $user->isPlatformAdmin()) {
+        if ($user === null || ! Hash::check($data['password'], $user->password) || ! $user->is_active || ! $user->isPlatformStaff()) {
             RateLimiter::hit($key, 300);
             $this->audit->log('admin.login_failed', $user, null, ['email' => mb_strtolower($data['email'])], AuditSeverity::WARNING);
             throw ValidationException::withMessages(['email' => 'These credentials do not match an administrator account.']);

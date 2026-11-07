@@ -4,18 +4,25 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Enums\BillingCycle;
 use App\Enums\DocumentStatus;
 use App\Enums\DocumentType;
 use App\Enums\PaymentGateway;
 use App\Http\Controllers\Controller;
 use App\Models\CreditPack;
 use App\Models\Document;
+use App\Models\Merchant;
 use App\Models\SubscriptionPlan;
 use App\Services\Billing\PlanEntitlements;
 use App\Services\Documents\VerificationService;
+use App\Services\Marketing\ActivityFeed;
 use App\Services\Payments\CheckoutService;
+use App\Services\Payouts\PayoutAccounts;
 use App\Services\Pdf\SlipRenderer;
+use App\Services\Pricing\PlanPricing;
 use App\Services\Settings\PlatformSettings;
+use App\Support\Countries;
+use App\Support\Currencies;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\URL;
@@ -24,21 +31,73 @@ use Symfony\Component\HttpFoundation\Response;
 
 final class PublicController extends Controller
 {
-    public function plans(PlatformSettings $settings): JsonResponse
+    /** Every currency and country the app supports (bundled data; cacheable by browsers for a day). */
+    /** Real, anonymous recent activity for the website's notes (empty when switched off). */
+    public function activityFeed(ActivityFeed $feed): JsonResponse
+    {
+        return response()->json($feed->payload())->setPublic()->setMaxAge(120);
+    }
+
+    /** A business's logo (public: it is printed on every slip). */
+    public function logo(string $merchantId): Response
+    {
+        $merchant = Merchant::query()->find($merchantId);
+        $path = $merchant?->logoAbsolutePath();
+        abort_if($path === null, 404);
+        $mime = match (strtolower(pathinfo($path, PATHINFO_EXTENSION))) {
+            'png' => 'image/png',
+            'webp' => 'image/webp',
+            default => 'image/jpeg',
+        };
+
+        return response((string) file_get_contents($path), 200, [
+            'Content-Type' => $mime,
+            'Content-Disposition' => 'inline; filename="logo"',
+            // Versioned URL (?v=…), so it can be cached for a long time.
+            'Cache-Control' => 'public, max-age=31536000, immutable',
+            'X-Content-Type-Options' => 'nosniff',
+            'Content-Security-Policy' => "default-src 'none'; sandbox",
+        ]);
+    }
+
+    public function locales(): JsonResponse
     {
         return response()->json([
-            'plans' => SubscriptionPlan::query()->where('is_active', true)->orderBy('sort_order')->get()->map(static fn (SubscriptionPlan $p): array => [
-                'tier' => $p->tier->value,
-                'name' => $p->name,
-                'tagline' => $p->tagline,
-                'currency' => $p->currency,
-                'monthly_price_minor' => $p->monthly_price_minor,
-                'yearly_price_minor' => $p->yearly_price_minor,
-                'monthly_quota' => $p->monthly_quota,
-                'highlights' => $p->highlights ?? [],
-                'features' => $p->features,
-            ]),
-            'credit_packs' => CreditPack::query()->where('is_active', true)->orderBy('sort_order')->get(['id', 'name', 'credits', 'price_minor', 'currency']),
+            'currencies' => array_values(Currencies::all()),
+            'countries' => array_values(Countries::all()),
+        ])->setPublic()->setMaxAge(86400);
+    }
+
+    /** Plans and packs, priced in ?currency= (fixed price, or converted from the base price). */
+    public function plans(Request $request, PlatformSettings $settings, PlanPricing $pricing): JsonResponse
+    {
+        $currency = strtoupper((string) $request->query('currency', ''));
+        $currency = Currencies::exists($currency) ? $currency : null;
+
+        return response()->json([
+            'currency' => $currency,
+            'plans' => SubscriptionPlan::query()->where('is_active', true)->orderBy('sort_order')->get()->map(static function (SubscriptionPlan $p) use ($pricing, $currency): array {
+                $monthly = $pricing->plan($p, BillingCycle::MONTHLY, $currency ?? $p->currency);
+                $yearly = $pricing->plan($p, BillingCycle::YEARLY, $monthly['currency']);
+
+                return [
+                    'tier' => $p->tier->value,
+                    'name' => $p->name,
+                    'tagline' => $p->tagline,
+                    'currency' => $monthly['currency'],
+                    'monthly_price_minor' => $monthly['amount_minor'],
+                    'yearly_price_minor' => $yearly['currency'] === $monthly['currency'] ? $yearly['amount_minor'] : $p->yearly_price_minor,
+                    'converted' => $monthly['source'] === 'converted',
+                    'monthly_quota' => $p->monthly_quota,
+                    'highlights' => $p->highlights ?? [],
+                    'features' => $p->features,
+                ];
+            }),
+            'credit_packs' => CreditPack::query()->where('is_active', true)->orderBy('sort_order')->get()->map(static function (CreditPack $c) use ($pricing, $currency): array {
+                $price = $pricing->pack($c, $currency ?? $c->currency);
+
+                return ['id' => $c->id, 'name' => $c->name, 'credits' => $c->credits, 'price_minor' => $price['amount_minor'], 'currency' => $price['currency'], 'converted' => $price['source'] === 'converted'];
+            }),
             'yearly_discount_label' => $settings->get('billing.yearly_discount_label'),
             'paid_credit_removes_watermark' => (bool) $settings->get('billing.remove_watermark_on_paid_credit', true),
         ]);
@@ -122,6 +181,7 @@ final class PublicController extends Controller
                 'bank_name' => $merchant->bank_name,
                 'bank_account_number' => $merchant->bank_account_number,
                 'bank_account_name' => $merchant->bank_account_name,
+                'payouts' => PayoutAccounts::forSlips($merchant),
             ],
             'gateways' => [
                 'flutterwave' => $online && $merchant->hasFlutterwave(),

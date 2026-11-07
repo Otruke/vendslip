@@ -71,15 +71,23 @@ final class Money
 
     public static function symbol(string $currency): string
     {
-        return self::SYMBOLS[strtoupper($currency)] ?? strtoupper($currency).' ';
+        $symbol = self::SYMBOLS[strtoupper($currency)] ?? Currencies::symbol($currency);
+
+        // Letter symbols read better spaced: "KSh 2,500", "FCFA 1,235" (but "₦15,000", "$20").
+        return preg_match('/\p{L}$/u', $symbol) === 1 && ! in_array($symbol, ['R'], true) ? $symbol.' ' : $symbol;
     }
 
-    /** "₦15,000.00" — deterministic formatting independent of the intl extension. */
+    /**
+     * "₦15,000.00", "USh 50,000" — deterministic formatting independent of the intl extension.
+     * Amounts are stored in hundredths for every currency; zero-decimal currencies round to whole units.
+     */
     public static function format(int $minor, string $currency = 'NGN', bool $withSymbol = true): string
     {
         $negative = $minor < 0;
         $minor = abs($minor);
-        $major = number_format(intdiv($minor, 100)).'.'.str_pad((string) ($minor % 100), 2, '0', STR_PAD_LEFT);
+        $major = Currencies::digits($currency) === 0
+            ? number_format(intdiv($minor + 50, 100))
+            : number_format(intdiv($minor, 100)).'.'.str_pad((string) ($minor % 100), 2, '0', STR_PAD_LEFT);
 
         return ($negative ? '-' : '').($withSymbol ? self::symbol($currency) : '').$major;
     }

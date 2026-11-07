@@ -16,8 +16,10 @@ export type SlipView = {
   issuedAt: string
   dueDate?: string | null
   currency: string
-  lines: { description: string; quantity: number; unit_minor: number; total_minor: number }[]
+  lines: { description: string; quantity: number; unit_minor: number; total_minor: number; was_minor?: number | null }[]
   subtotal: number
+  /** Item discounts already inside the subtotal (list price − selling price). */
+  lineDiscount?: number
   discount: number
   tax: number
   taxLabel: string

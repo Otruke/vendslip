@@ -109,6 +109,7 @@ final class InventoryController extends ApiController
             'stock_quantity' => ['required', 'integer', 'min:0', 'max:10000000'],
             'low_stock_threshold' => ['nullable', 'integer', 'min:0', 'max:100000'],
             'track_stock' => ['sometimes', 'boolean'],
+            'block_overselling' => ['sometimes', 'boolean'],
             'is_active' => ['sometimes', 'boolean'],
         ]);
     }

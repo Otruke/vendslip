@@ -93,3 +93,11 @@ document.addEventListener('change', (event) => {
         input.form?.requestSubmit();
     }
 });
+
+// Small pop-overs built on <details data-close-outside> close on an outside tap or Escape.
+document.addEventListener('pointerdown', (e) => {
+    document.querySelectorAll('details[data-close-outside][open]').forEach((d) => { if (!d.contains(e.target)) d.removeAttribute('open'); });
+});
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') document.querySelectorAll('details[data-close-outside][open]').forEach((d) => d.removeAttribute('open'));
+});

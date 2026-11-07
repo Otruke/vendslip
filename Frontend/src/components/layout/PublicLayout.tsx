@@ -1,6 +1,7 @@
 import { ArrowRight, Menu, X } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
+import { ActivityNotes } from './ActivityNotes'
 import { Button, Container, Logo, Tagline } from '@/components/ui'
 import { cn } from '@/lib/cn'
 import { useScrollMotion } from '@/lib/motion'
@@ -116,6 +117,8 @@ export function PublicLayout() {
         <Outlet />
       </main>
       <PublicFooter />
+      {/* Marketing pages only: never on a customer's pay or verify page. */}
+      {!pathname.startsWith('/pay/') && !pathname.startsWith('/verify') && <ActivityNotes />}
     </div>
   )
 }

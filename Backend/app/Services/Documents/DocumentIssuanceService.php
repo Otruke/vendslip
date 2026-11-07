@@ -15,7 +15,12 @@ use App\Models\DocumentPayment;
 use App\Models\Merchant;
 use App\Models\User;
 use App\Services\Billing\QuotaService;
+use App\Services\Notifications\AlertCatalog;
+use App\Services\Notifications\MerchantAlerts;
 use App\Services\Pdf\SlipRenderer;
+use App\Services\Security\AuditLogger;
+use App\Support\Currencies;
+use App\Support\Money;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -31,6 +36,8 @@ final class DocumentIssuanceService
         private readonly TemplateResolver $templates,
         private readonly InventoryService $inventory,
         private readonly SlipRenderer $renderer,
+        private readonly MerchantAlerts $alerts,
+        private readonly AuditLogger $audit,
     ) {}
 
     /**
@@ -52,6 +59,7 @@ final class DocumentIssuanceService
                 'description' => trim($item->description),
                 'quantity' => $item->quantity,
                 'unit_price_minor' => $item->unit_price_minor,
+                'list_price_minor' => $item->list_price_minor,
                 'sku_id' => $item->sku_id,
             ], array_values($draft->items));
 
@@ -97,13 +105,14 @@ final class DocumentIssuanceService
                 'public_uid' => Str::lower(Str::random(26)),
                 'status' => $totals->statusFor($draft->type, $dueDate, $now),
                 'channel' => $channel,
-                'currency' => $locked->currency,
+                'currency' => $this->currencyFor($draft, $locked),
                 'customer_name' => trim($draft->customer_name),
                 'customer_phone' => $draft->customer_phone,
                 'customer_email' => $draft->customer_email,
                 'customer_address' => $draft->customer_address,
                 'subtotal_minor' => $totals->subtotalMinor,
                 'discount_minor' => $totals->discountMinor,
+                'line_discount_minor' => $totals->lineDiscountMinor,
                 'vat_rate_bps' => $totals->vatRateBps,
                 'vat_inclusive' => $totals->vatInclusive,
                 'tax_minor' => $totals->taxMinor,
@@ -145,6 +154,21 @@ final class DocumentIssuanceService
         });
 
         $this->renderQuietly($document);
+
+        $this->audit->log('document.created', $actor, $merchant, [
+            'summary' => "{$document->doc_number} · ".Money::format($document->total_minor, $document->currency).' · '.$document->customer_name,
+            'channel' => $channel->value,
+            'subject' => ['id' => $document->id],
+        ]);
+        $label = $document->doc_type->label();
+        $this->alerts->send(
+            $merchant,
+            AlertCatalog::SLIP_ISSUED,
+            "{$label} {$document->doc_number} · ".Money::format($document->total_minor, $document->currency),
+            trim(($actor !== null ? "{$actor->name} issued it" : 'Issued').' for '.$document->customer_name.($channel !== Channel::WEB ? ' via '.$channel->label() : '').'.'),
+            '/dashboard/documents/'.$document->id,
+            $actor,
+        );
 
         return $document->refresh()->load('items');
     }
@@ -241,5 +265,19 @@ final class DocumentIssuanceService
             'email' => $draft->customer_email,
             'address' => $draft->customer_address,
         ]);
+    }
+
+    /** The slip's own currency (from /currency or the composer) or the business's default. */
+    private function currencyFor(DocumentDraftData $draft, Merchant $merchant): string
+    {
+        if ($draft->currency === null || $draft->currency === '') {
+            return $merchant->currency;
+        }
+        $code = strtoupper($draft->currency);
+        if (! Currencies::exists($code)) {
+            throw new DomainRuleException("{$draft->currency} isn't a currency VendSlip knows. Use a code like NGN or USD.", 'invalid_currency');
+        }
+
+        return $code;
     }
 }

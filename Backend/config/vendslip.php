@@ -85,6 +85,11 @@ return [
         'validate_signature' => (bool) env('TWILIO_VALIDATE_SIGNATURE', true),
     ],
 
+    // Exchange rates for pricing plans in other currencies (free, no key; refreshed every 6 hours).
+    'fx' => [
+        'url' => env('VENDSLIP_FX_URL', 'https://open.er-api.com/v6/latest/USD'),
+    ],
+
     'flutterwave' => [
         'base_url' => env('FLUTTERWAVE_BASE_URL', 'https://api.flutterwave.com/v3'),
         'public_key' => env('FLUTTERWAVE_PUBLIC_KEY'),

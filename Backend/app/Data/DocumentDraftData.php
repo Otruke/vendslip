@@ -12,6 +12,7 @@ use Spatie\LaravelData\Attributes\Validation\Email;
 use Spatie\LaravelData\Attributes\Validation\In;
 use Spatie\LaravelData\Attributes\Validation\Max;
 use Spatie\LaravelData\Attributes\Validation\Min;
+use Spatie\LaravelData\Attributes\Validation\Size;
 use Spatie\LaravelData\Attributes\Validation\Uuid;
 use Spatie\LaravelData\Data;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
@@ -56,5 +57,8 @@ final class DocumentDraftData extends Data
         public ?string $notes = null,
         public ?int $template_id = null,
         public bool $use_paid_credit = false,
+        /** This slip's currency (ISO 4217); null uses the business's default. */
+        #[Size(3)]
+        public ?string $currency = null,
     ) {}
 }

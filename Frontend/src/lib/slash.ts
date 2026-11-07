@@ -19,11 +19,12 @@ export const KEY_ALIASES: Record<string, string> = {
   due: 'due', duedate: 'due', due_date: 'due',
   note: 'note', notes: 'note', memo: 'note',
   template: 'template',
+  currency: 'currency', cur: 'currency', ccy: 'currency',
 }
 
-export const SHORTCUTS = ['/name = ', '/item = ', '/amount = ', '/phone = ', '/address = ', '/discount = ', '/shipping = ', '/vat = ', '/paid = ', '/due = ', '/type = invoice']
+export const SHORTCUTS = ['/name = ', '/item = ', '/amount = ', '/phone = ', '/address = ', '/discount = ', '/shipping = ', '/vat = ', '/paid = ', '/due = ', '/currency = ', '/type = invoice']
 
-export type ParsedItem = { description: string; quantity: number; unit_price_minor: number | null; raw: string }
+export type ParsedItem = { description: string; quantity: number; unit_price_minor: number | null; list_price_minor: number | null; raw: string }
 
 export type ParseResult = {
   fields: Record<string, string>
@@ -71,21 +72,31 @@ export function parseItem(line: string): ParsedItem | null {
   const raw = line.trim()
   if (raw === '') return null
 
-  let description = raw
+  // "… @ 15000 was 18000": the normal (list) price, so the line's discount is traceable.
+  let listPrice: number | null = null
+  let work = raw
+  const lm = /^(.*\S)\s*\(?\s*(?:was|list|rrp|normally)\s*[:=]?\s*((?:₦|NGN|N|\$)?\s*\d[\d,]*(?:\.\d+)?\s*[kKmM]?)\s*\)?\s*$/iu.exec(work)
+  if (lm) {
+    listPrice = parseToMinor((lm[2] ?? '').trim())
+    if (listPrice === null) return null
+    work = (lm[1] ?? '').trim()
+  }
+
+  let description = work
   let priceText: string | null = null
   let quantity: number | null = null
 
-  if (raw.includes('@')) {
-    const at = raw.lastIndexOf('@')
-    description = raw.slice(0, at).trim()
-    priceText = raw.slice(at + 1).trim()
+  if (work.includes('@')) {
+    const at = work.lastIndexOf('@')
+    description = work.slice(0, at).trim()
+    priceText = work.slice(at + 1).trim()
     const pm = /^(.+?)\s*[x×*]\s*(\d{1,6})$/iu.exec(priceText)
     if (pm) {
       priceText = (pm[1] ?? '').trim()
       quantity = Number(pm[2])
     }
   } else {
-    const pm = /^(.*?)(?:\s+-\s+|\s+)((?:₦|NGN|N|\$)?\s*\d[\d,]*(?:\.\d+)?\s*[kKmM]?)$/u.exec(raw)
+    const pm = /^(.*?)(?:\s+-\s+|\s+)((?:₦|NGN|N|\$)?\s*\d[\d,]*(?:\.\d+)?\s*[kKmM]?)$/u.exec(work)
     if (pm && (pm[1] ?? '').trim() !== '') {
       description = (pm[1] ?? '').trim()
       priceText = (pm[2] ?? '').trim()
@@ -117,5 +128,5 @@ export function parseItem(line: string): ParsedItem | null {
   quantity ??= 1
   if (quantity < 1) return null
 
-  return { description, quantity, unit_price_minor: unitPrice, raw }
+  return { description, quantity, unit_price_minor: unitPrice, list_price_minor: listPrice, raw }
 }

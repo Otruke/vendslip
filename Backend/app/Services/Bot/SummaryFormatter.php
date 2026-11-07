@@ -22,9 +22,16 @@ final class SummaryFormatter
         }
         $out[] = '';
         foreach ($a->lines as $i => $line) {
-            $out[] = ($i + 1).'. '.$line['description'].' — '.$line['quantity'].' × '.$m($line['unit_minor']).' = '.$m($line['total_minor']);
+            $was = isset($line['list_minor']) ? ' (was '.$m($line['list_minor']).')' : '';
+            $out[] = ($i + 1).'. '.$line['description'].' — '.$line['quantity'].' × '.$m($line['unit_minor']).$was.' = '.$m($line['total_minor']);
         }
         $out[] = '';
+        if ($a->discountMinor > 0 || $a->taxMinor > 0 || $a->shippingMinor > 0 || $a->lineDiscountMinor > 0) {
+            $out[] = 'Subtotal: '.$m($a->subtotalMinor);
+        }
+        if ($a->lineDiscountMinor > 0) {
+            $out[] = 'Item discounts: -'.$m($a->lineDiscountMinor).' (already in subtotal)';
+        }
         if ($a->discountMinor > 0) {
             $out[] = 'Discount: -'.$m($a->discountMinor);
         }

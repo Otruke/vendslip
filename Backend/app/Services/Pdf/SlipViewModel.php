@@ -7,6 +7,7 @@ namespace App\Services\Pdf;
 use App\Enums\DocumentStatus;
 use App\Enums\DocumentType;
 use App\Models\Document;
+use App\Services\Payouts\PayoutAccounts;
 use App\Support\Money;
 use App\Support\Urls;
 
@@ -69,9 +70,11 @@ final class SlipViewModel
                 'description' => $item->description,
                 'quantity' => $item->quantity,
                 'unit' => $money($item->unit_price_minor),
+                'was' => $item->list_price_minor !== null && $item->list_price_minor > $item->unit_price_minor ? $money($item->list_price_minor) : null,
                 'total' => $money($item->line_total_minor),
             ])->all(),
             'subtotal' => $money($document->subtotal_minor),
+            'line_discount' => $document->line_discount_minor > 0 ? $money($document->line_discount_minor) : null,
             'discount' => $document->discount_minor > 0 ? $money($document->discount_minor) : null,
             'tax' => $document->tax_minor > 0 ? $money($document->tax_minor) : null,
             'tax_label' => 'VAT '.rtrim(rtrim(number_format($document->vat_rate_bps / 100, 2), '0'), '.').'%'.($document->vat_inclusive ? ' (incl.)' : ''),
@@ -87,6 +90,8 @@ final class SlipViewModel
             'watermark' => $document->has_watermark,
             'tagline' => 'Close the sale. Send the slip',
             'footer' => $merchant->receipt_footer ?: 'Thank you for your patronage!',
+            // Every bank account and wallet the business shows on slips (falls back to the single bank below).
+            'payouts' => $merchant->exists ? PayoutAccounts::forSlips($merchant) : [],
             'bank' => $merchant->bank_account_number !== null ? [
                 'name' => $merchant->bank_name,
                 'number' => $merchant->bank_account_number,

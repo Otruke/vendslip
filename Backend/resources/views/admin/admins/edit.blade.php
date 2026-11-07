@@ -1,5 +1,5 @@
 <x-admin.layout :title="'Edit '.$admin->name">
-    <x-ui.page-header eyebrow="Super-Admin · Platform admins" :title="'Edit '.$admin->name" subtitle="Changing the email, role or password signs them out everywhere so the change applies at once.">
+    <x-ui.page-header eyebrow="Super-Admin · Platform staff" :title="'Edit '.$admin->name" subtitle="Changing the email, role or password signs them out everywhere so the change applies at once.">
         <x-slot:actions><x-ui.button variant="ghost" icon="users" :href="route('admin.admins.index')">All admins</x-ui.button></x-slot:actions>
     </x-ui.page-header>
 
@@ -11,11 +11,11 @@
                 <x-ui.input name="name" label="Full name" :value="$admin->name" required maxlength="120" autocomplete="off" />
                 <x-ui.input name="phone" label="Phone" :value="$admin->phone" maxlength="32" autocomplete="off" />
                 <x-ui.input name="email" type="email" label="Email" :value="$admin->email" required maxlength="255" autocomplete="off" helper="Their sign-in email." />
-                <x-ui.select name="role" label="Role" :value="$role" :options="['Admin' => 'Admin', 'SuperAdmin' => 'Super Admin']" />
+                <x-ui.select name="role" label="Role" :value="$role" :options="['Admin' => 'Admin', 'SuperAdmin' => 'Super Admin', 'SupportAgent' => 'Support Agent (tickets only)', 'QAReviewer' => 'QA Reviewer (reads and scores tickets)']" />
             </div>
             <div class="border-t border-border-subtle px-5 py-5">
                 <h3 class="text-sm font-semibold">Set a new password <span class="font-normal text-ink-muted">(optional)</span></h3>
-                <p class="mt-0.5 text-xs text-ink-secondary">Leave blank to keep their current password. 12+ characters with upper, lower and a number.</p>
+                <p class="mt-0.5 text-xs text-ink-secondary">Leave blank to keep their current password. 12+ characters with upper and lower case, a number and a symbol.</p>
                 <div class="mt-3 grid grid-cols-1 gap-4 sm:grid-cols-2">
                     <x-ui.input name="password" type="password" label="New password" autocomplete="new-password" />
                     <x-ui.input name="password_confirmation" type="password" label="Confirm new password" autocomplete="new-password" />

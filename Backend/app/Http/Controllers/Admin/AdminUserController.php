@@ -24,7 +24,7 @@ final class AdminUserController extends Controller
     public function index(): View
     {
         return view('admin.admins.index', [
-            'admins' => User::query()->role([Role::SUPER_ADMIN->value, Role::ADMIN->value])->with('roles')->orderBy('name')->get(),
+            'admins' => User::query()->role([Role::SUPER_ADMIN->value, Role::ADMIN->value, Role::SUPPORT_AGENT->value, Role::QA_REVIEWER->value])->with('roles')->orderBy('name')->get(),
         ]);
     }
 
@@ -33,8 +33,8 @@ final class AdminUserController extends Controller
         $data = $request->validate([
             'name' => ['required', 'string', 'max:120'],
             'email' => ['required', 'email', 'max:255', 'unique:users,email'],
-            'role' => ['required', Rule::in([Role::ADMIN->value, Role::SUPER_ADMIN->value])],
-            'password' => ['required', Password::min(12)->letters()->mixedCase()->numbers()],
+            'role' => ['required', Rule::in([Role::ADMIN->value, Role::SUPER_ADMIN->value, Role::SUPPORT_AGENT->value, Role::QA_REVIEWER->value])],
+            'password' => ['required', Password::min(12)->letters()->mixedCase()->numbers()->symbols()],
         ]);
         $admin = User::query()->create(['name' => $data['name'], 'email' => mb_strtolower($data['email']), 'password' => $data['password'], 'is_active' => true]);
         $admin->forceFill(['email_verified_at' => now()])->save();
@@ -47,12 +47,20 @@ final class AdminUserController extends Controller
 
     public function edit(Request $request, User $admin): View|RedirectResponse
     {
-        abort_unless($admin->isPlatformAdmin(), 404);
+        abort_unless($admin->isPlatformStaff(), 404);
         if ($request->user()?->getKey() === $admin->id) {
             return redirect()->route('admin.profile.show')->with('info', 'Edit your own details on My profile.');
         }
 
-        return view('admin.admins.edit', ['admin' => $admin, 'role' => $admin->isSuperAdmin() ? Role::SUPER_ADMIN->value : Role::ADMIN->value]);
+        $role = Role::ADMIN->value;
+        foreach ([Role::SUPER_ADMIN, Role::ADMIN, Role::SUPPORT_AGENT, Role::QA_REVIEWER] as $candidate) {
+            if ($admin->hasRole($candidate->value)) {
+                $role = $candidate->value;
+                break;
+            }
+        }
+
+        return view('admin.admins.edit', ['admin' => $admin, 'role' => $role]);
     }
 
     /**
@@ -61,7 +69,7 @@ final class AdminUserController extends Controller
      */
     public function update(Request $request, User $admin): RedirectResponse
     {
-        abort_unless($admin->isPlatformAdmin(), 404);
+        abort_unless($admin->isPlatformStaff(), 404);
         $actor = $request->user();
         abort_unless($actor instanceof User, 401);
         if ($actor->id === $admin->id) {
@@ -72,8 +80,8 @@ final class AdminUserController extends Controller
             'name' => ['required', 'string', 'max:120'],
             'email' => ['required', 'string', 'email:rfc', 'max:255', Rule::unique('users', 'email')->ignore($admin->id)],
             'phone' => ['nullable', 'string', 'max:32'],
-            'role' => ['required', Rule::in([Role::ADMIN->value, Role::SUPER_ADMIN->value])],
-            'password' => ['nullable', 'string', 'confirmed', Password::min(12)->letters()->mixedCase()->numbers()],
+            'role' => ['required', Rule::in([Role::ADMIN->value, Role::SUPER_ADMIN->value, Role::SUPPORT_AGENT->value, Role::QA_REVIEWER->value])],
+            'password' => ['nullable', 'string', 'confirmed', Password::min(12)->letters()->mixedCase()->numbers()->symbols()],
             'your_password' => ['required', 'string', 'current_password:web'],
         ], [
             'your_password.required' => 'Confirm with your own password.',
@@ -94,13 +102,13 @@ final class AdminUserController extends Controller
         $changed = array_keys($admin->getDirty());
         $passwordReset = isset($data['password']) && $data['password'] !== '';
 
-        DB::transaction(function () use ($admin, $data, $wasSuper, $passwordReset, &$changed): void {
+        DB::transaction(function () use ($admin, $data, $passwordReset, &$changed): void {
             if ($passwordReset) {
                 $admin->forceFill(['password' => (string) $data['password'], 'remember_token' => Str::random(60)]);
                 $changed[] = 'password';
             }
             $admin->save();
-            if ($wasSuper !== ($data['role'] === Role::SUPER_ADMIN->value)) {
+            if (! $admin->hasRole($data['role']) || $admin->roles->count() !== 1) {
                 $admin->syncRoles([$data['role']]);
                 $changed[] = 'role';
             }
@@ -122,7 +130,7 @@ final class AdminUserController extends Controller
     public function toggle(Request $request, User $admin): RedirectResponse
     {
         $actor = $request->user();
-        abort_unless($admin->isPlatformAdmin(), 404);
+        abort_unless($admin->isPlatformStaff(), 404);
         if ($actor instanceof User && $actor->id === $admin->id) {
             return back()->with('error', 'You cannot deactivate yourself.');
         }

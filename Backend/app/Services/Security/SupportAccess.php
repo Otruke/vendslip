@@ -11,6 +11,8 @@ use App\Models\Merchant;
 use App\Models\SupportAccessGrant;
 use App\Models\User;
 use App\Notifications\SupportAccessCodeNotification;
+use App\Services\Notifications\AlertCatalog;
+use App\Services\Notifications\MerchantAlerts;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
@@ -196,6 +198,13 @@ final class SupportAccess
             'merchant_id' => $grant->merchant_id,
             'expires_at' => $grant->expires_at?->getTimestamp(),
         ]);
+        app(MerchantAlerts::class)->send(
+            $grant->merchant,
+            AlertCatalog::SUPPORT_SESSION,
+            'VendSlip support is in your dashboard',
+            "{$grant->admin->name} from VendSlip support opened your dashboard with the code you shared, until ".$grant->expires_at?->timezone(config('vendslip.timezone'))->format('H:i').'. Everything they do is in your Activity log.',
+            '/dashboard/activity',
+        );
         $this->audit->log('support.session_started', $grant->admin, $grant->merchant, [
             'target_user_id' => $owner->id, 'grant_id' => $grant->id, 'expires_at' => $grant->expires_at?->toIso8601String(),
         ], AuditSeverity::CRITICAL);

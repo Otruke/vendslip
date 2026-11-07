@@ -12,7 +12,7 @@
             <tr>
                 <td>{{ $item['description'] }}</td>
                 <td class="num">{{ number_format($item['quantity']) }}</td>
-                <td class="num">{!! $item['unit'] !!}</td>
+                <td class="num">@if ($item['was'] ?? null)<span style="text-decoration:line-through; color:#8A99A3; font-size:85%;">{!! $item['was'] !!}</span><br>@endif{!! $item['unit'] !!}</td>
                 <td class="num" style="font-weight:700;">{!! $item['total'] !!}</td>
             </tr>
         @endforeach

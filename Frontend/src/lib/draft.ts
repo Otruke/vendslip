@@ -6,7 +6,7 @@ import { calculateTotals, type Totals } from './totals'
 /** Mirror of Backend/app/Services/Slash/DraftPayload.php */
 export const PAID_FULL = 'FULL' as const
 
-export type DraftItem = { description: string; quantity: number; unit_price_minor: number | null; sku_id?: string | null }
+export type DraftItem = { description: string; quantity: number; unit_price_minor: number | null; list_price_minor?: number | null; sku_id?: string | null }
 
 export type DraftPayload = {
   type: 'RECEIPT' | 'INVOICE' | null
@@ -25,14 +25,31 @@ export type DraftPayload = {
   due_date: string | null
   note: string | null
   template: string | null
+  /** This slip's currency (/currency = USD); null uses the business's default. */
+  currency: string | null
 }
 
 export function emptyDraft(): DraftPayload {
   return {
     type: null, name: null, phone: null, email: null, address: null, items: [], amount_minor: null,
     discount_minor: null, discount_bps: null, shipping_minor: null, paid: null, vat_rate_bps: null,
-    vat_inclusive: null, due_date: null, note: null, template: null,
+    vat_inclusive: null, due_date: null, note: null, template: null, currency: null,
   }
+}
+
+const CURRENCY_WORDS: Record<string, string> = {
+  naira: 'NGN', '₦': 'NGN', dollar: 'USD', dollars: 'USD', $: 'USD', pound: 'GBP', pounds: 'GBP', '£': 'GBP',
+  euro: 'EUR', euros: 'EUR', '€': 'EUR', cedi: 'GHS', cedis: 'GHS', rand: 'ZAR',
+}
+
+/** ISO 4217 check via Intl (the server re-checks against its own list). */
+function isCurrencyCode(code: string): boolean {
+  try {
+    const supported = (Intl as unknown as { supportedValuesOf?: (k: string) => string[] }).supportedValuesOf?.('currency')
+    if (supported) return supported.includes(code)
+    new Intl.NumberFormat('en', { style: 'currency', currency: code })
+    return true
+  } catch { return false }
 }
 
 function isoDate(d: Date): string {
@@ -96,6 +113,13 @@ function applyField(draft: DraftPayload, key: string, value: string, today: Date
     case 'address': draft.address = value.slice(0, 500); return null
     case 'note': draft.note = value.slice(0, 1000); return null
     case 'template': draft.template = lower.slice(0, 100); return null
+    case 'currency': {
+      if (['default', 'reset', 'off', 'none'].includes(lower)) { draft.currency = null; return null }
+      const code = CURRENCY_WORDS[lower] ?? lower.toUpperCase()
+      if (!/^[A-Z]{3}$/.test(code) || !isCurrencyCode(code)) return `Couldn't read /currency "${value}". Use a 3-letter code like NGN, USD or GHS.`
+      draft.currency = code
+      return null
+    }
     case 'phone': {
       const phone = value.replace(/[^\d+]/g, '')
       const digits = phone.replace(/^\+/, '').length
@@ -157,7 +181,7 @@ export function applyParse(base: DraftPayload, parsed: ParseResult, today = new 
     const error = applyField(draft, key, value, today)
     if (error) errors.push(error)
   }
-  for (const item of parsed.items) draft.items.push({ description: item.description, quantity: item.quantity, unit_price_minor: item.unit_price_minor })
+  for (const item of parsed.items) draft.items.push({ description: item.description, quantity: item.quantity, unit_price_minor: item.unit_price_minor, list_price_minor: item.list_price_minor })
   for (const unknown of parsed.unknownKeys) errors.push(`/${unknown} isn't a VendSlip field.`)
   return { draft, errors }
 }
@@ -172,10 +196,10 @@ export function missingFields(draft: DraftPayload): string[] {
   return missing
 }
 
-export function draftLines(draft: DraftPayload): { description: string; quantity: number; unit_price_minor: number; sku_id: string | null }[] {
-  const lines = draft.items.map((i) => ({ description: i.description, quantity: i.quantity, unit_price_minor: i.unit_price_minor ?? 0, sku_id: i.sku_id ?? null }))
+export function draftLines(draft: DraftPayload): { description: string; quantity: number; unit_price_minor: number; list_price_minor: number | null; sku_id: string | null }[] {
+  const lines = draft.items.map((i) => ({ description: i.description, quantity: i.quantity, unit_price_minor: i.unit_price_minor ?? 0, list_price_minor: i.list_price_minor ?? null, sku_id: i.sku_id ?? null }))
   if (lines.length === 0 && draft.amount_minor !== null) {
-    lines.push({ description: 'Goods & services', quantity: 1, unit_price_minor: draft.amount_minor, sku_id: null })
+    lines.push({ description: 'Goods & services', quantity: 1, unit_price_minor: draft.amount_minor, list_price_minor: null, sku_id: null })
   }
   return lines
 }
@@ -217,6 +241,7 @@ export function draftToRequest(draft: DraftPayload, templateId: number | null, u
     notes: draft.note,
     template_id: templateId,
     use_paid_credit: useCredit,
+    currency: draft.currency,
   }
 }
 
@@ -237,7 +262,8 @@ export function draftToSlash(draft: DraftPayload): string {
   for (const item of draft.items) {
     if (!item.description.trim()) continue
     const price = item.unit_price_minor !== null ? ` @ ${majorString(item.unit_price_minor)}` : ''
-    lines.push(`/item = ${item.quantity}x ${clean(item.description)}${price}`)
+    const was = item.unit_price_minor !== null && item.list_price_minor != null && item.list_price_minor > item.unit_price_minor ? ` was ${majorString(item.list_price_minor)}` : ''
+    lines.push(`/item = ${item.quantity}x ${clean(item.description)}${price}${was}`)
   }
   if (draft.items.length === 0 && draft.amount_minor !== null) lines.push(`/amount = ${majorString(draft.amount_minor)}`)
   if (draft.discount_bps !== null) lines.push(`/discount = ${(draft.discount_bps / 100).toString()}%`)
@@ -252,5 +278,6 @@ export function draftToSlash(draft: DraftPayload): string {
   else if (draft.paid !== null) lines.push(`/paid = ${majorString(draft.paid)}`)
   if (draft.due_date) lines.push(`/due = ${draft.due_date}`)
   if (draft.note) lines.push(`/note = ${clean(draft.note)}`)
+  if (draft.currency) lines.push(`/currency = ${draft.currency}`)
   return lines.join('\n')
 }

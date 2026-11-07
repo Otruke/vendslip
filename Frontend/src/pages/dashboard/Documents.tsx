@@ -8,7 +8,7 @@ import {
 import { apiPost, apiPut, useDocument, useDocuments, useInvalidate, useRefreshSession, useRevisions, type DocumentFilters } from '@/hooks/queries'
 import { errorMessage } from '@/lib/api'
 import { formatDate, formatDateTime } from '@/lib/format'
-import { formatMoney, minorToInput, parseToMinor } from '@/lib/money'
+import { currencySymbol, formatMoney, minorToInput, parseToMinor } from '@/lib/money'
 import { useCan, useEntitlement } from '@/stores/auth'
 import { toast } from '@/stores/ui'
 import type { Doc, DocDetail, Revision } from '@/types/api'
@@ -104,6 +104,17 @@ export default function Documents() {
           { key: 'c', header: 'Customer', cell: (d) => <span className="block max-w-[220px] truncate">{d.customer_name}</span> },
           { key: 'd', header: 'Issued', cell: (d) => <span className="text-ink-secondary">{formatDate(d.issued_at)}</span>, hideOnMobile: true },
           { key: 'ch', header: 'Channel', cell: (d) => <StatusBadge status={d.channel} size="sm" />, hideOnMobile: true },
+          { key: 'st', header: 'Subtotal', align: 'right', cell: (d) => <Money amountMinor={d.subtotal_minor} currency={d.currency} size="sm" className="text-ink-secondary" />, hideOnMobile: true },
+          {
+            key: 'dc', header: 'Discount', align: 'right', hideOnMobile: true,
+            // Slip discount plus discounts given on single items (list price − selling price).
+            cell: (d) => {
+              const total = d.discount_minor + (d.line_discount_minor ?? 0)
+              if (total <= 0) return <span className="text-ink-muted">—</span>
+              const parts = [d.line_discount_minor > 0 && `Items ${formatMoney(d.line_discount_minor, d.currency)}`, d.discount_minor > 0 && `Slip ${formatMoney(d.discount_minor, d.currency)}`].filter(Boolean).join(' · ')
+              return <span title={parts}><Money amountMinor={total} currency={d.currency} size="sm" className="text-tone-settled" /></span>
+            },
+          },
           { key: 't', header: 'Total', align: 'right', cell: (d) => <Money amountMinor={d.total_minor} currency={d.currency} size="sm" className="font-semibold" /> },
           { key: 'b', header: 'Balance', align: 'right', cell: (d) => d.balance_due_minor > 0 ? <Money amountMinor={d.balance_due_minor} currency={d.currency} size="sm" className="text-tone-open" /> : <span className="text-ink-muted">—</span>, hideOnMobile: true },
           { key: 's', header: 'Status', cell: (d) => <StatusBadge status={d.status} size="sm" /> },
@@ -142,13 +153,14 @@ function DocumentDrawer({ id, onClose }: { id: string | null; onClose: () => voi
             <ul className="divide-y divide-border-subtle text-sm">
               {doc.items?.map((it) => (
                 <li key={it.id} className="flex items-center justify-between gap-3 px-4 py-3">
-                  <div className="min-w-0"><p className="truncate font-medium">{it.description}</p><p className="tabular text-xs text-ink-muted">{it.quantity} × {formatMoney(it.unit_price_minor, doc.currency)}</p></div>
+                  <div className="min-w-0"><p className="truncate font-medium">{it.description}</p><p className="tabular text-xs text-ink-muted">{it.quantity} × {formatMoney(it.unit_price_minor, doc.currency)}{it.list_price_minor != null && it.list_price_minor > it.unit_price_minor && <> <s>{formatMoney(it.list_price_minor, doc.currency)}</s> <span className="text-tone-settled">saved {formatMoney((it.list_price_minor - it.unit_price_minor) * it.quantity, doc.currency)}</span></>}</p></div>
                   <Money amountMinor={it.line_total_minor} currency={doc.currency} size="sm" className="font-semibold" />
                 </li>
               ))}
             </ul>
             <dl className="tabular space-y-1.5 border-t border-border-subtle px-4 py-3 text-sm">
               <div className="flex justify-between text-ink-secondary"><dt>Subtotal</dt><dd>{formatMoney(doc.subtotal_minor, doc.currency)}</dd></div>
+              {doc.line_discount_minor > 0 && <div className="flex justify-between text-tone-settled"><dt>Item discounts (included)</dt><dd>{formatMoney(doc.line_discount_minor, doc.currency)}</dd></div>}
               {doc.discount_minor > 0 && <div className="flex justify-between text-ink-secondary"><dt>Discount</dt><dd>-{formatMoney(doc.discount_minor, doc.currency)}</dd></div>}
               {doc.tax_minor > 0 && <div className="flex justify-between text-ink-secondary"><dt>VAT {(doc.vat_rate_bps / 100).toString()}%{doc.vat_inclusive ? ' (incl.)' : ''}</dt><dd>{formatMoney(doc.tax_minor, doc.currency)}</dd></div>}
               {doc.shipping_minor > 0 && <div className="flex justify-between text-ink-secondary"><dt>Shipping</dt><dd>{formatMoney(doc.shipping_minor, doc.currency)}</dd></div>}
@@ -251,8 +263,9 @@ function EditModal({ detail, isOpen, onClose }: { detail: DocDetail; isOpen: boo
   const [name, setName] = useState(doc.customer_name)
   const [phone, setPhone] = useState(doc.customer_phone ?? '')
   const [address, setAddress] = useState(doc.customer_address ?? '')
-  const [items, setItems] = useState(doc.items?.map((i) => ({ description: i.description, quantity: i.quantity, price: minorToInput(i.unit_price_minor), sku_id: i.sku_id })) ?? [])
+  const [items, setItems] = useState(doc.items?.map((i) => ({ description: i.description, quantity: i.quantity, price: minorToInput(i.unit_price_minor), list: minorToInput(i.list_price_minor), sku_id: i.sku_id })) ?? [])
   const [discount, setDiscount] = useState(minorToInput(doc.discount_minor))
+  const sym = currencySymbol(doc.currency).trim()
   const [shipping, setShipping] = useState(minorToInput(doc.shipping_minor))
   const [notes, setNotes] = useState(doc.notes ?? '')
   const [reason, setReason] = useState('')
@@ -267,7 +280,7 @@ function EditModal({ detail, isOpen, onClose }: { detail: DocDetail; isOpen: boo
         reason: reason || null,
         draft: {
           type: doc.doc_type, customer_name: name, customer_phone: phone || null, customer_email: doc.customer_email, customer_address: address || null,
-          items: items.map((i) => ({ description: i.description, quantity: i.quantity, unit_price_minor: parseToMinor(i.price) ?? 0, sku_id: i.sku_id })),
+          items: items.map((i) => ({ description: i.description, quantity: i.quantity, unit_price_minor: parseToMinor(i.price) ?? 0, list_price_minor: i.list.trim() === '' ? null : parseToMinor(i.list), sku_id: i.sku_id })),
           discount_minor: parseToMinor(discount) ?? 0, shipping_minor: parseToMinor(shipping) ?? 0,
           vat_rate_bps: doc.vat_rate_bps, vat_inclusive: doc.vat_inclusive, due_date: doc.due_date, notes: notes || null, template_id: doc.template_id,
         },
@@ -294,16 +307,17 @@ function EditModal({ detail, isOpen, onClose }: { detail: DocDetail; isOpen: boo
         </div>
         <div className="space-y-2">
           {items.map((it, i) => (
-            <div key={i} className="grid grid-cols-[1fr_70px_120px] gap-2">
-              <Input aria-label="Description" value={it.description} onChange={(e) => setItems((arr) => arr.map((x, j) => j === i ? { ...x, description: e.target.value } : x))} />
+            <div key={i} className="grid grid-cols-[70px_1fr_1fr] gap-2 sm:grid-cols-[1fr_70px_120px_120px]">
+              <Input wrapperClassName="col-span-3 sm:col-span-1" aria-label="Description" value={it.description} onChange={(e) => setItems((arr) => arr.map((x, j) => j === i ? { ...x, description: e.target.value } : x))} />
               <Input aria-label="Quantity" type="number" min={1} value={it.quantity} onChange={(e) => setItems((arr) => arr.map((x, j) => j === i ? { ...x, quantity: Math.max(1, Number(e.target.value) || 1) } : x))} />
-              <Input aria-label="Unit price" prefixIcon={<span>₦</span>} value={it.price} onChange={(e) => setItems((arr) => arr.map((x, j) => j === i ? { ...x, price: e.target.value } : x))} />
+              <Input aria-label="Selling price" placeholder="Selling price" prefixIcon={<span>{sym}</span>} value={it.price} onChange={(e) => setItems((arr) => arr.map((x, j) => j === i ? { ...x, price: e.target.value } : x))} />
+              <Input aria-label="Normal price (optional)" placeholder="Normal price" prefixIcon={<span>{sym}</span>} value={it.list} onChange={(e) => setItems((arr) => arr.map((x, j) => j === i ? { ...x, list: e.target.value } : x))} />
             </div>
           ))}
         </div>
         <div className="grid gap-3 sm:grid-cols-2">
-          <Input label="Discount" prefixIcon={<span>₦</span>} value={discount} onChange={(e) => setDiscount(e.target.value)} />
-          <Input label="Shipping" prefixIcon={<span>₦</span>} value={shipping} onChange={(e) => setShipping(e.target.value)} />
+          <Input label="Discount" prefixIcon={<span>{sym}</span>} value={discount} onChange={(e) => setDiscount(e.target.value)} />
+          <Input label="Shipping" prefixIcon={<span>{sym}</span>} value={shipping} onChange={(e) => setShipping(e.target.value)} />
         </div>
         <Textarea label="Notes" rows={2} value={notes} onChange={(e) => setNotes(e.target.value)} />
         <Textarea label={detail.meta.edit_reason_required ? 'Reason for this edit (required)' : 'Reason (optional)'} rows={2} value={reason} onChange={(e) => setReason(e.target.value)} placeholder="e.g. Customer changed shoe size" helperText="Stored with your name, IP and the before/after snapshot." />
@@ -357,7 +371,7 @@ function CreditModal({ doc, credited, isOpen, onClose }: { doc: Doc; credited: n
       footer={<><Button variant="ghost" onClick={onClose}>Cancel</Button><Button isLoading={busy} disabled={!minor || minor > max || reason.trim().length < 5} onClick={submit}>Issue credit note</Button></>}>
       <div className="space-y-4">
         {error && <Alert tone="danger">{error}</Alert>}
-        <Input label="Amount" prefixIcon={<span>₦</span>} value={amount} onChange={(e) => setAmount(e.target.value)} error={minor !== null && minor > max ? 'More than the creditable amount' : undefined} />
+        <Input label="Amount" prefixIcon={<span>{currencySymbol(doc.currency).trim()}</span>} value={amount} onChange={(e) => setAmount(e.target.value)} error={minor !== null && minor > max ? 'More than the creditable amount' : undefined} />
         <Textarea label="Reason" rows={2} value={reason} onChange={(e) => setReason(e.target.value)} placeholder="e.g. Returned one pair" />
       </div>
     </Modal>
@@ -386,7 +400,7 @@ function PaymentModal({ doc, isOpen, onClose }: { doc: Doc; isOpen: boolean; onC
       footer={<><Button variant="ghost" onClick={onClose}>Cancel</Button><Button variant="success" isLoading={busy} disabled={!minor || minor > doc.balance_due_minor} onClick={submit}>Record payment</Button></>}>
       <div className="space-y-4">
         {error && <Alert tone="danger">{error}</Alert>}
-        <Input label="Amount" prefixIcon={<span>₦</span>} value={amount} onChange={(e) => setAmount(e.target.value)} />
+        <Input label="Amount" prefixIcon={<span>{currencySymbol(doc.currency).trim()}</span>} value={amount} onChange={(e) => setAmount(e.target.value)} />
         <Select label="Method" value={method} onChange={(e) => setMethod(e.target.value)} options={[['BANK_TRANSFER', 'Bank transfer'], ['CASH', 'Cash'], ['POS', 'POS'], ['CARD', 'Card'], ['CRYPTO', 'Crypto'], ['OTHER', 'Other']].map(([value, label]) => ({ value: value ?? '', label: label ?? '' }))} />
         <Input label="Reference (optional)" value={reference} onChange={(e) => setReference(e.target.value)} placeholder="e.g. Moniepoint TRF-88421" />
       </div>

@@ -1,5 +1,6 @@
 <table class="totals">
     <tr><td class="muted">Subtotal</td><td class="num">{!! $d['subtotal'] !!}</td></tr>
+    @if ($d['line_discount'] ?? null)<tr><td class="muted" style="font-size:90%;">You saved on items (included)</td><td class="num" style="font-size:90%; color:#1D6B52;">{!! $d['line_discount'] !!}</td></tr>@endif
     @if ($d['discount'])<tr><td class="muted">Discount</td><td class="num">-{!! $d['discount'] !!}</td></tr>@endif
     @if ($d['tax'])<tr><td class="muted">{{ $d['tax_label'] }}</td><td class="num">{!! $d['tax'] !!}</td></tr>@endif
     @if ($d['shipping'])<tr><td class="muted">Shipping</td><td class="num">{!! $d['shipping'] !!}</td></tr>@endif

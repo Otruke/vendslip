@@ -32,6 +32,7 @@ class DocumentResource extends JsonResource
             'customer_address' => $doc->customer_address,
             'subtotal_minor' => $doc->subtotal_minor,
             'discount_minor' => $doc->discount_minor,
+            'line_discount_minor' => $doc->line_discount_minor,
             'vat_rate_bps' => $doc->vat_rate_bps,
             'vat_inclusive' => $doc->vat_inclusive,
             'tax_minor' => $doc->tax_minor,
@@ -60,6 +61,7 @@ class DocumentResource extends JsonResource
                 'description' => $item->description,
                 'quantity' => $item->quantity,
                 'unit_price_minor' => $item->unit_price_minor,
+                'list_price_minor' => $item->list_price_minor,
                 'line_total_minor' => $item->line_total_minor,
             ])->values()),
             'payments' => $this->whenLoaded('payments', fn () => $doc->payments->map(static fn ($p): array => [

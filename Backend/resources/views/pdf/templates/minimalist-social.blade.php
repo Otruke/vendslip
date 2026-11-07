@@ -57,7 +57,7 @@
                 <tr>
                     <td>
                         <div style="font-weight:700;">{{ $item['description'] }}</div>
-                        <div class="muted" style="font-size:9px;">{{ number_format($item['quantity']) }} &times; {!! $item['unit'] !!}</div>
+                        <div class="muted" style="font-size:9px;">{{ number_format($item['quantity']) }} &times; {!! $item['unit'] !!}@if ($item['was'] ?? null) <span style="text-decoration:line-through;">{!! $item['was'] !!}</span>@endif</div>
                     </td>
                     <td class="num" style="font-weight:700;">{!! $item['total'] !!}</td>
                 </tr>
@@ -67,7 +67,7 @@
 
     <div style="margin-top:10px;">@include('pdf.partials.totals')</div>
 
-    @if ($d['bank'] || $d['pay_url'])<div style="margin-top:12px;">@include('pdf.partials.bank')</div>@endif
+    @if ($d['bank'] || ($d['payouts'] ?? []) !== [] || $d['pay_url'])<div style="margin-top:12px;">@include('pdf.partials.bank')</div>@endif
     @if ($d['document']->notes)<div style="margin-top:10px;"><span class="label">Note</span> {{ $d['document']->notes }}</div>@endif
 
     <div class="rule"></div>

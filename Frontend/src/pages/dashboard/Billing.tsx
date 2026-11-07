@@ -18,7 +18,7 @@ export default function Billing() {
   const usage = session?.usage
   const canBuy = useCan('billing.manage')
   const { data: billing } = useBilling()
-  const { data: plans } = usePlans()
+  const { data: plans } = usePlans(merchant?.currency)
   const [params, setParams] = useSearchParams()
   const reference = params.get('ref')
   const { data: tx } = useTransaction(reference)

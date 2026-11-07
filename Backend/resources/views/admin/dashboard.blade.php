@@ -2,9 +2,9 @@
     <x-ui.page-header eyebrow="Super-Admin" title="Command Center" subtitle="Revenue, merchants and platform health at a glance." />
 
     <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <x-ui.stat-card variant="obsidian" title="Platform MRR" :value="\App\Support\Money::format($mrr)" :hint="'ARR '.\App\Support\Money::format($arr)" icon="trending-up" />
+        <x-ui.stat-card variant="obsidian" title="Platform MRR" :value="\App\Support\Money::format($mrr, $reportingCurrency)" :hint="'ARR '.\App\Support\Money::format($arr, $reportingCurrency)" icon="trending-up" />
         <x-ui.stat-card variant="deep" title="Merchants" :value="number_format($merchantsTotal)" :trend="'+'.$merchantsNew30" hint="joined in 30 days" icon="store" />
-        <x-ui.stat-card variant="teal" title="Credit packs · this month" :value="\App\Support\Money::format($packFiat + $packCrypto)" :hint="'Fiat '.\App\Support\Money::format($packFiat).' · Crypto '.\App\Support\Money::format($packCrypto)" icon="coins" />
+        <x-ui.stat-card variant="teal" title="Credit packs · this month" :value="\App\Support\Money::format($packFiat + $packCrypto, $reportingCurrency)" :hint="'Fiat '.\App\Support\Money::format($packFiat, $reportingCurrency).' · Crypto '.\App\Support\Money::format($packCrypto, $reportingCurrency)" icon="coins" />
         <x-ui.stat-card variant="mist" title="Slips · 30 days" :value="number_format($slips30)" :hint="'Queue: '.$queue['pending'].' pending · '.$queue['failed'].' failed'" icon="file-text" />
     </div>
 

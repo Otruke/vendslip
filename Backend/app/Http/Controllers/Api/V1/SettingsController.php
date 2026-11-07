@@ -9,10 +9,13 @@ use App\Http\Resources\MerchantResource;
 use App\Services\Billing\PlanEntitlements;
 use App\Services\Security\AuditLogger;
 use App\Services\Security\SessionPayload;
+use App\Support\Countries;
+use App\Support\Currencies;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 
 final class SettingsController extends ApiController
 {
@@ -31,17 +34,29 @@ final class SettingsController extends ApiController
             'email' => ['nullable', 'email', 'max:255'],
             'phone' => ['nullable', 'string', 'max:32'],
             'address' => ['nullable', 'string', 'max:500'],
+            'country_code' => ['nullable', 'string', 'size:2', Rule::in(Countries::codes())],
+            'state' => ['nullable', 'string', 'max:80'],
+            'city' => ['nullable', 'string', 'max:80'],
+            // Anonymous "a business in Lagos just…" notes on the VendSlip website.
+            'show_in_activity_feed' => ['sometimes', 'boolean'],
+            // RC = registered company, BN = registered business name, UNREGISTERED = trading informally.
+            'registration_type' => ['nullable', Rule::in(['RC', 'BN', 'UNREGISTERED'])],
             'rc_number' => ['nullable', 'string', 'max:64'],
             'tax_id' => ['nullable', 'string', 'max:64'],
-            'currency' => ['required', 'string', 'size:3', 'in:NGN,USD,GBP,EUR,GHS,KES,ZAR'],
+            'currency' => ['required', 'string', 'size:3', Rule::in(Currencies::codes())],
             'vat_rate_bps' => ['required', 'integer', 'between:0,10000'],
             'vat_inclusive' => ['required', 'boolean'],
-            'bank_name' => ['nullable', 'string', 'max:120'],
-            'bank_account_number' => ['nullable', 'string', 'max:32', 'regex:/^[0-9 \-]+$/'],
-            'bank_account_name' => ['nullable', 'string', 'max:160'],
+            // Bank details moved to payout accounts (password-confirmed, alerts the owners).
             'invoice_due_days' => ['required', 'integer', 'between:0,365'],
             'receipt_footer' => ['nullable', 'string', 'max:280'],
         ]);
+        if (($data['registration_type'] ?? null) === 'UNREGISTERED') {
+            $data['rc_number'] = null; // no registration number for an unregistered business
+        }
+        if (isset($data['country_code'])) {
+            $data['country_code'] = strtoupper((string) $data['country_code']);
+        }
+        $data['currency'] = strtoupper((string) $data['currency']);
         $merchant->update($data);
         $this->audit->log('settings.business_updated', $this->user($request), $merchant, ['fields' => array_keys($merchant->getChanges())]);
 

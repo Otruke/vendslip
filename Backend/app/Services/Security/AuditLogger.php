@@ -13,6 +13,8 @@ use Throwable;
 
 final class AuditLogger
 {
+    public const string LOGGED = 'vendslip.audit_logged';
+
     public function __construct(private readonly ?Request $request = null) {}
 
     /** @param array<string, mixed> $context */
@@ -23,6 +25,8 @@ final class AuditLogger
         array $context = [],
         AuditSeverity $severity = AuditSeverity::INFO,
     ): void {
+        // Tells the AuditTrail middleware this request already has a specific entry.
+        $this->request?->attributes->set(self::LOGGED, true);
         try {
             SecurityAuditLog::query()->create([
                 'actor_user_id' => $actor?->id,

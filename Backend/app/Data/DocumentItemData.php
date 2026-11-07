@@ -22,5 +22,8 @@ final class DocumentItemData extends Data
         public int $unit_price_minor,
         #[Uuid]
         public ?string $sku_id = null,
+        /** Normal price before a discount on this line (optional; must be above the selling price to count). */
+        #[Min(0), Max(1_000_000_000_000_000)]
+        public ?int $list_price_minor = null,
     ) {}
 }

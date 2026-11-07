@@ -37,6 +37,7 @@ final class SlashCommandParser
         'due' => 'due', 'duedate' => 'due', 'due_date' => 'due',
         'note' => 'note', 'notes' => 'note', 'memo' => 'note',
         'template' => 'template',
+        'currency' => 'currency', 'cur' => 'currency', 'ccy' => 'currency',
     ];
 
     /** alias => canonical command */
@@ -128,6 +129,7 @@ final class SlashCommandParser
      * Supported shapes:
      *   "2x Shoe @ 15000", "2 x Shoe @ 15,000", "Shoe x2 @ 15k", "Shoe @ 15000 x 2",
      *   "3 Shoes @ 2000", "Shoe - 15000", "Shoe 15000", "2x Shoe" (price resolved from inventory later)
+     *   "2x Shoe @ 15000 was 18000" (sold at 15,000, normally 18,000: the line discount is recorded)
      */
     public function parseItem(string $line): ?ParsedItem
     {
@@ -136,20 +138,31 @@ final class SlashCommandParser
             return null;
         }
 
-        $description = $raw;
+        // "… @ 15000 was 18000": the normal (list) price, so the line's discount is traceable.
+        $listPrice = null;
+        $work = $raw;
+        if (preg_match('/^(.*\S)\s*\(?\s*(?:was|list|rrp|normally)\s*[:=]?\s*((?:₦|NGN|N|\$)?\s*\d[\d,]*(?:\.\d+)?\s*[kKmM]?)\s*\)?\s*$/iu', $work, $lm) === 1) {
+            $listPrice = Money::parseToMinor(trim($lm[2]));
+            if ($listPrice === null) {
+                return null;
+            }
+            $work = trim($lm[1]);
+        }
+
+        $description = $work;
         $priceText = null;
         $quantity = null;
 
-        if (str_contains($raw, '@')) {
-            $at = (int) strrpos($raw, '@');
-            $description = trim(substr($raw, 0, $at));
-            $priceText = trim(substr($raw, $at + 1));
+        if (str_contains($work, '@')) {
+            $at = (int) strrpos($work, '@');
+            $description = trim(substr($work, 0, $at));
+            $priceText = trim(substr($work, $at + 1));
             // "Shoe @ 15000 x 2"
             if (preg_match('/^(.+?)\s*[x×*]\s*(\d{1,6})$/iu', $priceText, $pm) === 1) {
                 $priceText = trim($pm[1]);
                 $quantity = (int) $pm[2];
             }
-        } elseif (preg_match('/^(.*?)(?:\s+-\s+|\s+)((?:₦|NGN|N|\$)?\s*\d[\d,]*(?:\.\d+)?\s*[kKmM]?)$/u', $raw, $pm) === 1 && trim($pm[1]) !== '') {
+        } elseif (preg_match('/^(.*?)(?:\s+-\s+|\s+)((?:₦|NGN|N|\$)?\s*\d[\d,]*(?:\.\d+)?\s*[kKmM]?)$/u', $work, $pm) === 1 && trim($pm[1]) !== '') {
             $description = trim($pm[1]);
             $priceText = trim($pm[2]);
         }
@@ -186,6 +199,6 @@ final class SlashCommandParser
             return null;
         }
 
-        return new ParsedItem($description, $quantity, $unitPrice, $raw);
+        return new ParsedItem($description, $quantity, $unitPrice, $raw, $listPrice);
     }
 }

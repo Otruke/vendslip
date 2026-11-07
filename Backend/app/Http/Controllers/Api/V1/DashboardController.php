@@ -30,8 +30,11 @@ final class DashboardController extends ApiController
     public function overview(Request $request): JsonResponse
     {
         $this->authorizePermission($request, Permission::DOCUMENTS_VIEW);
-        $range = (string) ($request->validate(['range' => ['nullable', 'in:7d,30d,90d,12m']])['range'] ?? '30d');
+        $input = $request->validate(['range' => ['nullable', 'in:7d,30d,90d,12m'], 'currency' => ['nullable', 'string', 'size:3']]);
+        $range = (string) ($input['range'] ?? '30d');
         $merchant = $this->merchant($request);
+        // Money is never added across currencies: totals are for one currency at a time.
+        $currency = strtoupper((string) ($input['currency'] ?? $merchant->currency));
         $tz = (string) config('vendslip.timezone');
         $now = CarbonImmutable::now($tz);
         [$start, $bucket] = match ($range) {
@@ -40,16 +43,17 @@ final class DashboardController extends ApiController
             '12m' => [$now->subMonths(11)->startOfMonth(), 'month'],
             default => [$now->subDays(29)->startOfDay(), 'day'],
         };
-        $previousStart = $start->sub($now->diffAsCarbonInterval($start));
+        // The same length of time immediately before the range (for the change %).
+        $previousStart = $start->subSeconds($now->getTimestamp() - $start->getTimestamp());
 
-        $settled = fn (CarbonImmutable $from, CarbonImmutable $to): int => $this->settledRevenue($merchant->id, $from, $to);
+        $settled = fn (CarbonImmutable $from, CarbonImmutable $to): int => $this->settledRevenue($merchant->id, $currency, $from, $to);
         $revenue = $settled($start, $now);
         $previousRevenue = $settled($previousStart, $start);
 
         $receivables = Document::query()->forMerchant($merchant)
             ->where('doc_type', DocumentType::INVOICE->value)
             ->whereIn('status', [DocumentStatus::UNPAID->value, DocumentStatus::PARTIAL->value, DocumentStatus::OVERDUE->value]);
-        $receivablesTotal = (int) (clone $receivables)->sum('balance_due_minor');
+        $receivablesTotal = (int) (clone $receivables)->where('currency', $currency)->sum('balance_due_minor');
         $overdueCount = (clone $receivables)->where('status', DocumentStatus::OVERDUE->value)->count();
 
         $savedCalls = (int) BotDraftSession::query()->forMerchant($merchant)->where('created_at', '>=', $start)->sum('saved_outbound_calls_count');
@@ -58,8 +62,14 @@ final class DashboardController extends ApiController
             ->where('status', '!=', DocumentStatus::VOID->value)
             ->where('issued_at', '>=', $start)->count();
 
+        $currencies = Document::query()->forMerchant($merchant)->where('issued_at', '>=', $previousStart)
+            ->distinct()->orderBy('currency')->pluck('currency')->map(static fn ($c): string => (string) $c)->all();
+
         return response()->json([
             'range' => $range,
+            'currency' => $currency,
+            // Every currency used recently (plus the default), so the page can switch between them.
+            'currencies' => array_values(array_unique([$merchant->currency, ...$currencies])),
             'kpis' => [
                 'settled_revenue_minor' => $revenue,
                 'settled_revenue_change_pct' => $previousRevenue > 0 ? round(($revenue - $previousRevenue) / $previousRevenue * 100, 1) : null,
@@ -71,8 +81,8 @@ final class DashboardController extends ApiController
                 'monthly_quota' => $this->entitlements->monthlyQuota($merchant),
                 'paid_credits' => $merchant->paid_credits_balance,
             ],
-            'series' => $this->series($merchant->id, $start, $now, $bucket, $tz),
-            'channels' => $this->channels($merchant->id, $start),
+            'series' => $this->series($merchant->id, $currency, $start, $now, $bucket, $tz),
+            'channels' => $this->channels($merchant->id, $currency, $start),
             'recent' => DocumentResource::collection(
                 Document::query()->forMerchant($merchant)->orderByDesc('issued_at')->limit(8)->get(),
             )->resolve(),
@@ -80,6 +90,7 @@ final class DashboardController extends ApiController
                 ->where('doc_type', DocumentType::INVOICE->value)
                 ->where('balance_due_minor', '>', 0)
                 ->where('status', '!=', DocumentStatus::VOID->value)
+                ->where('currency', $currency)
                 ->selectRaw('customer_name, customer_phone, customer_id, sum(balance_due_minor) as outstanding_minor, count(*) as invoices')
                 ->groupBy('customer_name', 'customer_phone', 'customer_id')
                 ->orderByDesc('outstanding_minor')->limit(5)->get()
@@ -101,20 +112,20 @@ final class DashboardController extends ApiController
      * Cash actually received: standalone receipts + invoice payments − credit notes. Payment receipts
      * (children of invoices) are excluded because their cash is already counted via document_payments.
      */
-    private function settledRevenue(string $merchantId, CarbonImmutable $from, CarbonImmutable $to): int
+    private function settledRevenue(string $merchantId, string $currency, CarbonImmutable $from, CarbonImmutable $to): int
     {
-        $receipts = (int) DB::table('documents')->where('merchant_id', $merchantId)
+        $receipts = (int) DB::table('documents')->where('merchant_id', $merchantId)->where('currency', $currency)
             ->where('doc_type', DocumentType::RECEIPT->value)->whereNull('parent_document_id')
             ->where('status', '!=', DocumentStatus::VOID->value)
             ->whereBetween('issued_at', [$from, $to])->sum('amount_paid_minor');
 
         $invoicePayments = (int) DB::table('document_payments')
             ->join('documents', 'documents.id', '=', 'document_payments.document_id')
-            ->where('documents.merchant_id', $merchantId)
+            ->where('documents.merchant_id', $merchantId)->where('documents.currency', $currency)
             ->where('documents.status', '!=', DocumentStatus::VOID->value)
             ->whereBetween('document_payments.paid_at', [$from, $to])->sum('document_payments.amount_minor');
 
-        $credits = (int) DB::table('documents')->where('merchant_id', $merchantId)
+        $credits = (int) DB::table('documents')->where('merchant_id', $merchantId)->where('currency', $currency)
             ->where('doc_type', DocumentType::CREDIT_NOTE->value)
             ->where('status', '!=', DocumentStatus::VOID->value)
             ->whereBetween('issued_at', [$from, $to])->sum('total_minor');
@@ -123,20 +134,20 @@ final class DashboardController extends ApiController
     }
 
     /** @return list<array{bucket: string, revenue_minor: int, invoiced_minor: int}> */
-    private function series(string $merchantId, CarbonImmutable $start, CarbonImmutable $now, string $bucket, string $tz): array
+    private function series(string $merchantId, string $currency, CarbonImmutable $start, CarbonImmutable $now, string $bucket, string $tz): array
     {
         // Bucket and timezone are bound as parameters (no SQL string interpolation).
-        $receipts = DB::table('documents')->where('merchant_id', $merchantId)
+        $receipts = DB::table('documents')->where('merchant_id', $merchantId)->where('currency', $currency)
             ->where('doc_type', DocumentType::RECEIPT->value)->whereNull('parent_document_id')
             ->where('status', '!=', DocumentStatus::VOID->value)->where('issued_at', '>=', $start)
             ->selectRaw("date_trunc(?, issued_at AT TIME ZONE 'UTC' AT TIME ZONE ?) as b, sum(amount_paid_minor) as v", [$bucket, $tz])
             ->groupBy('b')->pluck('v', 'b');
         $payments = DB::table('document_payments')->join('documents', 'documents.id', '=', 'document_payments.document_id')
-            ->where('documents.merchant_id', $merchantId)->where('documents.status', '!=', DocumentStatus::VOID->value)
+            ->where('documents.merchant_id', $merchantId)->where('documents.currency', $currency)->where('documents.status', '!=', DocumentStatus::VOID->value)
             ->where('document_payments.paid_at', '>=', $start)
             ->selectRaw("date_trunc(?, document_payments.paid_at AT TIME ZONE 'UTC' AT TIME ZONE ?) as b, sum(document_payments.amount_minor) as v", [$bucket, $tz])
             ->groupBy('b')->pluck('v', 'b');
-        $invoiced = DB::table('documents')->where('merchant_id', $merchantId)
+        $invoiced = DB::table('documents')->where('merchant_id', $merchantId)->where('currency', $currency)
             ->where('doc_type', DocumentType::INVOICE->value)->where('status', '!=', DocumentStatus::VOID->value)
             ->where('issued_at', '>=', $start)
             ->selectRaw("date_trunc(?, issued_at AT TIME ZONE 'UTC' AT TIME ZONE ?) as b, sum(total_minor) as v", [$bucket, $tz])
@@ -178,9 +189,9 @@ final class DashboardController extends ApiController
     }
 
     /** @return list<array{channel: string, label: string, count: int, total_minor: int}> */
-    private function channels(string $merchantId, CarbonImmutable $start): array
+    private function channels(string $merchantId, string $currency, CarbonImmutable $start): array
     {
-        $rows = DB::table('documents')->where('merchant_id', $merchantId)->whereNull('parent_document_id')
+        $rows = DB::table('documents')->where('merchant_id', $merchantId)->where('currency', $currency)->whereNull('parent_document_id')
             ->where('doc_type', '!=', DocumentType::CREDIT_NOTE->value)
             ->where('status', '!=', DocumentStatus::VOID->value)->where('issued_at', '>=', $start)
             ->selectRaw('channel, count(*) as c, sum(total_minor) as t')->groupBy('channel')->get()->keyBy('channel');

@@ -13,16 +13,24 @@
 <x-ui.toasts />
 @php
     $user = auth()->user();
+    $needs2fa = $user && ! $user->hasTwoFactorEnabled() && ! request()->routeIs('admin.profile.*');
+    // [route, label, icon, who sees it: staff = everyone incl. support agents & QA, admin, super]
     $nav = [
-        ['admin.dashboard', 'Command Center', 'bar-chart', false],
-        ['admin.merchants.index', 'Merchants', 'store', false],
-        ['admin.payments.index', 'Payments', 'credit-card', false],
-        ['admin.security.index', 'Security Logs', 'shield', false],
-        ['admin.templates.index', 'Template Studio', 'layout', true],
-        ['admin.monetization.edit', 'Pricing Engine', 'coins', true],
-        ['admin.gateways.edit', 'Gateways & Bots', 'key', true],
-        ['admin.admins.index', 'Platform Admins', 'users', true],
+        ['admin.dashboard', 'Command Center', 'bar-chart', 'admin'],
+        ['admin.support.index', 'Support', 'message', 'staff'],
+        ['admin.merchants.index', 'Merchants', 'store', 'admin'],
+        ['admin.payments.index', 'Payments', 'credit-card', 'admin'],
+        ['admin.security.index', 'Security Logs', 'shield', 'admin'],
+        ['admin.templates.index', 'Template Studio', 'layout', 'super'],
+        ['admin.monetization.edit', 'Pricing Engine', 'coins', 'super'],
+        ['admin.gateways.edit', 'Gateways & Bots', 'key', 'super'],
+        ['admin.admins.index', 'Platform Staff', 'users', 'super'],
     ];
+    $sees = fn (string $level): bool => match ($level) {
+        'super' => (bool) $user?->isSuperAdmin(),
+        'admin' => (bool) $user?->isPlatformAdmin(),
+        default => true,
+    };
 @endphp
 <div class="min-h-full lg:grid lg:grid-cols-[260px_1fr]">
     <aside class="hidden bg-vendslip-deep text-white lg:flex lg:flex-col">
@@ -33,9 +41,10 @@
                 <p class="text-[11px] font-semibold uppercase tracking-widest text-[#cfe3e8]">Control</p>
             </div>
         </div>
+        @if ($needs2fa)<div class="px-5 pb-4"><x-admin.two-factor-nudge /></div>@endif
         <nav class="flex-1 space-y-0.5 pl-3" aria-label="Admin">
-            @foreach ($nav as [$route, $label, $icon, $superOnly])
-                @continue($superOnly && ! $user?->isSuperAdmin())
+            @foreach ($nav as [$route, $label, $icon, $level])
+                @continue(! $sees($level))
                 @php $active = request()->routeIs(str_replace(['.index', '.edit'], '', $route).'*'); @endphp
                 <a href="{{ route($route) }}" @class([
                     'vs-nav flex items-center gap-3 rounded-l-lg px-3 py-2 text-sm font-medium transition-colors duration-300',
@@ -54,7 +63,7 @@
                 <x-admin.avatar :user="$user" />
                 <span class="min-w-0">
                     <span class="block truncate text-sm font-semibold">{{ $user?->name }}</span>
-                    <span class="block truncate text-xs text-[#cfe3e8]">{{ $user?->isSuperAdmin() ? 'Super Admin' : 'Admin' }} · My profile</span>
+                    <span class="block truncate text-xs text-[#cfe3e8]">{{ $user?->platformRoleLabel() }} · My profile</span>
                 </span>
             </a>
             <form method="POST" action="{{ route('admin.logout') }}" class="mt-1 px-2">@csrf
@@ -66,7 +75,10 @@
     <div class="min-w-0">
         <header class="sticky top-0 z-20 flex h-14 items-center justify-between border-b border-border-subtle bg-white/90 px-4 backdrop-blur sm:px-6 lg:hidden">
             <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-2"><img src="/assets/brand/vendslip-icon.png" alt="" class="h-6"><span class="font-extrabold text-vendslip-deep">VendSlip Control</span></a>
-            <a href="{{ route('admin.profile.show') }}" title="My profile"><x-admin.avatar :user="$user" class="size-8 rounded-lg text-xs" /></a>
+            <div class="flex items-center gap-2">
+                @if ($needs2fa)<x-admin.two-factor-nudge align="right" compact />@endif
+                <a href="{{ route('admin.profile.show') }}" title="My profile"><x-admin.avatar :user="$user" class="size-8 rounded-lg text-xs" /></a>
+            </div>
         </header>
         <main class="pt-6 pb-28 sm:pt-8 lg:pb-8">
             <x-ui.container size="full" class="space-y-6">
@@ -78,18 +90,30 @@
 
 {{-- Phones and tablets: bottom tab bar (thumb reach) and a slide-in menu for everything else. --}}
 @php
-    $tabs = [
+    $tabs = $user?->isPlatformAdmin() ? [
         ['admin.dashboard', 'Home', 'bar-chart'],
         ['admin.merchants.index', 'Merchants', 'store'],
-        ['admin.payments.index', 'Payments', 'credit-card'],
+        ['admin.support.index', 'Support', 'message'],
+        ['admin.profile.show', 'Profile', 'user'],
+    ] : [
+        ['admin.support.index', 'Queue', 'clock', ['view' => 'queue']],
+        $user?->isQaReviewer() ? ['admin.support.index', 'To review', 'check-circle', ['view' => 'unreviewed']] : ['admin.support.index', 'Mine', 'user', ['view' => 'mine']],
+        ['admin.support.index', 'All', 'message', ['view' => 'all']],
         ['admin.profile.show', 'Profile', 'user'],
     ];
 @endphp
 <nav class="fixed inset-x-0 bottom-0 z-30 border-t border-border-subtle bg-white pb-[env(safe-area-inset-bottom)] lg:hidden" aria-label="Quick navigation">
     <div class="mx-auto grid h-16 max-w-xl grid-cols-5">
-        @foreach ($tabs as [$route, $label, $icon])
-            @php $active = $route === 'admin.dashboard' ? request()->routeIs('admin.dashboard') : request()->routeIs(str_replace(['.index', '.show'], '', $route).'*'); @endphp
-            <a href="{{ route($route) }}" @class(['vs-tab flex flex-col items-center justify-center gap-1 pt-2 pb-1.5 text-[10.5px] font-semibold transition-colors [&>svg]:size-5', 'text-vendslip-deep' => $active, 'text-ink-muted hover:text-ink-primary' => ! $active]) @if ($active) aria-current="page" @endif>
+        @foreach ($tabs as $tab)
+            @php
+                [$route, $label, $icon] = $tab;
+                $params = $tab[3] ?? [];
+                $active = $route === 'admin.dashboard' ? request()->routeIs('admin.dashboard') : request()->routeIs(str_replace(['.index', '.show'], '', $route).'*');
+                if ($active && isset($params['view'])) {
+                    $active = request('view', $user?->isQaReviewer() ? 'unreviewed' : 'queue') === $params['view'];
+                }
+            @endphp
+            <a href="{{ route($route, $params) }}" @class(['vs-tab flex flex-col items-center justify-center gap-1 pt-2 pb-1.5 text-[10.5px] font-semibold transition-colors [&>svg]:size-5', 'text-vendslip-deep' => $active, 'text-ink-muted hover:text-ink-primary' => ! $active]) @if ($active) aria-current="page" @endif>
                 <x-ui.icon :name="$icon" />{{ $label }}
             </a>
         @endforeach
@@ -112,8 +136,8 @@
             <button type="button" data-close class="rounded-lg p-1.5 text-white/80 hover:bg-white/10" aria-label="Close menu"><x-ui.icon name="x" class="size-5" /></button>
         </div>
         <nav class="flex-1 space-y-0.5 overflow-y-auto pl-3" aria-label="Admin menu">
-            @foreach ($nav as [$route, $label, $icon, $superOnly])
-                @continue($superOnly && ! $user?->isSuperAdmin())
+            @foreach ($nav as [$route, $label, $icon, $level])
+                @continue(! $sees($level))
                 @php $active = request()->routeIs(str_replace(['.index', '.edit'], '', $route).'*'); @endphp
                 <a href="{{ route($route) }}" @class(['vs-nav flex items-center gap-3 rounded-l-lg px-3 py-2.5 text-sm font-medium transition-colors duration-300', 'text-white' => $active, 'text-[#cfe3e8] hover:text-white' => ! $active]) @if ($active) aria-current="page" @endif>
                     <x-ui.icon :name="$icon" />{{ $label }}

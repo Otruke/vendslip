@@ -40,7 +40,7 @@ final class ComposerController extends ApiController
         $totals = null;
         if ($payload->isReady()) {
             $draft = $payload->toDraftData();
-            $lines = array_values(array_map(static fn ($i): array => ['description' => $i->description, 'quantity' => $i->quantity, 'unit_price_minor' => $i->unit_price_minor], $draft->items));
+            $lines = array_values(array_map(static fn ($i): array => ['description' => $i->description, 'quantity' => $i->quantity, 'unit_price_minor' => $i->unit_price_minor, 'list_price_minor' => $i->list_price_minor], $draft->items));
             $t = $this->calculator->calculate(
                 $lines, $draft->discount_minor, $draft->shipping_minor,
                 $draft->vat_rate_bps ?? $merchant->vat_rate_bps,
@@ -48,8 +48,9 @@ final class ComposerController extends ApiController
                 $draft->amount_paid_minor,
             );
             $totals = [
-                'subtotal_minor' => $t->subtotalMinor, 'discount_minor' => $t->discountMinor, 'tax_minor' => $t->taxMinor,
+                'subtotal_minor' => $t->subtotalMinor, 'discount_minor' => $t->discountMinor, 'line_discount_minor' => $t->lineDiscountMinor, 'tax_minor' => $t->taxMinor,
                 'shipping_minor' => $t->shippingMinor, 'total_minor' => $t->totalMinor, 'vat_rate_bps' => $t->vatRateBps,
+                'currency' => $draft->currency ?? $merchant->currency,
             ];
         }
 

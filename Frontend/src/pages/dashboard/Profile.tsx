@@ -1,7 +1,7 @@
 import { ImageUp, KeyRound, ShieldCheck, Trash2 } from 'lucide-react'
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react'
 import { useLocation } from 'react-router-dom'
-import { Alert, Avatar, Button, Card, Input, Modal, PageHeader, StatusBadge } from '@/components/ui'
+import { Alert, Avatar, Button, Card, Input, Modal, PageHeader, PasswordChecklist, StatusBadge } from '@/components/ui'
 import { apiDelete, apiPost, apiPut, useRefreshSession } from '@/hooks/queries'
 import { api, ApiError, errorMessage } from '@/lib/api'
 import { formatDateTime } from '@/lib/format'
@@ -161,7 +161,10 @@ export default function Profile() {
           }>
             <Input label="Current password" type="password" autoComplete="current-password" value={pw.current_password} error={pwErrors.current_password} onChange={(e) => setPw({ ...pw, current_password: e.target.value })} />
             <div className="grid gap-4 sm:grid-cols-2">
-              <Input label="New password" type="password" autoComplete="new-password" value={pw.password} error={pwErrors.password} helperText={pwErrors.password ? undefined : 'At least 8 characters.'} onChange={(e) => setPw({ ...pw, password: e.target.value })} />
+              <div>
+                <Input label="New password" type="password" autoComplete="new-password" value={pw.password} error={pwErrors.password} onChange={(e) => setPw({ ...pw, password: e.target.value })} />
+                <PasswordChecklist value={pw.password} />
+              </div>
               <Input label="Confirm new password" type="password" autoComplete="new-password" value={pw.password_confirmation} onChange={(e) => setPw({ ...pw, password_confirmation: e.target.value })} />
             </div>
           </Section>

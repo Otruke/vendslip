@@ -313,7 +313,7 @@ final class BotOrchestrator
     private function confirmation(BotDraftSession $session, Merchant $merchant, DraftPayload $payload, bool $isUpdate = false): AskConfirmation
     {
         $draft = $payload->toDraftData();
-        $lines = array_values(array_map(static fn ($i): array => ['description' => $i->description, 'quantity' => $i->quantity, 'unit_price_minor' => $i->unit_price_minor], $draft->items));
+        $lines = array_values(array_map(static fn ($i): array => ['description' => $i->description, 'quantity' => $i->quantity, 'unit_price_minor' => $i->unit_price_minor, 'list_price_minor' => $i->list_price_minor], $draft->items));
         $vat = $draft->vat_rate_bps ?? $merchant->vat_rate_bps;
         $inclusive = $draft->vat_inclusive ?? $merchant->vat_inclusive;
         $totals = $this->calculator->calculate($lines, $draft->discount_minor, $draft->shipping_minor, $vat, $inclusive, null);
@@ -330,17 +330,18 @@ final class BotOrchestrator
             customerAddress: $draft->customer_address,
             lines: array_map(static fn (array $l): array => [
                 'description' => $l['description'], 'quantity' => $l['quantity'],
-                'unit_minor' => $l['unit_price_minor'], 'total_minor' => $l['line_total_minor'],
+                'unit_minor' => $l['unit_price_minor'], 'total_minor' => $l['line_total_minor'], 'list_minor' => $l['list_price_minor'],
             ], $totals->lines),
             subtotalMinor: $totals->subtotalMinor,
             discountMinor: $totals->discountMinor,
+            lineDiscountMinor: $totals->lineDiscountMinor,
             taxMinor: $totals->taxMinor,
             taxLabel: 'VAT '.rtrim(rtrim(number_format($vat / 100, 2), '0'), '.').'%',
             shippingMinor: $totals->shippingMinor,
             totalMinor: $totals->totalMinor,
             paidMinor: $paid,
             balanceMinor: $totals->totalMinor - $paid,
-            currency: $merchant->currency,
+            currency: $draft->currency ?? $merchant->currency,
             willWatermark: ! $planClean,
             canUseCleanCredit: ! $planClean && $merchant->paid_credits_balance > 0 && $merchant->effectiveTier() === PlanTier::FREE,
             isUpdate: $isUpdate,

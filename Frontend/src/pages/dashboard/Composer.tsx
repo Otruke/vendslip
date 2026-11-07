@@ -7,23 +7,26 @@ import { draftToSlipView } from '@/components/slip/toSlipView'
 import {
   Alert, Button, Card, Input, Modal, Money, PageHeader, SegmentedTabs, Select, SplitWorkspace, StatusBadge, Textarea, ToggleSwitch,
 } from '@/components/ui'
-import { apiPost, useInventory, useInvalidate, useRefreshSession, useTemplates } from '@/hooks/queries'
+import { apiPost, useInventory, useInvalidate, useLocales, useRefreshSession, useTemplates } from '@/hooks/queries'
 import { ApiError, errorMessage } from '@/lib/api'
 import { draftToRequest, missingFields, PAID_FULL } from '@/lib/draft'
-import { formatMoney, minorToInput, parseToMinor, percentToBps } from '@/lib/money'
+import { currencySymbol, formatMoney, minorToInput, parseToMinor, percentToBps } from '@/lib/money'
 import { SHORTCUTS } from '@/lib/slash'
 import { useAuthStore, useCan, useEntitlement } from '@/stores/auth'
 import { useComposerStore } from '@/stores/composer'
 import type { Doc } from '@/types/api'
 
 /** Money input: free text while focused, committed to minor units on blur. */
-function MoneyField({ label, value, onChange, placeholder }: { label: string; value: number | null; onChange: (v: number | null) => void; placeholder?: string }) {
+function MoneyField({ label, value, onChange, placeholder, ariaLabel }: { label: string; value: number | null; onChange: (v: number | null) => void; placeholder?: string; ariaLabel?: string }) {
   const [editing, setEditing] = useState<string | null>(null)
+  const merchantCurrency = useAuthStore((s) => s.session?.merchant?.currency ?? 'NGN')
+  const currency = useComposerStore((s) => s.draft.currency) ?? merchantCurrency
   return (
     <Input
       label={label}
+      aria-label={ariaLabel ?? (label || undefined)}
       inputMode="decimal"
-      prefixIcon={<span className="text-sm">₦</span>}
+      prefixIcon={<span className="text-sm">{currencySymbol(currency).trim()}</span>}
       placeholder={placeholder}
       value={editing ?? minorToInput(value)}
       onFocus={() => setEditing(minorToInput(value))}
@@ -75,10 +78,15 @@ function FormPane({ inventoryEnabled }: { inventoryEnabled: boolean }) {
   const { draft, update, setItem, addItem, removeItem } = useComposerStore()
   const skus = useInventory({ page: 1 }, inventoryEnabled)
   const type = draft.type ?? 'RECEIPT'
+  const currency = useAuthStore((s) => s.session?.merchant?.currency ?? 'NGN')
+  const locales = useLocales()
 
   const pickSku = (index: number, description: string) => {
     const sku = skus.data?.data.find((s) => s.name.toLowerCase() === description.toLowerCase() || s.sku.toLowerCase() === description.toLowerCase())
-    setItem(index, sku ? { description: sku.name, sku_id: sku.id, unit_price_minor: draft.items[index]?.unit_price_minor ?? sku.unit_price_minor } : { description, sku_id: null })
+    // The product's price is its normal price: sell below it and the slip shows the item discount.
+    setItem(index, sku
+      ? { description: sku.name, sku_id: sku.id, unit_price_minor: draft.items[index]?.unit_price_minor ?? sku.unit_price_minor, list_price_minor: sku.unit_price_minor }
+      : { description, sku_id: null })
   }
 
   return (
@@ -98,7 +106,7 @@ function FormPane({ inventoryEnabled }: { inventoryEnabled: boolean }) {
           <h3 className="text-sm font-semibold">Items</h3>
           <Button size="xs" variant="secondary" leftIcon={<Plus className="size-3.5" />} onClick={() => addItem()}>Add item</Button>
         </div>
-        {inventoryEnabled && <datalist id="sku-list">{skus.data?.data.map((s) => <option key={s.id} value={s.name}>{s.sku} · {formatMoney(s.unit_price_minor)} · {s.stock_quantity} in stock</option>)}</datalist>}
+        {inventoryEnabled && <datalist id="sku-list">{skus.data?.data.map((s) => <option key={s.id} value={s.name}>{s.sku} · {formatMoney(s.unit_price_minor, currency)} · {s.stock_quantity} in stock</option>)}</datalist>}
         {draft.items.length === 0 ? (
           <div className="mt-3 space-y-2">
             <p className="text-sm text-ink-secondary">No items yet. Add items, or bill a single amount:</p>
@@ -107,15 +115,17 @@ function FormPane({ inventoryEnabled }: { inventoryEnabled: boolean }) {
         ) : (
           <ul className="mt-3 space-y-3">
             {draft.items.map((item, i) => (
-              <li key={i} className="grid grid-cols-[1fr_72px_120px_auto] items-end gap-2">
-                <Input label={i === 0 ? 'Description' : undefined} aria-label="Description" list={inventoryEnabled ? 'sku-list' : undefined} value={item.description} onChange={(e) => pickSku(i, e.target.value)} placeholder="Leather sneakers" />
+              <li key={i} className="grid grid-cols-[60px_1fr_1fr_auto] items-end gap-2 sm:grid-cols-[1fr_64px_112px_112px_auto]">
+                <Input wrapperClassName="col-span-4 sm:col-span-1" label={i === 0 ? 'Description' : undefined} aria-label="Description" list={inventoryEnabled ? 'sku-list' : undefined} value={item.description} onChange={(e) => pickSku(i, e.target.value)} placeholder="Leather sneakers" />
                 <Input label={i === 0 ? 'Qty' : undefined} aria-label="Quantity" type="number" min={1} value={item.quantity} onChange={(e) => setItem(i, { quantity: Math.max(1, Number(e.target.value) || 1) })} />
-                <MoneyField label={i === 0 ? 'Unit price' : ''} value={item.unit_price_minor} onChange={(v) => setItem(i, { unit_price_minor: v })} />
+                <MoneyField label={i === 0 ? 'Selling price' : ''} value={item.unit_price_minor} onChange={(v) => setItem(i, { unit_price_minor: v })} />
+                <MoneyField label={i === 0 ? 'Normal price' : ''} ariaLabel="Normal price (optional)" value={item.list_price_minor ?? null} onChange={(v) => setItem(i, { list_price_minor: v })} placeholder="Optional" />
                 <button type="button" onClick={() => removeItem(i)} className="mb-1 inline-flex size-8 items-center justify-center rounded-lg text-ink-muted hover:bg-tone-open/10 hover:text-tone-open" aria-label="Remove item"><Trash2 className="size-4" /></button>
               </li>
             ))}
           </ul>
         )}
+        {draft.items.length > 0 && <p className="mt-3 text-xs text-ink-muted">Selling below the normal price? The slip shows the old price crossed out and the saving. In chats, type <code className="font-mono">@ 25,000 was 30,000</code>.</p>}
       </Card>
 
       <Card padding="sm" className="grid gap-4 sm:grid-cols-2">
@@ -134,6 +144,13 @@ function FormPane({ inventoryEnabled }: { inventoryEnabled: boolean }) {
           options={[{ value: 'default', label: 'Business default' }, { value: 'excl', label: 'Added on top' }, { value: 'incl', label: 'Included in prices' }]}
         />
         <MoneyField label={type === 'RECEIPT' ? 'Amount paid (blank = full)' : 'Deposit received'} value={draft.paid === PAID_FULL ? null : draft.paid} onChange={(v) => update({ paid: v })} />
+        <Select
+          label="Currency"
+          value={draft.currency ?? 'default'}
+          onChange={(e) => update({ currency: e.target.value === 'default' ? null : e.target.value })}
+          options={[{ value: 'default', label: `Business default (${currency})` }, ...(locales.data?.currencies ?? []).filter((c) => c.code !== currency).map((c) => ({ value: c.code, label: `${c.code} · ${c.name}` }))]}
+          info="For this slip only. In chats, type /currency = USD."
+        />
         {type === 'INVOICE' && <Input label="Due date" type="date" value={draft.due_date ?? ''} onChange={(e) => update({ due_date: e.target.value || null })} />}
         <Textarea label="Note" wrapperClassName="sm:col-span-2" rows={2} value={draft.note ?? ''} onChange={(e) => update({ note: e.target.value || null })} placeholder="Thanks for your order!" />
       </Card>

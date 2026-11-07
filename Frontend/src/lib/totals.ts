@@ -1,11 +1,13 @@
 import { mulDivRound } from './money'
 
 /** Mirror of Backend/app/Services/Documents/TotalsCalculator.php */
-export type Line = { description: string; quantity: number; unit_price_minor: number; sku_id?: string | null }
+export type Line = { description: string; quantity: number; unit_price_minor: number; list_price_minor?: number | null; sku_id?: string | null }
 
 export type Totals = {
-  lines: (Line & { line_total_minor: number })[]
+  lines: (Line & { line_total_minor: number; list_price_minor: number | null })[]
   subtotalMinor: number
+  /** Discounts given on single items (list price above selling price), already inside the subtotal. */
+  lineDiscountMinor: number
   discountMinor: number
   vatRateBps: number
   vatInclusive: boolean
@@ -26,8 +28,13 @@ export function calculateTotals(
 ): Totals {
   const resolved = lines
     .filter((l) => l.quantity >= 1 && l.unit_price_minor >= 0)
-    .map((l) => ({ ...l, line_total_minor: l.quantity * l.unit_price_minor }))
+    .map((l) => {
+      // A list price only counts when it is above the selling price (a real discount).
+      const list = l.list_price_minor != null && l.list_price_minor > l.unit_price_minor ? l.list_price_minor : null
+      return { ...l, list_price_minor: list, line_total_minor: l.quantity * l.unit_price_minor }
+    })
   const subtotal = resolved.reduce((sum, l) => sum + l.line_total_minor, 0)
+  const lineDiscount = resolved.reduce((sum, l) => sum + (l.list_price_minor === null ? 0 : (l.list_price_minor - l.unit_price_minor) * l.quantity), 0)
   const discount = Math.min(Math.max(0, discountMinor), subtotal)
   const taxable = subtotal - discount
   const shipping = Math.max(0, shippingMinor)
@@ -45,6 +52,7 @@ export function calculateTotals(
   return {
     lines: resolved,
     subtotalMinor: subtotal,
+    lineDiscountMinor: lineDiscount,
     discountMinor: discount,
     vatRateBps,
     vatInclusive,

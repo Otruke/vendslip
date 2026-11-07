@@ -60,6 +60,7 @@ final class DocumentLifecycleService
                 'description' => trim($item->description),
                 'quantity' => $item->quantity,
                 'unit_price_minor' => $item->unit_price_minor,
+                'list_price_minor' => $item->list_price_minor,
                 'sku_id' => $item->sku_id,
             ], array_values($draft->items));
 
@@ -115,6 +116,7 @@ final class DocumentLifecycleService
                 'template_id' => $template?->id,
                 'subtotal_minor' => $totals->subtotalMinor,
                 'discount_minor' => $totals->discountMinor,
+                'line_discount_minor' => $totals->lineDiscountMinor,
                 'vat_rate_bps' => $totals->vatRateBps,
                 'vat_inclusive' => $totals->vatInclusive,
                 'tax_minor' => $totals->taxMinor,

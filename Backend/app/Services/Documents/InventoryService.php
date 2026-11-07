@@ -7,9 +7,14 @@ namespace App\Services\Documents;
 use App\Exceptions\DomainRuleException;
 use App\Models\InventorySku;
 use App\Models\Merchant;
+use App\Services\Notifications\AlertCatalog;
+use App\Services\Notifications\MerchantAlerts;
+use Illuminate\Support\Facades\DB;
 
 final class InventoryService
 {
+    public function __construct(private readonly MerchantAlerts $alerts) {}
+
     /**
      * Lock SKUs referenced by the lines, verify tenancy and stock, then apply the delta.
      * $direction = -1 to deduct (issue), +1 to restock (void / edit rollback).
@@ -29,6 +34,7 @@ final class InventoryService
             return;
         }
 
+        $low = [];
         $skus = InventorySku::query()
             ->forMerchant($merchant)
             ->whereIn('id', array_keys($quantities))
@@ -44,11 +50,32 @@ final class InventoryService
             if (! $sku->track_stock) {
                 continue;
             }
-            if ($direction < 0 && $sku->stock_quantity < $quantity) {
+            // Tracking stock and blocking oversells are separate switches: a product can count down
+            // into negative stock (sell now, restock later) when blocking is off.
+            if ($direction < 0 && $sku->block_overselling && $sku->stock_quantity < $quantity) {
                 throw new DomainRuleException("Only {$sku->stock_quantity} × {$sku->name} left in stock.", 'insufficient_stock');
             }
+            $before = $sku->stock_quantity;
             $sku->stock_quantity += $direction * $quantity;
             $sku->save();
+            // Alert once, as stock crosses the threshold (not on every sale while it stays low).
+            if ($direction < 0 && $before > $sku->low_stock_threshold && $sku->stock_quantity <= $sku->low_stock_threshold) {
+                $low[] = $sku;
+            }
+        }
+
+        if ($low !== []) {
+            DB::afterCommit(function () use ($merchant, $low): void {
+                foreach ($low as $sku) {
+                    $this->alerts->send(
+                        $merchant,
+                        AlertCatalog::LOW_STOCK,
+                        "Low stock: {$sku->name}",
+                        "{$sku->name} ({$sku->sku}) is down to {$sku->stock_quantity}. Your low-stock level is {$sku->low_stock_threshold}.",
+                        '/dashboard/inventory?low=1',
+                    );
+                }
+            });
         }
     }
 

@@ -4,10 +4,44 @@
  */
 export const MAX_MINOR = 1_000_000_000_000_000
 
-const SYMBOLS: Record<string, string> = { NGN: '₦', USD: '$', GBP: '£', EUR: '€', GHS: 'GH₵', KES: 'KSh', ZAR: 'R' }
+const SYMBOLS: Record<string, string> = {
+  NGN: '₦', USD: '$', GBP: '£', EUR: '€', GHS: 'GH₵', KES: 'KSh', ZAR: 'R',
+  // Same friendlier local symbols as Backend/app/Support/Currencies.php
+  UGX: 'USh', TZS: 'TSh', CDF: 'FC', ZMW: 'K', MWK: 'MK', ETB: 'Br', EGP: 'E£', MAD: 'DH', BWP: 'P',
+  SLE: 'Le', GMD: 'D', LRD: 'L$', NAD: 'N$', AED: 'AED', SAR: 'SAR', KWD: 'KD', QAR: 'QR',
+}
+const symbolCache = new Map<string, string>()
+const digitsCache = new Map<string, number>()
 
+function intlSymbol(code: string): string {
+  try {
+    const part = new Intl.NumberFormat('en', { style: 'currency', currency: code, currencyDisplay: 'narrowSymbol' })
+      .formatToParts(0).find((p) => p.type === 'currency')
+    return part?.value ?? code
+  } catch { return code }
+}
+
+/** "₦", "$", "KSh ", "FCFA ", "UGX " — letter symbols get a space, like Money::symbol(). */
 export function currencySymbol(currency: string): string {
-  return SYMBOLS[currency.toUpperCase()] ?? `${currency.toUpperCase()} `
+  const code = currency.toUpperCase()
+  let symbol = symbolCache.get(code)
+  if (symbol === undefined) {
+    symbol = (SYMBOLS[code] ?? intlSymbol(code)).trim()
+    if (/\p{L}$/u.test(symbol) && symbol !== 'R') symbol += ' '
+    symbolCache.set(code, symbol)
+  }
+  return symbol
+}
+
+/** 0 for currencies shown without decimals (UGX, XAF, RWF, JPY…), otherwise 2. */
+export function currencyDigits(currency: string): number {
+  const code = currency.toUpperCase()
+  let digits = digitsCache.get(code)
+  if (digits === undefined) {
+    try { digits = new Intl.NumberFormat('en', { style: 'currency', currency: code }).resolvedOptions().maximumFractionDigits === 0 ? 0 : 2 } catch { digits = 2 }
+    digitsCache.set(code, digits)
+  }
+  return digits
 }
 
 /** "15000", "15,000.50", "₦15k", "NGN 1.5m", "N2,500" → minor units (null if unreadable). */
@@ -58,9 +92,13 @@ export function percentToBps(input: string): number | null {
 export function formatMoney(minor: number, currency = 'NGN', withSymbol = true): string {
   const negative = minor < 0
   const abs = Math.abs(Math.trunc(minor))
+  const sign = negative ? '-' : ''
+  const symbol = withSymbol ? currencySymbol(currency) : ''
+  // Amounts are stored in hundredths for every currency; zero-decimal ones round to whole units.
+  if (currencyDigits(currency) === 0) return `${sign}${symbol}${Math.trunc((abs + 50) / 100).toLocaleString('en-US')}`
   const major = Math.trunc(abs / 100).toLocaleString('en-US')
   const cents = String(abs % 100).padStart(2, '0')
-  return `${negative ? '-' : ''}${withSymbol ? currencySymbol(currency) : ''}${major}.${cents}`
+  return `${sign}${symbol}${major}.${cents}`
 }
 
 /** Compact for charts: ₦1.2m, ₦45k */

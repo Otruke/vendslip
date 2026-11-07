@@ -20,6 +20,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $currency
  * @property int $monthly_price_minor
  * @property int $yearly_price_minor
+ * @property array<string, array{monthly?: int, yearly?: int}>|null $price_overrides
  * @property int|null $monthly_quota
  * @property array<string, bool|int|null> $features
  * @property list<string>|null $highlights
@@ -30,7 +31,7 @@ class SubscriptionPlan extends Model
 {
     /** @var list<string> */
     protected $fillable = [
-        'tier', 'name', 'tagline', 'currency', 'monthly_price_minor', 'yearly_price_minor', 'monthly_quota',
+        'tier', 'name', 'tagline', 'currency', 'monthly_price_minor', 'yearly_price_minor', 'price_overrides', 'monthly_quota',
         'features', 'highlights', 'is_active', 'sort_order',
     ];
 
@@ -41,6 +42,7 @@ class SubscriptionPlan extends Model
             'tier' => PlanTier::class,
             'monthly_price_minor' => 'integer',
             'yearly_price_minor' => 'integer',
+            'price_overrides' => 'array',
             'monthly_quota' => 'integer',
             'features' => 'array',
             'highlights' => 'array',

@@ -47,9 +47,12 @@ final class VerificationService
             'doc_number' => $document->doc_number,
             'currency' => $document->currency,
             'customer_name' => $document->customer_name,
-            'items' => $document->items->map(static fn ($item): array => [
-                $item->description, $item->quantity, $item->unit_price_minor, $item->line_total_minor,
-            ])->values()->all(),
+            // A list price is appended only when one was set, so slips issued before list prices
+            // existed produce exactly the same hash as they always did.
+            'items' => $document->items->map(static fn ($item): array => $item->list_price_minor !== null
+                ? [$item->description, $item->quantity, $item->unit_price_minor, $item->line_total_minor, $item->list_price_minor]
+                : [$item->description, $item->quantity, $item->unit_price_minor, $item->line_total_minor],
+            )->values()->all(),
             'subtotal_minor' => $document->subtotal_minor,
             'discount_minor' => $document->discount_minor,
             'tax_minor' => $document->tax_minor,

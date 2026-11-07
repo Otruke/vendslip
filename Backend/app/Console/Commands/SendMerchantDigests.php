@@ -49,7 +49,9 @@ final class SendMerchantDigests extends Command
                         ->where('doc_type', '!=', DocumentType::CREDIT_NOTE->value)
                         ->where('status', '!=', DocumentStatus::VOID->value)->where('issued_at', '>=', $start)->get();
                     $lines[] = "📊 Today at {$merchant->name}";
-                    $lines[] = $docs->count().' slip(s) · '.Money::format((int) $docs->sum('total_minor'), $merchant->currency).' billed';
+                    $billed = $docs->isEmpty() ? Money::format(0, $merchant->currency) : $docs->groupBy('currency')
+                        ->map(static fn ($group, $currency): string => Money::format((int) $group->sum('total_minor'), (string) $currency))->implode(' + ');
+                    $lines[] = $docs->count().' slip(s) · '.$billed.' billed';
                     foreach (Channel::cases() as $channel) {
                         $n = $docs->where('channel', $channel)->count();
                         if ($n > 0) {

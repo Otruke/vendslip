@@ -32,10 +32,17 @@ final class TelegramRichMessageBuilder
         foreach ($a->lines as $line) {
             $rows[] = [
                 self::cell($line['description'], 'left'), self::cell((string) $line['quantity'], 'right'),
-                self::cell($m($line['unit_minor']), 'right'), self::cell($m($line['total_minor']), 'right'),
+                self::cell($m($line['unit_minor']).(isset($line['list_minor']) ? ' (was '.$m($line['list_minor']).')' : ''), 'right'),
+                self::cell($m($line['total_minor']), 'right'),
             ];
         }
         $totals = [];
+        if ($a->discountMinor > 0 || $a->taxMinor > 0 || $a->shippingMinor > 0 || $a->lineDiscountMinor > 0) {
+            $totals[] = ['Subtotal', $m($a->subtotalMinor)];
+        }
+        if ($a->lineDiscountMinor > 0) {
+            $totals[] = ['Item discounts (in subtotal)', '-'.$m($a->lineDiscountMinor)];
+        }
         if ($a->discountMinor > 0) {
             $totals[] = ['Discount', '-'.$m($a->discountMinor)];
         }

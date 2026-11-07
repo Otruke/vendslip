@@ -30,6 +30,8 @@ final class PlatformSettings
         'telegram.webhook_secret' => ['vendslip.telegram.webhook_secret', true, 'string'],
         'telegram.bot_username' => ['vendslip.telegram.bot_username', false, 'string'],
         'channels.meta_provider' => ['vendslip.channels.meta_provider', false, 'string'],
+        'marketing.popups.enabled' => [null, false, 'bool'],
+        'marketing.popups.show_stats' => [null, false, 'bool'],
         'meta.app_secret' => ['vendslip.meta.app_secret', true, 'string'],
         'meta.verify_token' => ['vendslip.meta.verify_token', true, 'string'],
         'meta.graph_version' => ['vendslip.meta.graph_version', false, 'string'],
@@ -53,6 +55,11 @@ final class PlatformSettings
     private const array DEFAULTS = [
         'billing.remove_watermark_on_paid_credit' => true,
         'billing.yearly_discount_label' => 'Save 20%',
+        'marketing.popups.enabled' => false,
+        'marketing.popups.show_stats' => true,
+        'marketing.popups.min_seconds' => 15,
+        'marketing.popups.max_seconds' => 40,
+        'marketing.popups.max_per_visit' => 4,
     ];
 
     public function get(string $key, mixed $default = null): mixed

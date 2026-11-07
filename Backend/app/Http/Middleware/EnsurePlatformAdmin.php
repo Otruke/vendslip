@@ -15,7 +15,11 @@ final class EnsurePlatformAdmin
     {
         $user = $request->user();
         $allowed = $user instanceof User && $user->is_active
-            && ($level === 'super' ? $user->isSuperAdmin() : $user->isPlatformAdmin());
+            && match ($level) {
+                'super' => $user->isSuperAdmin(),
+                'staff' => $user->isPlatformStaff(),
+                default => $user->isPlatformAdmin(),
+            };
 
         if (! $allowed) {
             if ($request->expectsJson()) {

@@ -6,6 +6,7 @@ import { apiPost, usePublicInvoice } from '@/hooks/queries'
 import { errorMessage } from '@/lib/api'
 import { formatDate } from '@/lib/format'
 import { formatMoney } from '@/lib/money'
+import type { PublicInvoice } from '@/types/api'
 
 export default function Pay() {
   const { uid } = useParams()
@@ -114,17 +115,65 @@ export default function Pay() {
             ) : (
               <Text className="mt-4">Online payment isn’t enabled for this merchant.</Text>
             )}
-            {!paid && data.merchant.bank_account_number && (
-              <div className="mt-6 rounded-xl border border-border-subtle bg-surface-canvas p-4 text-sm">
-                <p className="flex items-center gap-2 font-semibold"><Landmark className="size-4" />Or pay by bank transfer</p>
-                <p className="tabular mt-2 text-lg font-bold">{data.merchant.bank_account_number}</p>
-                <p className="text-ink-secondary">{data.merchant.bank_name} · {data.merchant.bank_account_name}</p>
-              </div>
-            )}
+            {!paid && <PayoutList data={data} />}
             {returned && <Button variant="ghost" size="sm" className="mt-3" onClick={() => refetch()}>Refresh status</Button>}
           </Card>
         </div>
       </Container>
     </Section>
+  )
+}
+
+type PayoutItem = PublicInvoice['merchant']['payouts'][number]
+
+/** Bank accounts and wallets the business prints on its slips, with copy buttons. */
+function PayoutList({ data }: { data: PublicInvoice }) {
+  const [copied, setCopied] = useState<string | null>(null)
+  const legacy: PayoutItem[] = data.merchant.bank_account_number
+    ? [{ kind: 'BANK', label: null, bank_name: data.merchant.bank_name, account_number: data.merchant.bank_account_number, account_name: data.merchant.bank_account_name, currency: null }]
+    : []
+  const items = (data.merchant.payouts?.length ?? 0) > 0 ? data.merchant.payouts : legacy
+  if (items.length === 0) return null
+  const copy = (value: string) => {
+    void navigator.clipboard?.writeText(value).then(() => { setCopied(value); window.setTimeout(() => setCopied(null), 1500) }).catch(() => undefined)
+  }
+  const banks = items.filter((p) => p.kind === 'BANK')
+  const wallets = items.filter((p) => p.kind === 'CRYPTO')
+  return (
+    <div className="mt-6 space-y-3">
+      {banks.length > 0 && (
+        <div className="rounded-xl border border-border-subtle bg-surface-canvas p-4 text-sm">
+          <p className="flex items-center gap-2 font-semibold"><Landmark className="size-4" />Or pay by bank transfer</p>
+          <ul className="mt-2 space-y-3">
+            {banks.map((b, i) => (
+              <li key={i} className="flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <p className="tabular text-lg font-bold">{b.account_number}{b.currency && <span className="ml-1.5 text-xs font-medium text-ink-muted">{b.currency}</span>}</p>
+                  <p className="text-ink-secondary">{[b.bank_name, b.account_name, b.label].filter(Boolean).join(' · ')}</p>
+                </div>
+                <Button size="xs" variant="outline" onClick={() => copy(b.account_number ?? '')}>{copied === b.account_number ? 'Copied' : 'Copy'}</Button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+      {wallets.length > 0 && (
+        <div className="rounded-xl border border-border-subtle bg-surface-canvas p-4 text-sm">
+          <p className="flex items-center gap-2 font-semibold"><Bitcoin className="size-4" />Or pay with crypto</p>
+          <ul className="mt-2 space-y-3">
+            {wallets.map((w, i) => (
+              <li key={i} className="flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <p className="font-semibold">{w.asset} <span className="font-normal text-ink-secondary">on {w.network}</span>{w.label && <span className="text-ink-secondary"> · {w.label}</span>}</p>
+                  <p className="break-all font-mono text-xs text-ink-primary">{w.wallet_address}</p>
+                </div>
+                <Button size="xs" variant="outline" onClick={() => copy(w.wallet_address ?? '')}>{copied === w.wallet_address ? 'Copied' : 'Copy'}</Button>
+              </li>
+            ))}
+          </ul>
+          <p className="mt-2 text-xs text-ink-muted">Send only the coin on the network shown. Coins sent on another network can be lost.</p>
+        </div>
+      )}
+    </div>
   )
 }

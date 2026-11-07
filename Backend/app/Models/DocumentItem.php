@@ -14,13 +14,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string $description
  * @property int $quantity
  * @property int $unit_price_minor
+ * @property int|null $list_price_minor
  * @property int $line_total_minor
  * @property int $position
  */
 class DocumentItem extends Model
 {
     /** @var list<string> */
-    protected $fillable = ['document_id', 'sku_id', 'description', 'quantity', 'unit_price_minor', 'line_total_minor', 'position'];
+    protected $fillable = ['document_id', 'sku_id', 'description', 'quantity', 'unit_price_minor', 'list_price_minor', 'line_total_minor', 'position'];
 
     /** @return array<string, string> */
     protected function casts(): array
@@ -28,6 +29,7 @@ class DocumentItem extends Model
         return [
             'quantity' => 'integer',
             'unit_price_minor' => 'integer',
+            'list_price_minor' => 'integer',
             'line_total_minor' => 'integer',
             'position' => 'integer',
         ];

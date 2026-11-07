@@ -296,14 +296,14 @@ final class MetaWebhookTest extends TestCase
     {
         $this->actingAs($this->admin());
         $this->get(route('admin.gateways.edit'))->assertOk()
-            ->assertSee('Meta Cloud API')->assertSee('Primary · live')->assertSee(url('/api/v1/webhooks/meta'))
+            ->assertSee('Meta Cloud API')->assertSeeInOrder(['aria-pressed="true"', 'Meta Cloud API', 'aria-pressed="false"', 'Twilio'], false)->assertSee(url('/api/v1/webhooks/meta'))
             ->assertDontSee('meta-app-secret')->assertDontSee('wa-system-token');
 
         $this->put(route('admin.gateways.provider'), ['provider' => 'nonsense'])->assertSessionHasErrors('provider');
         $this->put(route('admin.gateways.provider'), ['provider' => 'twilio'])->assertRedirect()->assertSessionHas('status');
         $this->assertSame('twilio', app(PlatformSettings::class)->string('channels.meta_provider'));
         $this->assertTrue(SecurityAuditLog::query()->where('event', 'admin.channel_provider_switched')->exists());
-        $this->get(route('admin.gateways.edit'))->assertSee('Secondary · live');
+        $this->get(route('admin.gateways.edit'))->assertSeeInOrder(['aria-pressed="false"', 'Meta Cloud API', 'aria-pressed="true"', 'Twilio'], false);
 
         // A regular platform admin cannot flip it.
         $this->actingAs($this->admin(Role::ADMIN));

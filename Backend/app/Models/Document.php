@@ -34,6 +34,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string|null $customer_address
  * @property int $subtotal_minor
  * @property int $discount_minor
+ * @property int $line_discount_minor
  * @property int $vat_rate_bps
  * @property bool $vat_inclusive
  * @property int $tax_minor
@@ -69,7 +70,7 @@ class Document extends Model
         'merchant_id', 'customer_id', 'template_id', 'created_by_user_id', 'parent_document_id',
         'doc_type', 'doc_number', 'public_uid', 'status', 'channel', 'currency',
         'customer_name', 'customer_phone', 'customer_email', 'customer_address',
-        'subtotal_minor', 'discount_minor', 'vat_rate_bps', 'vat_inclusive', 'tax_minor', 'shipping_minor',
+        'subtotal_minor', 'discount_minor', 'line_discount_minor', 'vat_rate_bps', 'vat_inclusive', 'tax_minor', 'shipping_minor',
         'total_minor', 'amount_paid_minor', 'balance_due_minor',
         'consumed_paid_credit', 'has_watermark', 'revision_number', 'verification_hash', 'verification_code',
         'pdf_storage_path', 'notes', 'due_date', 'issued_at', 'voided_at', 'void_reason',
@@ -84,6 +85,7 @@ class Document extends Model
             'channel' => Channel::class,
             'subtotal_minor' => 'integer',
             'discount_minor' => 'integer',
+            'line_discount_minor' => 'integer',
             'vat_rate_bps' => 'integer',
             'vat_inclusive' => 'boolean',
             'tax_minor' => 'integer',

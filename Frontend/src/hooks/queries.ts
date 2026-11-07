@@ -1,8 +1,9 @@
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useCallback, useState } from 'react'
 import { api } from '@/lib/api'
 import { useAuthStore } from '@/stores/auth'
 import type {
-  ChannelsResponse, Customer, Doc, DocDetail, Merchant, Overview, Paginated, PublicInvoice, PublicPlans, Revision,
+  ActivityResponse, AlertSettings, ChannelsResponse, Customer, Doc, DocDetail, Locales, Merchant, NotificationsResponse, Overview, PayoutAccountsResponse, ReminderSettings, SupportTicket, SupportTicketList, Paginated, PublicInvoice, PublicPlans, Revision,
   Session, ShareLinks, Sku, TeamResponse, Template, Transaction, VerifyResult,
 } from '@/types/api'
 
@@ -18,7 +19,33 @@ function clean(params: Record<string, unknown>): Record<string, unknown> {
 }
 
 /* ── Public ─────────────────────────────────────────────────────────── */
-export const usePlans = () => useQuery({ queryKey: ['plans'], queryFn: () => get<PublicPlans>('/public/plans'), staleTime: 5 * 60_000 })
+/** Every currency and country (bundled on the server, rarely changes). */
+export const useLocales = () => useQuery({ queryKey: ['locales'], queryFn: () => get<Locales>('/public/locales'), staleTime: Infinity, gcTime: Infinity })
+export const usePlans = (currency?: string | null) =>
+  useQuery({ queryKey: ['plans', currency ?? null], queryFn: () => get<PublicPlans>('/public/plans', clean({ currency })), staleTime: 5 * 60_000, placeholderData: keepPreviousData })
+
+const CURRENCY_KEY = 'vendslip.pricing-currency'
+
+/**
+ * The currency to show prices in: the business's own when signed in; otherwise the visitor's pick,
+ * or a guess from their browser's region (en-NG → NGN). Null shows the base price.
+ */
+export function useDisplayCurrency(): [string | null, (code: string) => void] {
+  const merchantCurrency = useAuthStore((s) => s.session?.merchant?.currency ?? null)
+  const locales = useLocales()
+  const [picked, setPicked] = useState<string | null>(() => {
+    try { return window.localStorage.getItem(CURRENCY_KEY) } catch { return null }
+  })
+  const pick = useCallback((code: string) => {
+    setPicked(code)
+    try { window.localStorage.setItem(CURRENCY_KEY, code) } catch { /* private mode */ }
+  }, [])
+  if (merchantCurrency) return [merchantCurrency, pick]
+  if (picked) return [picked, pick]
+  const region = (navigator.languages ?? [navigator.language]).map((l) => l.split('-')[1]?.toUpperCase()).find(Boolean)
+  const guess = region ? locales.data?.countries.find((c) => c.code === region)?.currency ?? null : null
+  return [guess, pick]
+}
 export const useVerify = (code: string | undefined) =>
   useQuery({ queryKey: ['verify', code], queryFn: () => get<VerifyResult>(`/public/verify/${encodeURIComponent(code ?? '')}`), enabled: !!code, retry: false })
 export const usePublicInvoice = (uid: string | undefined) =>
@@ -28,8 +55,20 @@ export const usePublicInvoice = (uid: string | undefined) =>
 export const fetchSession = () => get<Session>('/auth/me')
 
 /* ── Dashboard ──────────────────────────────────────────────────────── */
-export const useOverview = (range: string) =>
-  useQuery({ queryKey: ['overview', range], queryFn: () => get<Overview>('/dashboard/overview', { range }), placeholderData: keepPreviousData })
+/** The bell: checks every minute while the tab is open. */
+export const useNotifications = () =>
+  useQuery({ queryKey: ['notifications'], queryFn: () => get<NotificationsResponse>('/notifications'), refetchInterval: 60_000, refetchIntervalInBackground: false, staleTime: 20_000 })
+export const usePayoutAccounts = () => useQuery({ queryKey: ['payout-accounts'], queryFn: () => get<PayoutAccountsResponse>('/settings/payout-accounts') })
+export const useReminderSettings = () => useQuery({ queryKey: ['reminder-settings'], queryFn: () => get<ReminderSettings>('/settings/reminders') })
+export const useActivity = (filters: { category?: string; page?: number }, enabled = true) =>
+  useQuery({ queryKey: ['activity', filters], queryFn: () => get<ActivityResponse>('/activity', clean(filters)), placeholderData: keepPreviousData, enabled })
+export const useSupportTickets = () => useQuery({ queryKey: ['support-tickets'], queryFn: () => get<SupportTicketList>('/support/tickets') })
+export const useSupportTicket = (reference: string) =>
+  useQuery({ queryKey: ['support-ticket', reference], queryFn: () => get<{ data: SupportTicket }>(`/support/tickets/${encodeURIComponent(reference)}`), refetchInterval: 60_000 })
+export const useAlertSettings = () => useQuery({ queryKey: ['alert-settings'], queryFn: () => get<AlertSettings>('/settings/alerts') })
+
+export const useOverview = (range: string, currency?: string | null) =>
+  useQuery({ queryKey: ['overview', range, currency ?? null], queryFn: () => get<Overview>('/dashboard/overview', clean({ range, currency })), placeholderData: keepPreviousData })
 
 export type DocumentFilters = { type?: string; status?: string; channel?: string; q?: string; customer_id?: string; outstanding?: boolean; page?: number; per_page?: number; from?: string; to?: string }
 export const useDocuments = (filters: DocumentFilters) =>

@@ -1,17 +1,18 @@
 import { useQueryClient } from '@tanstack/react-query'
 import {
-  Bot, Coins, CreditCard, FileText, KeyRound, LayoutDashboard, LayoutTemplate, LifeBuoy, LogOut, Menu, Package, Plus, Settings, Sparkles, UserRound, Users, UsersRound, X,
+  Bot, Coins, CreditCard, FileText, History, KeyRound, LayoutDashboard, LayoutTemplate, LifeBuoy, LogOut, Menu, Package, Plus, Settings, ShieldAlert, ShieldCheck, Sparkles, UserRound, Users, UsersRound, X,
 } from 'lucide-react'
-import { useCallback, useEffect, useState, type ReactNode } from 'react'
+import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react'
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { Avatar, Button, StatusBadge } from '@/components/ui'
 import { apiPost } from '@/hooks/queries'
 import { resetCsrf } from '@/lib/api'
 import { cn } from '@/lib/cn'
-import { useAuthStore } from '@/stores/auth'
+import { useAuthStore, useCan } from '@/stores/auth'
+import { NotificationBell } from './NotificationBell'
 import { useUiStore } from '@/stores/ui'
 
-type NavItem = { to: string; label: string; icon: ReactNode; end?: boolean }
+type NavItem = { to: string; label: string; icon: ReactNode; end?: boolean; manageOnly?: boolean }
 
 const NAV: NavItem[] = [
   { to: '/dashboard', label: 'Overview', icon: <LayoutDashboard />, end: true },
@@ -24,6 +25,8 @@ const NAV: NavItem[] = [
   { to: '/dashboard/channels', label: 'Bot Channels', icon: <Bot /> },
   { to: '/dashboard/billing', label: 'Billing & Credits', icon: <CreditCard /> },
   { to: '/dashboard/settings', label: 'Settings', icon: <Settings /> },
+  { to: '/dashboard/activity', label: 'Activity log', icon: <History />, manageOnly: true },
+  { to: '/dashboard/support', label: 'Help & support', icon: <LifeBuoy /> },
 ]
 
 function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
@@ -31,6 +34,7 @@ function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
   const merchant = session?.merchant
   const usage = session?.usage
   const unlimited = usage?.monthly_quota === null
+  const canManage = useCan('settings.manage')
 
   return (
     <div className="flex h-full flex-col bg-vendslip-deep text-white">
@@ -45,7 +49,7 @@ function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
         </div>
       </div>
       <nav className="no-scrollbar flex-1 space-y-0.5 overflow-y-auto pl-3" aria-label="Dashboard">
-        {NAV.map((item) => (
+        {NAV.filter((item) => !item.manageOnly || canManage).map((item) => (
           <NavLink
             key={item.to}
             to={item.to}
@@ -187,6 +191,64 @@ function SupportBanner() {
   )
 }
 
+/**
+ * A small header pill (not a banner) until the signed-in person turns on two-factor sign-in. It
+ * moves just enough to be noticed; tapping it opens a short explanation. "Later" hides it for the
+ * current visit only. Never shown in support sessions or on the profile page.
+ */
+function TwoFactorNudge() {
+  const session = useAuthStore((s) => s.session)
+  const { pathname } = useLocation()
+  const [hidden, setHidden] = useState(false)
+  const [open, setOpen] = useState(false)
+  const box = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (!open) return
+    const away = (e: PointerEvent) => { if (!box.current?.contains(e.target as Node)) setOpen(false) }
+    const esc = (e: KeyboardEvent) => { if (e.key === 'Escape') setOpen(false) }
+    document.addEventListener('pointerdown', away)
+    document.addEventListener('keydown', esc)
+    return () => { document.removeEventListener('pointerdown', away); document.removeEventListener('keydown', esc) }
+  }, [open])
+
+  if (!session || session.user.two_factor_enabled || session.support || hidden || pathname.startsWith('/dashboard/profile')) return null
+
+  return (
+    <div ref={box} className="relative">
+      <button
+        type="button"
+        onClick={() => setOpen((o) => !o)}
+        aria-expanded={open}
+        aria-haspopup="dialog"
+        aria-label="Your account isn’t fully protected. Turn on two-factor sign-in"
+        className="vs-nudge group inline-flex h-8 items-center gap-1.5 rounded-full px-2 text-xs font-semibold text-tone-partial transition-colors sm:px-2.5 cursor-pointer"
+      >
+        <span className="relative inline-flex items-center">
+          <span className="vs-nudge__halo" aria-hidden />
+          <ShieldAlert className="vs-nudge__icon size-4" aria-hidden />
+        </span>
+        
+        {/* Removed pb-1 so flex centering stays aligned, using -bottom-1 for spacing */}
+        <span className="hidden sm:inline relative">
+          Secure your account
+          <span className="absolute -bottom-1 left-1/2 h-[1.5px] w-0 -translate-x-1/2 bg-current transition-all duration-500 ease-out group-hover:w-full" />
+        </span>
+      </button>
+      {open && (
+        <div role="dialog" aria-label="Two-factor sign-in" className="absolute right-0 z-40 mt-2 w-[min(18rem,calc(100vw-2rem))] animate-fade-up rounded-xl border border-border-subtle bg-white p-4 shadow-lg">
+          <p className="flex items-center gap-2 text-sm font-semibold text-ink-primary"><ShieldCheck className="size-4 text-vendslip-primary" aria-hidden />Turn on two-factor sign-in</p>
+          <p className="mt-1.5 text-xs leading-relaxed text-ink-secondary">A 6-digit code from an authenticator app keeps your slips and payouts safe, even if your password leaks.</p>
+          <div className="mt-3 flex items-center justify-end gap-2">
+            <Button size="xs" variant="ghost" onClick={() => { setHidden(true); setOpen(false) }}>Later</Button>
+            <Button size="xs" to="/dashboard/profile#two-factor" onClick={() => setOpen(false)}>Turn it on</Button>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
 export default function DashboardLayout() {
   const sidebarOpen = useUiStore((s) => s.sidebarOpen)
   const setSidebarOpen = useUiStore((s) => s.setSidebarOpen)
@@ -219,9 +281,11 @@ export default function DashboardLayout() {
               <img src="/assets/brand/vendslip-icon.png" alt="VendSlip" className="h-7 w-auto lg:hidden" />
               {merchant && <StatusBadge status={merchant.record_mutability_mode} size="sm" showIcon className="hidden sm:inline-flex" />}
               {merchant?.status === 'SUSPENDED' && <StatusBadge status="SUSPENDED" size="sm" />}
+              <TwoFactorNudge />
             </div>
             <div className="flex items-center gap-2 sm:gap-3">
               <Button to="/dashboard/composer" size="sm" leftIcon={<Plus className="size-4" />} className="hidden lg:inline-flex">New slip</Button>
+              {merchant && <NotificationBell />}
               <UserMenu />
             </div>
           </div>

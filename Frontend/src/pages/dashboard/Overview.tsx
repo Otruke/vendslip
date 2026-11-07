@@ -13,11 +13,13 @@ const CHANNEL_COLORS: Record<string, string> = { WHATSAPP: '#1c7d55', TELEGRAM: 
 
 export default function Overview() {
   const [range, setRange] = useState<'7d' | '30d' | '90d' | '12m'>('30d')
-  const { data, isLoading } = useOverview(range)
+  const [pickedCurrency, setPickedCurrency] = useState<string | null>(null)
+  const { data, isLoading } = useOverview(range, pickedCurrency)
   const merchant = useAuthStore((s) => s.session?.merchant)
   const user = useAuthStore((s) => s.session?.user)
   const navigate = useNavigate()
-  const currency = merchant?.currency ?? 'NGN'
+  const currency = data?.currency ?? pickedCurrency ?? merchant?.currency ?? 'NGN'
+  const currencies = data?.currencies ?? []
   const k = data?.kpis
   const channelTotal = data?.channels.reduce((s, c) => s + c.count, 0) ?? 0
 
@@ -27,7 +29,10 @@ export default function Overview() {
         eyebrow={new Intl.DateTimeFormat('en-GB', { weekday: 'long', day: 'numeric', month: 'long' }).format(new Date())}
         title={`Hello, ${user?.name.split(' ')[0] ?? 'there'}`}
         subtitle="Here’s how your sales are moving."
-        actions={<SegmentedTabs value={range} onChange={setRange} size="sm" options={[{ value: '7d', label: '7D' }, { value: '30d', label: '30D' }, { value: '90d', label: '90D' }, { value: '12m', label: '12M' }]} />}
+        actions={<div className="flex flex-wrap items-center gap-2">
+          {currencies.length > 1 && <SegmentedTabs value={currency} onChange={setPickedCurrency} size="sm" options={currencies.map((c) => ({ value: c, label: c }))} />}
+          <SegmentedTabs value={range} onChange={setRange} size="sm" options={[{ value: '7d', label: '7D' }, { value: '30d', label: '30D' }, { value: '90d', label: '90D' }, { value: '12m', label: '12M' }]} />
+        </div>}
       />
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">

@@ -29,13 +29,15 @@ final class CustomerController extends ApiController
         ]);
         $outstandingStatuses = "'".implode("','", [DocumentStatus::UNPAID->value, DocumentStatus::PARTIAL->value, DocumentStatus::OVERDUE->value])."'";
 
+        // Money totals are in the business's own currency (slips in other currencies are not added in).
+        $currency = $this->merchant($request)->currency;
         $query = Customer::query()->forMerchant($this->merchant($request))
             ->select('customers.*')
             ->selectSub(Document::query()->selectRaw('count(*)')->whereColumn('documents.customer_id', 'customers.id')->whereNull('parent_document_id'), 'documents_count')
             ->selectSub(Document::query()->selectRaw('coalesce(sum(total_minor),0)')->whereColumn('documents.customer_id', 'customers.id')
-                ->whereNull('parent_document_id')->where('doc_type', '!=', DocumentType::CREDIT_NOTE->value)->where('status', '!=', DocumentStatus::VOID->value), 'total_billed_minor')
+                ->whereNull('parent_document_id')->where('doc_type', '!=', DocumentType::CREDIT_NOTE->value)->where('status', '!=', DocumentStatus::VOID->value)->where('currency', $currency), 'total_billed_minor')
             ->selectSub(Document::query()->selectRaw('coalesce(sum(balance_due_minor),0)')->whereColumn('documents.customer_id', 'customers.id')
-                ->where('doc_type', DocumentType::INVOICE->value)->whereRaw("status in ({$outstandingStatuses})"), 'outstanding_minor')
+                ->where('doc_type', DocumentType::INVOICE->value)->whereRaw("status in ({$outstandingStatuses})")->where('currency', $currency), 'outstanding_minor')
             ->selectSub(Document::query()->selectRaw('max(issued_at)')->whereColumn('documents.customer_id', 'customers.id'), 'last_purchase_at');
 
         if (! empty($filters['q'])) {
@@ -70,12 +72,14 @@ final class CustomerController extends ApiController
         $documents = Document::query()->forMerchant($this->merchant($request))->where('customer_id', $customer->id)
             ->orderByDesc('issued_at')->limit(50)->get();
 
+        $own = $documents->where('currency', $this->merchant($request)->currency);
+
         return response()->json([
             'data' => (new CustomerResource($customer))->resolve(),
             'documents' => DocumentResource::collection($documents)->resolve(),
             'summary' => [
-                'total_billed_minor' => (int) $documents->whereNull('parent_document_id')->where('doc_type', '!=', DocumentType::CREDIT_NOTE)->where('status', '!=', DocumentStatus::VOID)->sum('total_minor'),
-                'outstanding_minor' => (int) $documents->where('doc_type', DocumentType::INVOICE)->filter(static fn (Document $d): bool => $d->status->isOutstanding())->sum('balance_due_minor'),
+                'total_billed_minor' => (int) $own->whereNull('parent_document_id')->where('doc_type', '!=', DocumentType::CREDIT_NOTE)->where('status', '!=', DocumentStatus::VOID)->sum('total_minor'),
+                'outstanding_minor' => (int) $own->where('doc_type', DocumentType::INVOICE)->filter(static fn (Document $d): bool => $d->status->isOutstanding())->sum('balance_due_minor'),
             ],
         ]);
     }

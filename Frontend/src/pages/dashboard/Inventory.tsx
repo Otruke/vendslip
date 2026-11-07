@@ -3,7 +3,8 @@ import { useEffect, useState } from 'react'
 import { Alert, Button, DataTable, EmptyState, Input, Modal, Money, PageHeader, SegmentedTabs, StatusBadge, ToggleSwitch } from '@/components/ui'
 import { apiDelete, apiPost, apiPut, useInventory, useInvalidate } from '@/hooks/queries'
 import { errorMessage } from '@/lib/api'
-import { minorToInput, parseToMinor } from '@/lib/money'
+import { currencySymbol, minorToInput, parseToMinor } from '@/lib/money'
+import { useAuthStore } from '@/stores/auth'
 import { useCan, useEntitlement } from '@/stores/auth'
 import { toast } from '@/stores/ui'
 import type { Sku } from '@/types/api'
@@ -54,14 +55,15 @@ export default function Inventory() {
 function SkuForm({ sku, onClose }: { sku: Sku | 'new' | null; onClose: () => void }) {
   const existing = sku !== 'new' ? sku : null
   const invalidate = useInvalidate()
-  const [form, setForm] = useState({ sku: existing?.sku ?? '', name: existing?.name ?? '', description: existing?.description ?? '', price: minorToInput(existing?.unit_price_minor ?? null), stock: String(existing?.stock_quantity ?? 0), threshold: String(existing?.low_stock_threshold ?? 5), track: existing?.track_stock ?? true, active: existing?.is_active ?? true })
+  const currency = useAuthStore((s) => s.session?.merchant?.currency ?? 'NGN')
+  const [form, setForm] = useState({ sku: existing?.sku ?? '', name: existing?.name ?? '', description: existing?.description ?? '', price: minorToInput(existing?.unit_price_minor ?? null), stock: String(existing?.stock_quantity ?? 0), threshold: String(existing?.low_stock_threshold ?? 5), track: existing?.track_stock ?? true, block: existing?.block_overselling ?? true, active: existing?.is_active ?? true })
   const [error, setError] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
 
   const save = async () => {
     setBusy(true)
     try {
-      const body = { sku: form.sku.trim(), name: form.name.trim(), description: form.description.trim() || null, unit_price_minor: parseToMinor(form.price) ?? 0, stock_quantity: Number(form.stock) || 0, low_stock_threshold: Number(form.threshold) || 0, track_stock: form.track, is_active: form.active }
+      const body = { sku: form.sku.trim(), name: form.name.trim(), description: form.description.trim() || null, unit_price_minor: parseToMinor(form.price) ?? 0, stock_quantity: Number(form.stock) || 0, low_stock_threshold: Number(form.threshold) || 0, track_stock: form.track, block_overselling: form.block, is_active: form.active }
       if (existing) await apiPut(`/inventory/${existing.id}`, body)
       else await apiPost('/inventory', body)
       await invalidate('inventory', 'overview')
@@ -85,12 +87,13 @@ function SkuForm({ sku, onClose }: { sku: Sku | 'new' | null; onClose: () => voi
         </div>
         <Input label="Description" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
         <div className="grid gap-4 sm:grid-cols-3">
-          <Input label="Unit price" prefixIcon={<span>₦</span>} value={form.price} onChange={(e) => setForm({ ...form, price: e.target.value })} />
+          <Input label="Unit price" info="Its normal price. Sell below it and the slip shows the saving." prefixIcon={<span>{currencySymbol(currency).trim()}</span>} value={form.price} onChange={(e) => setForm({ ...form, price: e.target.value })} />
           <Input label="In stock" type="number" min={0} value={form.stock} onChange={(e) => setForm({ ...form, stock: e.target.value })} disabled={!!existing} helperText={existing ? 'Use Adjust to change stock' : undefined} />
           <Input label="Low-stock alert" type="number" min={0} value={form.threshold} onChange={(e) => setForm({ ...form, threshold: e.target.value })} />
         </div>
-        <ToggleSwitch checked={form.track} onChange={(v) => setForm({ ...form, track: v })} label="Track stock" description="Deduct on sale, block overselling." />
-        <ToggleSwitch checked={form.active} onChange={(v) => setForm({ ...form, active: v })} label="Active" description="Inactive products don’t auto-fill in /item." />
+        <ToggleSwitch checked={form.track} onChange={(v) => setForm({ ...form, track: v })} label="Track stock" info="Counts stock down on every sale and back up on voids, with low-stock alerts." />
+        <ToggleSwitch checked={form.track && form.block} disabled={!form.track} onChange={(v) => setForm({ ...form, block: v })} label="Block overselling" info={form.track ? 'Stops a slip when there isn’t enough stock. Turn it off to sell now and restock later (stock can go below zero).' : 'Turn on stock tracking first.'} />
+        <ToggleSwitch checked={form.active} onChange={(v) => setForm({ ...form, active: v })} label="Active" info="Inactive products don’t auto-fill when you type /item." />
       </div>
     </Modal>
   )

@@ -7,6 +7,7 @@ namespace App\Services\Slash;
 use App\Data\DocumentDraftData;
 use App\Data\DocumentItemData;
 use App\Enums\DocumentType;
+use App\Support\Currencies;
 use App\Support\Money;
 use Carbon\CarbonImmutable;
 
@@ -14,17 +15,23 @@ use Carbon\CarbonImmutable;
  * The accumulating state of a /slash draft (stored in bot_draft_sessions.draft_payload_json
  * and mirrored by the React composer store).
  *
- * @phpstan-type ItemShape array{description: string, quantity: int, unit_price_minor: int|null, sku_id?: string|null}
+ * @phpstan-type ItemShape array{description: string, quantity: int, unit_price_minor: int|null, list_price_minor?: int|null, sku_id?: string|null}
  * @phpstan-type PayloadShape array{
  *   type: string|null, name: string|null, phone: string|null, email: string|null, address: string|null,
  *   items: list<ItemShape>, amount_minor: int|null, discount_minor: int|null, discount_bps: int|null,
  *   shipping_minor: int|null, paid: int|string|null, vat_rate_bps: int|null, vat_inclusive: bool|null,
- *   due_date: string|null, note: string|null, template: string|null
+ *   due_date: string|null, note: string|null, template: string|null, currency: string|null
  * }
  */
 final class DraftPayload
 {
     public const string PAID_FULL = 'FULL';
+
+    /** A few everyday names people type instead of the code. */
+    private const array CURRENCY_WORDS = [
+        'naira' => 'NGN', '₦' => 'NGN', 'dollar' => 'USD', 'dollars' => 'USD', '$' => 'USD', 'pound' => 'GBP', 'pounds' => 'GBP', '£' => 'GBP',
+        'euro' => 'EUR', 'euros' => 'EUR', '€' => 'EUR', 'cedi' => 'GHS', 'cedis' => 'GHS', 'rand' => 'ZAR',
+    ];
 
     /** @param PayloadShape $data */
     private function __construct(private array $data) {}
@@ -35,7 +42,7 @@ final class DraftPayload
             'type' => null, 'name' => null, 'phone' => null, 'email' => null, 'address' => null,
             'items' => [], 'amount_minor' => null, 'discount_minor' => null, 'discount_bps' => null,
             'shipping_minor' => null, 'paid' => null, 'vat_rate_bps' => null, 'vat_inclusive' => null,
-            'due_date' => null, 'note' => null, 'template' => null,
+            'due_date' => null, 'note' => null, 'template' => null, 'currency' => null,
         ]);
     }
 
@@ -125,6 +132,21 @@ final class DraftPayload
 
             case 'template':
                 $this->data['template'] = mb_substr($lower, 0, 100);
+
+                return null;
+
+            case 'currency':
+                // "/currency = USD" for this slip only; "/currency = default" goes back to the business's.
+                if (in_array($lower, ['default', 'reset', 'off', 'none'], true)) {
+                    $this->data['currency'] = null;
+
+                    return null;
+                }
+                $code = self::CURRENCY_WORDS[$lower] ?? strtoupper($lower);
+                if (! Currencies::exists($code)) {
+                    return "Couldn't read /currency \"{$value}\". Use a 3-letter code like NGN, USD or GHS.";
+                }
+                $this->data['currency'] = $code;
 
                 return null;
 
@@ -300,6 +322,12 @@ final class DraftPayload
         return $this->data['template'];
     }
 
+    /** This slip's currency when /currency was used, else null (the business's default). */
+    public function currency(): ?string
+    {
+        return $this->data['currency'] ?? null;
+    }
+
     public function get(string $key): mixed
     {
         return $this->data[$key] ?? null;
@@ -337,7 +365,7 @@ final class DraftPayload
     /**
      * Normalised line items: a lump-sum /amount becomes a single line.
      *
-     * @return list<array{description: string, quantity: int, unit_price_minor: int, sku_id: string|null}>
+     * @return list<array{description: string, quantity: int, unit_price_minor: int, list_price_minor: int|null, sku_id: string|null}>
      */
     public function resolvedLines(): array
     {
@@ -347,6 +375,7 @@ final class DraftPayload
                 'description' => $item['description'],
                 'quantity' => $item['quantity'],
                 'unit_price_minor' => (int) $item['unit_price_minor'],
+                'list_price_minor' => $item['list_price_minor'] ?? null,
                 'sku_id' => $item['sku_id'] ?? null,
             ];
         }
@@ -355,6 +384,7 @@ final class DraftPayload
                 'description' => 'Goods & services',
                 'quantity' => 1,
                 'unit_price_minor' => $this->data['amount_minor'],
+                'list_price_minor' => null,
                 'sku_id' => null,
             ];
         }
@@ -388,6 +418,7 @@ final class DraftPayload
                 quantity: $l['quantity'],
                 unit_price_minor: $l['unit_price_minor'],
                 sku_id: $l['sku_id'],
+                list_price_minor: $l['list_price_minor'],
             ), $lines),
             customer_phone: $this->data['phone'],
             customer_email: $this->data['email'],
@@ -401,6 +432,7 @@ final class DraftPayload
             notes: $this->data['note'],
             template_id: $templateId,
             use_paid_credit: $useCredit,
+            currency: $this->currency(),
         );
     }
 }

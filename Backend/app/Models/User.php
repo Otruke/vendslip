@@ -96,6 +96,34 @@ class User extends Authenticatable
         return $this->hasAnyRole([Role::SUPER_ADMIN->value, Role::ADMIN->value]);
     }
 
+    /** Anyone who signs in to the admin portal, including support agents and QA reviewers. */
+    public function isPlatformStaff(): bool
+    {
+        return $this->hasAnyRole([Role::SUPER_ADMIN->value, Role::ADMIN->value, Role::SUPPORT_AGENT->value, Role::QA_REVIEWER->value]);
+    }
+
+    /** Can write to customers on tickets (QA reviewers can't). */
+    public function canAnswerTickets(): bool
+    {
+        return $this->hasAnyRole([Role::SUPER_ADMIN->value, Role::ADMIN->value, Role::SUPPORT_AGENT->value]);
+    }
+
+    public function isQaReviewer(): bool
+    {
+        return $this->hasRole(Role::QA_REVIEWER->value);
+    }
+
+    public function platformRoleLabel(): string
+    {
+        foreach ([Role::SUPER_ADMIN, Role::ADMIN, Role::SUPPORT_AGENT, Role::QA_REVIEWER] as $role) {
+            if ($this->hasRole($role->value)) {
+                return $role->label();
+            }
+        }
+
+        return 'Staff';
+    }
+
     public function isSuperAdmin(): bool
     {
         return $this->hasRole(Role::SUPER_ADMIN->value);

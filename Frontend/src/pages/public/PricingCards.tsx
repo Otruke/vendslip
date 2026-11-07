@@ -1,12 +1,16 @@
 import { Check, Coins } from 'lucide-react'
 import { useState, type CSSProperties } from 'react'
 import { Button, Card, SegmentedTabs, Skeleton } from '@/components/ui'
-import { usePlans } from '@/hooks/queries'
+import { useDisplayCurrency, useLocales, usePlans } from '@/hooks/queries'
+import { useAuthStore } from '@/stores/auth'
 import { cn } from '@/lib/cn'
 import { formatMoney } from '@/lib/money'
 
 export function PricingCards({ className, ctaTo = '/register', onSelect }: { className?: string; ctaTo?: string; onSelect?: (tier: string, cycle: 'MONTHLY' | 'YEARLY') => void }) {
-  const { data, isLoading } = usePlans()
+  const [currency, setCurrency] = useDisplayCurrency()
+  const signedIn = useAuthStore((s) => !!s.session?.merchant)
+  const locales = useLocales()
+  const { data, isLoading } = usePlans(currency)
   const [cycle, setCycle] = useState<'MONTHLY' | 'YEARLY'>('MONTHLY')
 
   if (isLoading || !data) {
@@ -16,8 +20,16 @@ export function PricingCards({ className, ctaTo = '/register', onSelect }: { cla
   const pack = data.credit_packs[0]
   return (
     <div className={className}>
-      <div className="flex justify-center">
+      <div className="flex flex-wrap items-center justify-center gap-3">
         <SegmentedTabs value={cycle} onChange={setCycle} options={[{ value: 'MONTHLY', label: 'Monthly' }, { value: 'YEARLY', label: <span>Yearly <span className="vs-tag vs-tag--settled vs-tag--sm ml-1.5" data-fill="solid"><span className="vs-tag__mark" aria-hidden />{data.yearly_discount_label ?? 'Save'}</span></span> }]} />
+        {!signedIn && locales.data && (
+          <label className="flex items-center gap-2 text-sm text-ink-secondary">
+            <span>Prices in</span>
+            <select value={data.plans[0]?.currency ?? currency ?? 'USD'} onChange={(e) => setCurrency(e.target.value)} className="h-9 rounded-lg border border-border-subtle bg-white px-2 text-sm text-ink-primary focus:border-vendslip-primary focus:outline-none focus:ring-2 focus:ring-vendslip-primary/20" aria-label="Currency">
+              {locales.data.currencies.map((c) => <option key={c.code} value={c.code}>{c.code}</option>)}
+            </select>
+          </label>
+        )}
       </div>
       <div className="mt-8 grid gap-5 md:grid-cols-3" data-stagger>
         {data.plans.map((plan) => {
@@ -58,6 +70,7 @@ export function PricingCards({ className, ctaTo = '/register', onSelect }: { cla
           )
         })}
       </div>
+      {data.plans.some((p) => p.converted) && <p className="mt-4 text-center text-xs text-ink-muted">Prices converted at today&rsquo;s exchange rate. The amount is fixed when you start a payment. Gateways that can&rsquo;t charge {data.plans[0]?.currency} charge USD.</p>}
       {pack && (
         <div className="mt-6" data-reveal="rise">
         <Card variant="teal" className="vs-slip flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">

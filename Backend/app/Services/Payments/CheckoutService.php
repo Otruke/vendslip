@@ -18,6 +18,7 @@ use App\Models\PaymentTransaction;
 use App\Models\SubscriptionPlan;
 use App\Models\User;
 use App\Services\Billing\PlanEntitlements;
+use App\Services\Pricing\PlanPricing;
 use App\Services\Settings\PlatformSettings;
 use App\Support\Urls;
 use Illuminate\Support\Str;
@@ -29,6 +30,7 @@ final class CheckoutService
         private readonly NowPaymentsClient $nowPayments,
         private readonly PlatformSettings $settings,
         private readonly PlanEntitlements $entitlements,
+        private readonly PlanPricing $pricing,
     ) {}
 
     public function subscription(Merchant $merchant, User $user, PlanTier $tier, BillingCycle $cycle, PaymentGateway $gateway): PaymentTransaction
@@ -37,13 +39,14 @@ final class CheckoutService
         if ($plan === null || ! $plan->is_active || $tier === PlanTier::FREE) {
             throw new DomainRuleException('That plan is not available.', 'plan_unavailable');
         }
-        $amount = $plan->priceFor($cycle);
-        if ($amount <= 0) {
+        // Priced in the business's currency when the gateway takes it (fixed price or converted), else USD.
+        $price = $this->pricing->plan($plan, $cycle, PlanPricing::chargeCurrency($gateway, $merchant->currency));
+        if ($price['amount_minor'] <= 0) {
             throw new DomainRuleException('That plan has no price set.', 'plan_unavailable');
         }
 
-        $transaction = $this->createTransaction($merchant, $user, PaymentPurpose::SUBSCRIPTION, $gateway, $amount, $plan->currency, [
-            'plan_tier' => $tier, 'billing_cycle' => $cycle,
+        $transaction = $this->createTransaction($merchant, $user, PaymentPurpose::SUBSCRIPTION, $gateway, $price['amount_minor'], $price['currency'], [
+            'plan_tier' => $tier, 'billing_cycle' => $cycle, 'metadata' => ['price_source' => $price['source']],
         ]);
 
         return $this->start($transaction, GatewayCredentials::platform($this->settings), "VendSlip {$plan->name} ({$cycle->label()})", $user);
@@ -54,8 +57,9 @@ final class CheckoutService
         if (! $pack->is_active) {
             throw new DomainRuleException('That credit pack is not available.', 'pack_unavailable');
         }
-        $transaction = $this->createTransaction($merchant, $user, PaymentPurpose::CREDIT_PACK, $gateway, $pack->price_minor, $pack->currency, [
-            'credits' => $pack->credits,
+        $price = $this->pricing->pack($pack, PlanPricing::chargeCurrency($gateway, $merchant->currency));
+        $transaction = $this->createTransaction($merchant, $user, PaymentPurpose::CREDIT_PACK, $gateway, $price['amount_minor'], $price['currency'], [
+            'credits' => $pack->credits, 'metadata' => ['price_source' => $price['source']],
         ]);
 
         return $this->start($transaction, GatewayCredentials::platform($this->settings), "VendSlip {$pack->credits} slip credits", $user);

@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $name
  * @property int $credits
  * @property int $price_minor
+ * @property array<string, int>|null $price_overrides
  * @property string $currency
  * @property bool $is_active
  * @property int $sort_order
@@ -18,7 +19,7 @@ use Illuminate\Database\Eloquent\Model;
 class CreditPack extends Model
 {
     /** @var list<string> */
-    protected $fillable = ['name', 'credits', 'price_minor', 'currency', 'is_active', 'sort_order'];
+    protected $fillable = ['name', 'credits', 'price_minor', 'price_overrides', 'currency', 'is_active', 'sort_order'];
 
     /** @return array<string, string> */
     protected function casts(): array
@@ -26,6 +27,7 @@ class CreditPack extends Model
         return [
             'credits' => 'integer',
             'price_minor' => 'integer',
+            'price_overrides' => 'array',
             'is_active' => 'boolean',
             'sort_order' => 'integer',
         ];

@@ -25,6 +25,13 @@ use Illuminate\Support\Facades\Storage;
  * @property string|null $phone
  * @property string|null $address
  * @property string|null $rc_number
+ * @property string|null $registration_type RC | BN | UNREGISTERED
+ * @property array<string, mixed>|null $alert_settings
+ * @property array<string, mixed>|null $reminder_settings
+ * @property bool $show_in_activity_feed
+ * @property string|null $country_code
+ * @property string|null $state
+ * @property string|null $city
  * @property string|null $tax_id
  * @property string $currency
  * @property int $vat_rate_bps
@@ -66,7 +73,7 @@ class Merchant extends Model
 
     /** @var list<string> */
     protected $fillable = [
-        'name', 'slug', 'email', 'phone', 'address', 'rc_number', 'tax_id', 'currency',
+        'name', 'slug', 'email', 'phone', 'address', 'country_code', 'state', 'city', 'show_in_activity_feed', 'registration_type', 'rc_number', 'tax_id', 'currency',
         'vat_rate_bps', 'vat_inclusive', 'primary_color', 'secondary_color', 'logo_path', 'receipt_footer',
         'bank_name', 'bank_account_number', 'bank_account_name', 'invoice_due_days',
         'default_receipt_template_id', 'default_invoice_template_id',
@@ -86,6 +93,9 @@ class Merchant extends Model
     protected function casts(): array
     {
         return [
+            'alert_settings' => 'array',
+            'reminder_settings' => 'array',
+            'show_in_activity_feed' => 'boolean',
             'vat_rate_bps' => 'integer',
             'vat_inclusive' => 'boolean',
             'invoice_due_days' => 'integer',
@@ -106,6 +116,12 @@ class Merchant extends Model
             'created_at' => 'immutable_datetime',
             'updated_at' => 'immutable_datetime',
         ];
+    }
+
+    /** @return HasMany<PayoutAccount, $this> */
+    public function payoutAccounts(): HasMany
+    {
+        return $this->hasMany(PayoutAccount::class)->orderByDesc('is_default')->orderBy('sort_order')->orderBy('id');
     }
 
     /** @return HasMany<User, $this> */
@@ -172,9 +188,15 @@ class Merchant extends Model
         return filled($this->nowpayments_api_key);
     }
 
+    /**
+     * Served by the app itself (not /storage), so logos show without `storage:link` and the
+     * version in the URL makes a new upload appear at once instead of a cached old one.
+     */
     public function logoUrl(): ?string
     {
-        return $this->logo_path !== null ? Storage::disk('public')->url($this->logo_path) : null;
+        return $this->logo_path !== null
+            ? '/api/v1/public/merchants/'.$this->id.'/logo?v='.substr(md5($this->logo_path), 0, 10)
+            : null;
     }
 
     public function logoAbsolutePath(): ?string
