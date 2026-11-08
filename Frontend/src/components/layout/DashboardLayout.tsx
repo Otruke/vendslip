@@ -9,6 +9,7 @@ import { apiPost } from '@/hooks/queries'
 import { resetCsrf } from '@/lib/api'
 import { cn } from '@/lib/cn'
 import { useAuthStore, useCan } from '@/stores/auth'
+import { LegalUpdate } from './LegalUpdate'
 import { NotificationBell } from './NotificationBell'
 import { useUiStore } from '@/stores/ui'
 
@@ -289,6 +290,7 @@ export default function DashboardLayout() {
               <UserMenu />
             </div>
           </div>
+          <LegalUpdate />
         </header>
         <main className="mx-auto w-full max-w-[1440px] px-4 pt-6 pb-28 sm:px-6 lg:px-8 lg:py-8">
           <Outlet />

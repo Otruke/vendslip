@@ -11,6 +11,7 @@ use App\Enums\Permission;
 use App\Enums\PlanTier;
 use App\Models\CreditPack;
 use App\Models\PaymentTransaction;
+use App\Services\Legal\LegalConsent;
 use App\Services\Payments\CheckoutService;
 use App\Services\Settings\PlatformSettings;
 use Illuminate\Http\JsonResponse;
@@ -49,6 +50,11 @@ final class BillingController extends ApiController
             'plan_tier' => ['required_if:purpose,SUBSCRIPTION', 'nullable', Rule::in([PlanTier::PRO->value, PlanTier::BUSINESS_PLUS->value])],
             'billing_cycle' => ['required_if:purpose,SUBSCRIPTION', 'nullable', Rule::enum(BillingCycle::class)],
             'credit_pack_id' => ['required_if:purpose,CREDIT_PACK', 'nullable', 'integer', 'exists:credit_packs,id'],
+            // Every payment to VendSlip needs the current Terms and Privacy Policy accepted first.
+            'accept_terms' => ['required', 'accepted'],
+        ], [
+            'accept_terms.accepted' => 'Please accept the Terms of Service and Privacy Policy to continue.',
+            'accept_terms.required' => 'Please accept the Terms of Service and Privacy Policy to continue.',
         ]);
         $merchant = $this->merchant($request);
         $user = $this->user($request);
@@ -57,6 +63,8 @@ final class BillingController extends ApiController
         $transaction = $data['purpose'] === PaymentPurpose::SUBSCRIPTION->value
             ? $this->checkout->subscription($merchant, $user, PlanTier::from($data['plan_tier']), BillingCycle::from($data['billing_cycle']), $gateway)
             : $this->checkout->creditPack($merchant, $user, CreditPack::query()->findOrFail((int) $data['credit_pack_id']), $gateway);
+
+        app(LegalConsent::class)->record($user, LegalConsent::CHECKOUT, $request, $transaction->reference);
 
         return response()->json(['reference' => $transaction->reference, 'checkout_url' => $transaction->checkout_url], 201);
     }

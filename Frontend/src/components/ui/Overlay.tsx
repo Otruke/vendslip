@@ -43,20 +43,24 @@ function useOverlay(isOpen: boolean, onClose: () => void) {
 
 const modalSizes = { sm: 'max-w-md', md: 'max-w-lg', lg: 'max-w-2xl', xl: 'max-w-4xl' }
 
-export function Modal({ isOpen, onClose, title, description, size = 'md', children, footer }: { isOpen: boolean; onClose: () => void; title: ReactNode; description?: ReactNode; size?: keyof typeof modalSizes; children: ReactNode; footer?: ReactNode }) {
+const stay = () => {}
+
+/** `dismissible={false}`: no close button, and Escape or a tap outside does nothing (a required step). */
+export function Modal({ isOpen, onClose, title, description, size = 'md', children, footer, dismissible = true }: { isOpen: boolean; onClose: () => void; title: ReactNode; description?: ReactNode; size?: keyof typeof modalSizes; children: ReactNode; footer?: ReactNode; dismissible?: boolean }) {
   const titleId = useId()
-  const panelRef = useOverlay(isOpen, onClose)
+  const close = dismissible ? onClose : stay
+  const panelRef = useOverlay(isOpen, close)
   if (!isOpen) return null
   return createPortal(
     <div className="fixed inset-0 z-50 flex items-end justify-center p-0 sm:items-center sm:p-4" role="presentation">
-      <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm animate-fade-up" onClick={onClose} aria-hidden />
+      <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm animate-fade-up" onClick={close} aria-hidden />
       <div ref={panelRef} role="dialog" aria-modal="true" aria-labelledby={titleId} className={cn('relative flex max-h-[92dvh] w-full flex-col rounded-t-2xl bg-white shadow-2xl animate-slip-in sm:rounded-2xl', modalSizes[size])}>
         <div className="flex items-start justify-between gap-4 border-b border-border-subtle px-5 py-4">
           <div>
             <h2 id={titleId} className="text-base font-semibold text-ink-primary">{title}</h2>
             {description && <p className="mt-0.5 text-sm text-ink-secondary">{description}</p>}
           </div>
-          <IconButton icon={<X className="size-4" />} label="Close" onClick={onClose} />
+          {dismissible && <IconButton icon={<X className="size-4" />} label="Close" onClick={onClose} />}
         </div>
         <div className="overflow-y-auto px-5 py-5">{children}</div>
         {footer && <div className="flex flex-wrap justify-end gap-2 border-t border-border-subtle px-5 py-4">{footer}</div>}

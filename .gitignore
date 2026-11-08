@@ -509,3 +509,5 @@ settings.local.php
 
 # Local backups
 /backups/
+
+/Claude outputs

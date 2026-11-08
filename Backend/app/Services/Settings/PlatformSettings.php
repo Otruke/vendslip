@@ -56,6 +56,8 @@ final class PlatformSettings
         'billing.remove_watermark_on_paid_credit' => true,
         'billing.yearly_discount_label' => 'Save 20%',
         'marketing.popups.enabled' => false,
+        // Days before (positive) or after (negative) a plan ends to remind the owners.
+        'billing.renewal_reminder_days' => '7,3,1,0,-3',
         'marketing.popups.show_stats' => true,
         'marketing.popups.min_seconds' => 15,
         'marketing.popups.max_seconds' => 40,

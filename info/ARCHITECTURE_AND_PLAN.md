@@ -32,8 +32,9 @@ This document is the **Single Source of Truth (SSOT)** for the **VendSlip** plat
 
 ```text
 c:\Users\rufus.otolorin\Documents\Ampps\vendSlip\
-├── ARCHITECTURE_AND_PLAN.md                 # THIS FILE — Master Architecture, UI/UX & Component Blueprint
-├── GOOGLE_STITCH_UI_UX_PROMPT.md            # Historical Stitch prompt reference
+├── info/                                    # All guides (START-HERE, SETUP, TESTING, META-SETUP, TWILIO-SETUP, LEGAL-BRIEF)
+│   ├── ARCHITECTURE_AND_PLAN.md             # THIS FILE — Master Architecture, UI/UX & Component Blueprint
+│   └── GOOGLE_STITCH_UI_UX_PROMPT.md        # Historical Stitch prompt reference
 │
 ├── brand_identity/                          # Official VendSlip Brand Assets (Source of Truth)
 │   ├── Brand Guide.jpg                      # Official color palette (#377581, #265363) & typography rules

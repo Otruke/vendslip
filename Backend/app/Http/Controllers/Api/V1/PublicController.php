@@ -15,6 +15,7 @@ use App\Models\Merchant;
 use App\Models\SubscriptionPlan;
 use App\Services\Billing\PlanEntitlements;
 use App\Services\Documents\VerificationService;
+use App\Services\Legal\LegalConsent;
 use App\Services\Marketing\ActivityFeed;
 use App\Services\Payments\CheckoutService;
 use App\Services\Payouts\PayoutAccounts;
@@ -58,6 +59,22 @@ final class PublicController extends Controller
             'X-Content-Type-Options' => 'nosniff',
             'Content-Security-Policy' => "default-src 'none'; sandbox",
         ]);
+    }
+
+    /** Who runs VendSlip and the current version of the Terms and Privacy Policy. */
+    public function legal(): JsonResponse
+    {
+        $latest = app(LegalConsent::class)->latest();
+
+        return response()->json([
+            'version' => $latest['version'],
+            'in_force' => $latest['in_force'],
+            'summary' => $latest['summary'],
+            'entity' => (string) config('vendslip.legal.entity'),
+            'address' => (string) config('vendslip.legal.address'),
+            'privacy_email' => (string) config('vendslip.legal.privacy_email'),
+            'support_email' => (string) config('vendslip.legal.support_email'),
+        ])->setPublic()->setMaxAge(300);
     }
 
     public function locales(): JsonResponse

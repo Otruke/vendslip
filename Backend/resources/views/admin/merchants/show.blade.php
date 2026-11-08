@@ -62,7 +62,19 @@
                 <div class="flex justify-between gap-3"><dt class="text-ink-secondary">VAT</dt><dd class="tabular font-medium">{{ rtrim(rtrim(number_format($merchant->vat_rate_bps / 100, 2), '0'), '.') }}% {{ $merchant->vat_inclusive ? 'incl.' : 'excl.' }}</dd></div>
                 <div class="flex justify-between gap-3"><dt class="text-ink-secondary">Gateways</dt><dd class="font-medium">{{ collect(['Flutterwave' => $merchant->hasFlutterwave(), 'Crypto' => $merchant->hasNowPayments()])->filter()->keys()->implode(', ') ?: 'None' }}</dd></div>
                 <div class="flex justify-between gap-3"><dt class="text-ink-secondary">Joined</dt><dd class="font-medium">{{ $merchant->created_at->format('d M Y') }}</dd></div>
+                <div class="flex justify-between gap-3"><dt class="text-ink-secondary">Terms accepted</dt><dd class="text-right font-medium">@if ($legal){{ $legal->accepted_at->format('d M Y') }}<span class="block text-xs font-normal text-ink-muted">v{{ $legal->version }} · {{ strtolower($legal->context) }} · {{ $legal->user?->name }}</span>@if (strcmp($legal->version, $legalVersion) < 0)<span class="block text-xs font-semibold text-[#94600f]">Not the newest (v{{ $legalVersion }})</span>@endif@else<span class="text-ink-muted">Not on record</span>@endif</dd></div>
             </dl>
+            <div class="mt-5 border-t border-border-subtle pt-5">
+                <p class="text-sm font-semibold">Plan renewal reminders</p>
+                <p class="mt-0.5 text-xs text-ink-secondary">{{ $renewal['own'] === null ? 'Uses the platform timing' : 'Own timing' }}: {{ $renewal['effective'] }}@if ($renewal['last']) · last sent {{ \Illuminate\Support\Carbon::parse($renewal['last']->sent_at)->diffForHumans() }}@endif</p>
+                @if (auth()->user()?->isSuperAdmin())
+                    <form method="POST" action="{{ route('admin.merchants.renewal', $merchant) }}" class="mt-3 flex items-end gap-2">
+                        @csrf @method('PUT')
+                        <div class="min-w-0 flex-1"><x-ui.input name="renewal_reminder_days" label="Their timing" :value="old('renewal_reminder_days', $renewal['own'])" placeholder="Platform timing" info="Days before the plan ends, e.g. 14, 7, 1, 0. Negative numbers are days after it ended. Leave blank to use the platform timing." /></div>
+                        <x-ui.button variant="outline">Save</x-ui.button>
+                    </form>
+                @endif
+            </div>
             <form method="POST" action="{{ route('admin.merchants.status', $merchant) }}" class="mt-5 space-y-3 border-t border-border-subtle pt-5" data-confirm="Change this merchant's account status?">
                 @csrf @method('PUT')
                 @if ($merchant->isSuspended())

@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Illuminate\Support\Facades\Schedule;
 
 Schedule::command('vendslip:mark-overdue')->dailyAt('00:05')->timezone(config('vendslip.timezone'));
+Schedule::command('vendslip:renewal-reminders')->dailyAt('09:00')->timezone(config('vendslip.timezone'))->withoutOverlapping();
 Schedule::command('vendslip:invoice-reminders')->dailyAt('09:10')->timezone(config('vendslip.timezone'))->withoutOverlapping();
 Schedule::command('vendslip:expire-drafts')->hourly();
 Schedule::command('vendslip:fx-refresh')->everySixHours()->withoutOverlapping();

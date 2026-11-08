@@ -129,7 +129,7 @@ domain (e.g. `https://vendslip.com`), `SESSION_SECURE_COOKIE=true`, real `MAIL_*
 The hosts in `APP_URL` / `FRONTEND_URL` are trusted for cookie login automatically.
 
 Cron (as the web user): `* * * * * cd /var/www/vendslip/Backend && php artisan schedule:run >> /dev/null 2>&1`.
-No queue worker is needed — nothing is queued.
+No separate queue worker is needed: alerts and emails are queued, and the scheduler drains the queue every minute.
 
 After every deploy: `php artisan migrate --force && php artisan optimize`, and run `composer audit`.
 

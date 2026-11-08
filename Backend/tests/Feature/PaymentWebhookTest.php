@@ -22,7 +22,7 @@ final class PaymentWebhookTest extends TestCase
         $this->actingAs($user);
         $pack = CreditPack::query()->firstOrFail();
 
-        $ref = $this->postJson('/api/v1/billing/checkout', ['purpose' => 'CREDIT_PACK', 'gateway' => 'FLUTTERWAVE', 'credit_pack_id' => $pack->id])
+        $ref = $this->postJson('/api/v1/billing/checkout', ['purpose' => 'CREDIT_PACK', 'gateway' => 'FLUTTERWAVE', 'credit_pack_id' => $pack->id, 'accept_terms' => true])
             ->assertCreated()->assertJsonPath('checkout_url', 'https://checkout.flutterwave.com/pay/x')->json('reference');
 
         Http::fake([
@@ -44,7 +44,7 @@ final class PaymentWebhookTest extends TestCase
         Http::fake(['api.flutterwave.com/v3/payments' => Http::response(['status' => 'success', 'data' => ['link' => 'https://x']])]);
         [$merchant, $user] = $this->merchantWithOwner();
         $this->actingAs($user);
-        $ref = $this->postJson('/api/v1/billing/checkout', ['purpose' => 'SUBSCRIPTION', 'gateway' => 'FLUTTERWAVE', 'plan_tier' => 'PRO', 'billing_cycle' => 'MONTHLY'])->json('reference');
+        $ref = $this->postJson('/api/v1/billing/checkout', ['purpose' => 'SUBSCRIPTION', 'gateway' => 'FLUTTERWAVE', 'plan_tier' => 'PRO', 'billing_cycle' => 'MONTHLY', 'accept_terms' => true])->json('reference');
         Http::fake(['api.flutterwave.com/v3/transactions/verify_by_reference*' => Http::response(['status' => 'success', 'data' => [
             'id' => 1, 'tx_ref' => $ref, 'status' => 'successful', 'amount' => 25, 'currency' => 'NGN',
         ]])]);
@@ -60,7 +60,7 @@ final class PaymentWebhookTest extends TestCase
         Http::fake(['api.nowpayments.io/v1/invoice' => Http::response(['id' => '4522', 'invoice_url' => 'https://nowpayments.io/payment/?iid=4522'])]);
         [$merchant, $user] = $this->merchantWithOwner();
         $this->actingAs($user);
-        $ref = $this->postJson('/api/v1/billing/checkout', ['purpose' => 'SUBSCRIPTION', 'gateway' => 'NOWPAYMENTS', 'plan_tier' => 'BUSINESS_PLUS', 'billing_cycle' => 'YEARLY'])
+        $ref = $this->postJson('/api/v1/billing/checkout', ['purpose' => 'SUBSCRIPTION', 'gateway' => 'NOWPAYMENTS', 'plan_tier' => 'BUSINESS_PLUS', 'billing_cycle' => 'YEARLY', 'accept_terms' => true])
             ->assertCreated()->json('reference');
 
         $payload = ['payment_id' => 5077125051, 'payment_status' => 'finished', 'order_id' => $ref, 'price_amount' => 60000, 'price_currency' => 'ngn', 'pay_currency' => 'usdttrc20', 'actually_paid' => 38.2];

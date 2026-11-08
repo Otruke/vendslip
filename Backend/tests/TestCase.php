@@ -25,6 +25,8 @@ abstract class TestCase extends BaseTestCase
         parent::setUp();
         Storage::fake('local');
         Storage::fake('public');
+        // Factory users have no Terms acceptance on record; RenewalAndLegalTest turns this back on.
+        config(['vendslip.legal.require_current' => false]);
         $this->seed([RolesAndPermissionsSeeder::class, TemplatesSeeder::class, MonetizationSeeder::class]);
     }
 

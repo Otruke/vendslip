@@ -14,6 +14,7 @@ use App\Http\Controllers\Api\V1\DashboardController;
 use App\Http\Controllers\Api\V1\DocumentController;
 use App\Http\Controllers\Api\V1\InventoryController;
 use App\Http\Controllers\Api\V1\InvitationController;
+use App\Http\Controllers\Api\V1\LegalController;
 use App\Http\Controllers\Api\V1\NotificationController;
 use App\Http\Controllers\Api\V1\PaymentWebhookController;
 use App\Http\Controllers\Api\V1\PayoutAccountController;
@@ -23,6 +24,7 @@ use App\Http\Controllers\Api\V1\SupportTicketController;
 use App\Http\Controllers\Api\V1\TeamController;
 use App\Http\Controllers\Api\V1\TemplateController;
 use App\Http\Middleware\AuditTrail;
+use App\Http\Middleware\RequireCurrentTerms;
 use App\Http\Middleware\SupportSessionGuard;
 use Illuminate\Support\Facades\Route;
 
@@ -31,6 +33,7 @@ Route::prefix('v1')->group(function (): void {
     Route::middleware('throttle:public')->prefix('public')->group(function (): void {
         Route::get('plans', [PublicController::class, 'plans']);
         Route::get('locales', [PublicController::class, 'locales']);
+        Route::get('legal', [PublicController::class, 'legal']);
         Route::get('merchants/{merchantId}/logo', [PublicController::class, 'logo'])->whereUuid('merchantId')->withoutMiddleware('throttle:public')->middleware('throttle:240,1,logos');
         Route::get('activity-feed', [PublicController::class, 'activityFeed']);
         Route::get('verify/{code}', [PublicController::class, 'verify']);
@@ -85,6 +88,7 @@ Route::prefix('v1')->group(function (): void {
             Route::post('account/two-factor', [AccountController::class, 'enableTwoFactor']);
             Route::post('account/two-factor/confirm', [AccountController::class, 'confirmTwoFactor']);
             Route::delete('account/two-factor', [AccountController::class, 'disableTwoFactor']);
+            Route::post('legal/accept', [LegalController::class, 'accept']);
         });
         Route::get('users/{user}/avatar', [AccountController::class, 'showAvatar'])->whereNumber('user');
 
@@ -93,7 +97,7 @@ Route::prefix('v1')->group(function (): void {
         Route::post('notifications/read-all', [NotificationController::class, 'readAll']);
         Route::post('notifications/{id}/read', [NotificationController::class, 'read'])->whereUuid('id');
 
-        Route::middleware('merchant')->group(function (): void {
+        Route::middleware(['merchant', RequireCurrentTerms::class])->group(function (): void {
             Route::get('dashboard/overview', [DashboardController::class, 'overview']);
             Route::post('composer/parse', [ComposerController::class, 'parse']);
 

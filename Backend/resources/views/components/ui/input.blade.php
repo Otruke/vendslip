@@ -1,11 +1,13 @@
-@props(['name', 'label' => null, 'type' => 'text', 'value' => null, 'error' => null, 'helper' => null, 'prefix' => null])
+@props(['name', 'label' => null, 'type' => 'text', 'value' => null, 'error' => null, 'helper' => null, 'info' => null, 'prefix' => null])
 @php
     $id = $attributes->get('id', 'f_'.str_replace(['[', ']', '.'], '_', $name));
     $error ??= $errors->first(str_replace(['[', ']'], ['.', ''], $name));
     $current = old(str_replace(['[', ']'], ['.', ''], $name), $value);
 @endphp
 <div>
-    @if ($label)<label for="{{ $id }}" class="mb-1.5 block text-sm font-medium text-ink-primary">{{ $label }}</label>@endif
+    @if ($label && $info)
+        <div class="mb-1.5 flex items-center gap-1.5"><label for="{{ $id }}" class="block text-sm font-medium text-ink-primary">{{ $label }}</label><x-ui.info :label="'About '.$label">{{ $info }}</x-ui.info></div>
+    @elseif ($label)<label for="{{ $id }}" class="mb-1.5 block text-sm font-medium text-ink-primary">{{ $label }}</label>@endif
     <div class="relative">
         @if ($prefix)<span class="pointer-events-none absolute inset-y-0 left-3 flex items-center text-sm text-ink-muted">{{ $prefix }}</span>@endif
         <input id="{{ $id }}" name="{{ $name }}" type="{{ $type }}" @if ($type !== 'password') value="{{ $current }}" @endif

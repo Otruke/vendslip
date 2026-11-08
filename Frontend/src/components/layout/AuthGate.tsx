@@ -2,7 +2,7 @@ import { useEffect, type ReactNode } from 'react'
 import { Navigate, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { PageLoader, Toaster } from '@/components/ui'
 import { fetchSession } from '@/hooks/queries'
-import { ApiError, setUnauthorizedHandler } from '@/lib/api'
+import { ApiError, setTermsRequiredHandler, setUnauthorizedHandler } from '@/lib/api'
 import { useAuthStore } from '@/stores/auth'
 
 /** Loads the Sanctum session once for the whole app. */
@@ -17,6 +17,8 @@ export function SessionProvider({ children }: { children?: ReactNode }) {
       setSession(null)
       navigate('/login', { replace: true })
     })
+    // Newer Terms now apply: reload the session so the accept screen shows.
+    setTermsRequiredHandler(() => { fetchSession().then(setSession).catch(() => undefined) })
   }, [navigate, setSession])
 
   useEffect(() => {

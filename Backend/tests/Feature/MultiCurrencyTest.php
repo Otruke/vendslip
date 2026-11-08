@@ -81,7 +81,7 @@ final class MultiCurrencyTest extends TestCase
         $merchant->update(['currency' => 'KES']);
         $this->actingAs($owner);
 
-        $ref = $this->postJson('/api/v1/billing/checkout', ['purpose' => 'SUBSCRIPTION', 'gateway' => 'FLUTTERWAVE', 'plan_tier' => 'PRO', 'billing_cycle' => 'MONTHLY'])->assertCreated()->json('reference');
+        $ref = $this->postJson('/api/v1/billing/checkout', ['purpose' => 'SUBSCRIPTION', 'gateway' => 'FLUTTERWAVE', 'plan_tier' => 'PRO', 'billing_cycle' => 'MONTHLY', 'accept_terms' => true])->assertCreated()->json('reference');
         $tx = PaymentTransaction::query()->where('reference', $ref)->firstOrFail();
         $this->assertSame('KES', $tx->currency);
         $this->assertSame(117_000, $tx->amount_minor);

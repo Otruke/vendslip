@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\GatewayController;
+use App\Http\Controllers\Admin\LegalController;
 use App\Http\Controllers\Admin\MerchantController;
 use App\Http\Controllers\Admin\MonetizationController;
 use App\Http\Controllers\Admin\PaymentController;
@@ -78,6 +79,10 @@ Route::prefix('admin')->name('admin.')->group(function (): void {
                 Route::put('monetization/packs/{pack}', [MonetizationController::class, 'savePack'])->name('monetization.packs.update');
                 Route::put('monetization/rules', [MonetizationController::class, 'updateRules'])->name('monetization.rules');
                 Route::put('monetization/marketing', [MonetizationController::class, 'updateMarketing'])->name('monetization.marketing');
+                Route::put('monetization/renewal-reminders', [MonetizationController::class, 'updateRenewalReminders'])->name('monetization.renewal');
+                Route::get('legal', [LegalController::class, 'index'])->name('legal.index');
+                Route::post('legal', [LegalController::class, 'publish'])->middleware('throttle:10,1')->name('legal.publish');
+                Route::put('merchants/{merchant}/renewal-reminders', [MerchantController::class, 'updateRenewalReminders'])->name('merchants.renewal');
                 Route::post('monetization/fx-refresh', [MonetizationController::class, 'refreshRates'])->middleware('throttle:6,1')->name('monetization.fx-refresh');
 
                 Route::get('gateways', [GatewayController::class, 'edit'])->name('gateways.edit');
@@ -98,3 +103,11 @@ Route::prefix('admin')->name('admin.')->group(function (): void {
         });
     });
 });
+
+
+
+
+
+
+
+

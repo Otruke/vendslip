@@ -110,6 +110,7 @@ export default function Pay() {
                 <Input type="email" label="Email for receipt (optional)" placeholder="you@example.com" value={email} onChange={(e) => setEmail(e.target.value)} />
                 {error && <Alert tone="danger">{error}</Alert>}
                 <Button fullWidth size="lg" isLoading={busy} onClick={pay} leftIcon={<Lock className="size-4" />}>Pay {formatMoney(data.balance_due_minor, data.currency)}</Button>
+                <p className="text-center text-xs text-ink-muted">You pay {data.merchant.name} directly through their payment provider. VendSlip handles this page under its <a href="/privacy" target="_blank" rel="noopener" className="font-medium text-vendslip-primary hover:underline">Privacy Policy</a>.</p>
                 <p className="text-center text-xs text-ink-muted">You’ll be redirected to {selected === 'FLUTTERWAVE' ? 'Flutterwave' : 'NOWPayments'} to complete payment.</p>
               </div>
             ) : (

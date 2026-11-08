@@ -7,9 +7,11 @@ namespace App\Http\Controllers\Admin;
 use App\Enums\AuditSeverity;
 use App\Http\Controllers\Controller;
 use App\Models\CreditPack;
+use App\Models\Merchant;
 use App\Models\SubscriptionPlan;
 use App\Models\User;
 use App\Services\Billing\PlanEntitlements;
+use App\Services\Billing\RenewalReminders;
 use App\Services\Marketing\ActivityFeed;
 use App\Services\Pricing\FxRates;
 use App\Services\Security\AuditLogger;
@@ -52,6 +54,9 @@ final class MonetizationController extends Controller
                 'max_per_visit' => (int) $this->settings->get('marketing.popups.max_per_visit'),
             ],
             'popupPreview' => app(ActivityFeed::class)->payload(),
+            'renewalDays' => implode(', ', app(RenewalReminders::class)->platformOffsets()),
+            'renewalText' => RenewalReminders::describe(app(RenewalReminders::class)->platformOffsets()),
+            'renewalOverrides' => Merchant::query()->whereNotNull('renewal_reminder_days')->orderBy('name')->limit(50)->get(['id', 'name', 'renewal_reminder_days']),
         ]);
     }
 
@@ -171,6 +176,21 @@ final class MonetizationController extends Controller
         return $count === null
             ? back()->with('warning', 'Couldn’t reach the exchange-rate service. The last saved rates are still used.')
             : back()->with('status', "Exchange rates updated ({$count} currencies).");
+    }
+
+    /** Platform-wide renewal reminder timing (businesses with their own timing keep theirs). */
+    public function updateRenewalReminders(Request $request): RedirectResponse
+    {
+        $data = $request->validate(['renewal_reminder_days' => ['required', 'string', 'max:60']]);
+        $offsets = RenewalReminders::parse($data['renewal_reminder_days']);
+        if ($offsets === null) {
+            return back()->withInput()->withErrors(['renewal_reminder_days' => 'Use up to 8 whole numbers between -30 and 60, like 7, 3, 1, 0, -3 (or "off").']);
+        }
+        $value = $offsets === [] ? 'off' : implode(',', $offsets);
+        $this->settings->set('billing.renewal_reminder_days', $value);
+        $this->audit->log('admin.renewal_reminders_changed', $this->actor($request), null, ['after' => $value]);
+
+        return back()->with('status', 'Renewal reminder timing saved: '.RenewalReminders::describe($offsets).'.');
     }
 
     /** Website activity notes: on/off, timing and whether true platform stats are shown. */

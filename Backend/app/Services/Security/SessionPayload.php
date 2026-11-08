@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Services\Account\AvatarStore;
 use App\Services\Billing\PlanEntitlements;
 use App\Services\Billing\QuotaService;
+use App\Services\Legal\LegalConsent;
 use Carbon\CarbonImmutable;
 
 /** The "who am I" payload the SPA bootstraps from (GET /api/v1/auth/me). */
@@ -18,6 +19,7 @@ final class SessionPayload
         private readonly PlanEntitlements $entitlements,
         private readonly QuotaService $quota,
         private readonly AvatarStore $avatars,
+        private readonly LegalConsent $legal,
     ) {}
 
     /** @return array<string, mixed> */
@@ -41,6 +43,8 @@ final class SessionPayload
             ],
             'merchant' => $merchant !== null ? (new MerchantResource($merchant))->resolve() : null,
             'support' => $this->support($merchant?->id),
+            // Terms and Privacy Policy: a notice when a new version is out, the accept screen once it applies.
+            'legal' => $merchant !== null ? $this->legal->status($user) : null,
             'entitlements' => $merchant !== null ? $this->entitlements->featureMap($merchant) : [],
             'usage' => $merchant !== null ? [
                 'monthly_quota' => $this->entitlements->monthlyQuota($merchant),

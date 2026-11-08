@@ -109,6 +109,36 @@
 
     <x-ui.card>
         <div class="grid gap-6 lg:grid-cols-2">
+            <form method="POST" action="{{ route('admin.monetization.renewal') }}" class="space-y-4">
+                @csrf @method('PUT')
+                <div>
+                    <div class="flex items-center gap-2"><x-ui.heading level="2" variant="card">Plan renewal reminders</x-ui.heading><x-ui.info label="About renewal reminders">Plans are prepaid and don’t renew by themselves, so each Owner is reminded in the app and by email, with a one-tap renew link.</x-ui.info></div>
+                </div>
+                <x-ui.input name="renewal_reminder_days" label="Remind on these days" :value="old('renewal_reminder_days', $renewalDays)" placeholder="7, 3, 1, 0, -3"
+                    info="Days before the plan ends. 0 is the day it ends; a negative number is days after it ended (-3 = three days later). Up to 8 days, or “off”." />
+                <p class="text-sm"><span class="text-ink-secondary">Now:</span> <span class="font-medium">{{ $renewalText }}</span></p>
+                <x-ui.button>Save reminder timing</x-ui.button>
+            </form>
+            <div>
+                <div class="flex items-center gap-1.5"><p class="text-sm font-semibold">Businesses with their own timing</p><x-ui.info label="About own timing">Set from a business’s page (Merchants → open the business) when they ask for different timing. They keep it when you change the default.</x-ui.info></div>
+                @if ($renewalOverrides->isEmpty())
+                    <p class="mt-3 text-sm text-ink-secondary">None. Every business uses the timing on the left.</p>
+                @else
+                    <ul class="mt-3 divide-y divide-border-subtle rounded-xl border border-border-subtle text-sm">
+                        @foreach ($renewalOverrides as $o)
+                            <li class="flex items-center justify-between gap-3 px-3 py-2">
+                                <a class="min-w-0 truncate font-medium hover:text-vendslip-primary" href="{{ route('admin.merchants.show', $o) }}">{{ $o->name }}</a>
+                                <span class="shrink-0 text-xs text-ink-secondary">{{ \App\Services\Billing\RenewalReminders::describe(\App\Services\Billing\RenewalReminders::parse($o->renewal_reminder_days) ?? []) }}</span>
+                            </li>
+                        @endforeach
+                    </ul>
+                @endif
+            </div>
+        </div>
+    </x-ui.card>
+
+    <x-ui.card>
+        <div class="grid gap-6 lg:grid-cols-2">
             <form method="POST" action="{{ route('admin.monetization.marketing') }}" class="space-y-4">
                 @csrf @method('PUT')
                 <div>

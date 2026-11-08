@@ -49,6 +49,7 @@ use Illuminate\Support\Facades\Storage;
  * @property PlanTier $plan_tier
  * @property BillingCycle|null $billing_cycle
  * @property CarbonImmutable|null $plan_expires_at
+ * @property string|null $renewal_reminder_days
  * @property int $free_quota_used
  * @property string|null $free_quota_period
  * @property int $paid_credits_balance
@@ -77,7 +78,7 @@ class Merchant extends Model
         'vat_rate_bps', 'vat_inclusive', 'primary_color', 'secondary_color', 'logo_path', 'receipt_footer',
         'bank_name', 'bank_account_number', 'bank_account_name', 'invoice_due_days',
         'default_receipt_template_id', 'default_invoice_template_id',
-        'plan_tier', 'billing_cycle', 'plan_expires_at', 'free_quota_used', 'free_quota_period', 'paid_credits_balance',
+        'plan_tier', 'billing_cycle', 'plan_expires_at', 'renewal_reminder_days', 'free_quota_used', 'free_quota_period', 'paid_credits_balance',
         'record_mutability_mode', 'allow_staff_edits', 'mutable_window_hours',
         'flutterwave_public_key', 'flutterwave_secret_key', 'flutterwave_secret_hash',
         'nowpayments_api_key', 'nowpayments_ipn_secret',

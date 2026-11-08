@@ -4,16 +4,21 @@
 
 ## 1. Folder layout
 
-These sit **directly** inside your project folder (`C:\Users\rufus.otolorin\Documents\Ampps\netSlip\` today). You can rename that folder to `vendSlip`: nothing inside depends on its name. After renaming, run `php artisan optimize:clear` in `Backend`.
+These sit inside your project folder (`C:\Users\rufus.otolorin\Documents\Ampps\netSlip\` today). You can rename that folder to `vendSlip`: nothing inside depends on its name. After renaming, run `php artisan optimize:clear` in `Backend`.
 
 ```
 vendSlip\
-├── START-HERE.md            ← this file
 ├── setup-windows.bat        ← run once (installs packages, builds the database)
 ├── start-vendslip.bat        ← run every time you want to use VendSlip
-├── SETUP.md                 ← full developer + production guide
-├── ARCHITECTURE_AND_PLAN.md
-├── GOOGLE_STITCH_UI_UX_PROMPT.md
+├── info\                    ← all the guides
+│   ├── START-HERE.md        ← this file
+│   ├── SETUP.md             ← full developer + production guide
+│   ├── TESTING.md           ← testing payments, Telegram and WhatsApp
+│   ├── META-SETUP.md        ← WhatsApp, Messenger, Instagram (Meta)
+│   ├── TWILIO-SETUP.md      ← WhatsApp, Messenger (Twilio)
+│   ├── LEGAL-BRIEF.md       ← regulations, for the lawyer
+│   ├── ARCHITECTURE_AND_PLAN.md
+│   └── GOOGLE_STITCH_UI_UX_PROMPT.md
 ├── Backend\                 ← Laravel 13 API + Admin / Super-Admin portal
 ├── Frontend\                ← React 19 public site + merchant dashboard
 ├── whatsapp_bot\  telegram_bot\  instagram_bot\  facebook_bot\
@@ -68,7 +73,7 @@ so unzipping over the folder keeps them.
 **Super-Admin portal:** merchants, per-client mutability (Immutable / Audited / Unrestricted),
 plans and credit pack prices, templates, gateway keys, payments, security log, admin users.
 
-**Needs external accounts (not testable offline):**
+**Needs external accounts (not testable offline):** step-by-step checks are in **`TESTING.md`**; chat app setup in **`META-SETUP.md`** and **`TWILIO-SETUP.md`**.
 - Real card/crypto checkout needs Flutterwave or NOWPayments keys in `.env` or `/admin/gateways`.
 - The chat bots need a public HTTPS URL (e.g. `ngrok http 8000`) plus Telegram, Meta (or Twilio)
   credentials. See `SETUP.md` §3.

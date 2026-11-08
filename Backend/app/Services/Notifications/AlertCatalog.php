@@ -29,6 +29,10 @@ final class AlertCatalog
 
     public const string TICKET_UPDATE = 'ticket_update';
 
+    public const string PLAN_RENEWAL = 'plan_renewal';
+
+    public const string LEGAL_UPDATE = 'legal_update';
+
     /**
      * @return array<string, array{label: string, description: string, group: string, mandatory: bool, locked: list<string>, roles: list<string>, email: bool}>
      */
@@ -39,6 +43,18 @@ final class AlertCatalog
                 'label' => 'New slip issued', 'group' => 'Sales',
                 'description' => 'A receipt or invoice was issued from the dashboard or a chat.',
                 'mandatory' => false, 'locked' => [], 'roles' => [Role::OWNER->value], 'email' => false,
+            ],
+            self::PLAN_RENEWAL => [
+                'label' => 'Plan renewal due', 'group' => 'Billing',
+                'description' => 'Your VendSlip plan is about to end or has ended. Plans don’t renew automatically.',
+                // Owners always hear about it: a lapsed plan quietly switches the business to Free.
+                'mandatory' => true, 'locked' => [Role::OWNER->value], 'roles' => [Role::OWNER->value], 'email' => true,
+            ],
+            self::LEGAL_UPDATE => [
+                'label' => 'Terms or Privacy Policy updated', 'group' => 'Billing',
+                'description' => 'A new version of VendSlip’s Terms of Service or Privacy Policy, what changed and when it applies.',
+                // The law expects account holders to be told about material changes, so Owners can't turn it off.
+                'mandatory' => true, 'locked' => [Role::OWNER->value], 'roles' => [Role::OWNER->value], 'email' => true,
             ],
             self::INVOICE_OVERDUE => [
                 'label' => 'Invoice overdue', 'group' => 'Sales',

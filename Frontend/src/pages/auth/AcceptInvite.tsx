@@ -2,7 +2,8 @@ import { useQuery } from '@tanstack/react-query'
 import { useState, type FormEvent } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { AuthLayout } from '@/components/layout/AuthLayout'
-import { Alert, Button, Input, PageLoader, PasswordChecklist } from '@/components/ui'
+import { Alert, Button, Checkbox, Input, PageLoader, PasswordChecklist } from '@/components/ui'
+import { LegalAgreement } from '@/pages/public/Legal'
 import { apiPost } from '@/hooks/queries'
 import { api, errorMessage, resetCsrf } from '@/lib/api'
 import { useAuthStore } from '@/stores/auth'
@@ -16,6 +17,7 @@ export default function AcceptInvite() {
   const [name, setName] = useState('')
   const [password, setPassword] = useState('')
   const [confirmation, setConfirmation] = useState('')
+  const [accepted, setAccepted] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
 
@@ -29,7 +31,7 @@ export default function AcceptInvite() {
     setBusy(true)
     setError(null)
     try {
-      const session = await apiPost<Session>(`/invitations/${token}/accept`, { name, password, password_confirmation: confirmation })
+      const session = await apiPost<Session>(`/invitations/${token}/accept`, { name, password, password_confirmation: confirmation, accept_terms: accepted })
       resetCsrf()
       setSession(session)
       navigate('/dashboard', { replace: true })
@@ -50,7 +52,8 @@ export default function AcceptInvite() {
           <PasswordChecklist value={password} />
         </div>
         <Input label="Confirm password" type="password" autoComplete="new-password" required value={confirmation} onChange={(e) => setConfirmation(e.target.value)} />
-        <Button type="submit" fullWidth size="lg" isLoading={busy}>Accept & continue</Button>
+        <Checkbox className="items-start text-ink-secondary [&>input]:mt-0.5" checked={accepted} onChange={(e) => setAccepted(e.target.checked)} label={<LegalAgreement />} />
+        <Button type="submit" fullWidth size="lg" isLoading={busy} disabled={!accepted}>Accept & continue</Button>
       </form>
     </AuthLayout>
   )

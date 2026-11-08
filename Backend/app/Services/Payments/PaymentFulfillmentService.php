@@ -10,10 +10,13 @@ use App\Enums\PaymentGateway;
 use App\Enums\PaymentMethod;
 use App\Enums\PaymentPurpose;
 use App\Enums\PaymentStatus;
+use App\Enums\PlanTier;
 use App\Models\Document;
 use App\Models\Merchant;
 use App\Models\PaymentTransaction;
+use App\Models\SubscriptionPlan;
 use App\Services\Documents\DocumentLifecycleService;
+use App\Services\Pricing\FxRates;
 use App\Services\Security\AuditLogger;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\DB;
@@ -27,6 +30,7 @@ final class PaymentFulfillmentService
     public function __construct(
         private readonly DocumentLifecycleService $lifecycle,
         private readonly AuditLogger $audit,
+        private readonly FxRates $fx,
     ) {}
 
     public function markSuccessful(string $reference, int $paidAmountMinor, string $paidCurrency, ?string $gatewayReference): ?PaymentTransaction
@@ -88,13 +92,59 @@ final class PaymentFulfillmentService
         /** @var Merchant $merchant */
         $merchant = Merchant::query()->whereKey($tx->merchant_id)->lockForUpdate()->firstOrFail();
         $cycle = $tx->billing_cycle ?? BillingCycle::MONTHLY;
-        $base = $merchant->plan_tier === $tx->plan_tier && $merchant->plan_expires_at !== null && $merchant->plan_expires_at->isFuture()
-            ? $merchant->plan_expires_at
-            : CarbonImmutable::now();
-        $merchant->plan_tier = $tx->plan_tier ?? $merchant->plan_tier;
+        $newTier = $tx->plan_tier ?? $merchant->plan_tier;
+        $now = CarbonImmutable::now();
+        $active = $merchant->plan_tier !== PlanTier::FREE && $merchant->plan_expires_at !== null && $merchant->plan_expires_at->isFuture();
+
+        $start = $now;
+        $carried = 0;
+        if ($active && $merchant->plan_expires_at !== null) {
+            if ($merchant->plan_tier === $newTier) {
+                // Renewing the same plan early: the new term starts when the paid one ends.
+                $start = $merchant->plan_expires_at;
+            } else {
+                // Changing plan mid-term: the unused value of the old plan becomes extra time on the new one.
+                $carried = $this->carriedSeconds($merchant, $newTier, (int) $now->diffInSeconds($merchant->plan_expires_at));
+            }
+        }
+
+        $ends = ($cycle === BillingCycle::YEARLY ? $start->addYear() : $start->addMonth())->addSeconds($carried);
+        $merchant->plan_tier = $newTier;
         $merchant->billing_cycle = $cycle;
-        $merchant->plan_expires_at = $cycle === BillingCycle::YEARLY ? $base->addYear() : $base->addMonth();
+        $merchant->plan_expires_at = $ends;
         $merchant->save();
+
+        if ($carried > 0) {
+            $tx->forceFill(['metadata' => [...($tx->metadata ?? []), 'carried_over_days' => round($carried / 86400, 1)]])->save();
+            $this->audit->log('billing.plan_changed_with_credit', null, $merchant, [
+                'reference' => $tx->reference, 'to' => $newTier->value, 'carried_over_days' => round($carried / 86400, 1),
+            ]);
+        }
+    }
+
+    /**
+     * Unused time on the old plan, converted to time on the new plan at the two plans' monthly
+     * prices (in the same currency). Moving up gives fewer days, moving down gives more; nothing is
+     * ever lost. Without comparable prices no credit is given (and nothing is taken either).
+     */
+    private function carriedSeconds(Merchant $merchant, PlanTier $newTier, int $remainingSeconds): int
+    {
+        $old = SubscriptionPlan::forTier($merchant->plan_tier);
+        $new = SubscriptionPlan::forTier($newTier);
+        if ($old === null || $new === null || $remainingSeconds <= 0) {
+            return 0;
+        }
+        $oldMonthly = $merchant->billing_cycle === BillingCycle::YEARLY ? $old->yearly_price_minor / 12 : $old->monthly_price_minor;
+        $newMonthly = $new->monthly_price_minor;
+        if ($old->currency !== $new->currency) {
+            $oldMonthly = $this->fx->convert((int) round($oldMonthly), $old->currency, $new->currency);
+        }
+        if ($oldMonthly === null || $oldMonthly <= 0 || $newMonthly <= 0) {
+            return 0;
+        }
+
+        // Capped at two years so a misconfigured price can't hand out unlimited time.
+        return (int) min(2 * 365 * 86400, floor($remainingSeconds * $oldMonthly / $newMonthly));
     }
 
     private function addCredits(PaymentTransaction $tx): void

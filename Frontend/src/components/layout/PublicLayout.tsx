@@ -81,7 +81,7 @@ export function PublicFooter() {
         </div>
         {[
           ['Product', [['How it works', '/how-it-works'], ['Pricing', '/pricing'], ['Verify a slip', '/verify']]],
-          ['Company', [['Trust & security', '/about'], ['Sign in', '/login'], ['Create account', '/register']]],
+          ['Company', [['Trust & security', '/about'], ['Terms of Service', '/terms'], ['Privacy Policy', '/privacy'], ['Create account', '/register']]],
           ['Channels', [['WhatsApp', '/how-it-works'], ['Telegram', '/how-it-works'], ['Instagram & Facebook', '/how-it-works']]],
         ].map(([title, items]) => (
           <div key={title as string} data-reveal="rise">
@@ -95,7 +95,7 @@ export function PublicFooter() {
       <div className="border-t border-white/10">
         <Container className="flex flex-col gap-2 py-5 text-xs sm:flex-row sm:items-center sm:justify-between">
           <p>© {new Date().getFullYear()} VendSlip developed by Techberryz . Lagos, Nigeria.</p>
-          <p>NDPA-aligned · HMAC-signed slips · Encrypted at rest</p>
+          <p className="flex flex-wrap items-center gap-x-3 gap-y-1"><Link to="/terms" className="hover:text-white">Terms</Link><Link to="/privacy" className="hover:text-white">Privacy</Link><span>GDPR & NDPA aligned · Signed slips</span></p>
         </Container>
       </div>
     </footer>

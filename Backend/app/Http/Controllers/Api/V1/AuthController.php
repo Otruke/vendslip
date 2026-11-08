@@ -10,6 +10,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Merchant;
 use App\Models\Template;
 use App\Models\User;
+use App\Services\Legal\LegalConsent;
 use App\Services\Security\AuditLogger;
 use App\Services\Security\SessionPayload;
 use App\Services\Security\SupportAccess;
@@ -44,6 +45,10 @@ final class AuthController extends Controller
             'email' => ['required', 'string', 'email:rfc', 'max:255', 'unique:users,email'],
             'phone' => ['nullable', 'string', 'max:32'],
             'password' => ['required', 'confirmed', PasswordRule::defaults()],
+            'accept_terms' => ['required', 'accepted'],
+        ], [
+            'accept_terms.accepted' => 'Please accept the Terms of Service and Privacy Policy to continue.',
+            'accept_terms.required' => 'Please accept the Terms of Service and Privacy Policy to continue.',
         ]);
 
         $user = DB::transaction(function () use ($data): User {
@@ -72,6 +77,7 @@ final class AuthController extends Controller
         Auth::guard('web')->login($user);
         $request->session()->regenerate();
         $this->audit->log('auth.registered', $user, $user->merchant_id);
+        app(LegalConsent::class)->record($user, LegalConsent::SIGNUP, $request);
 
         return response()->json($this->payload->for($user->refresh()), 201);
     }

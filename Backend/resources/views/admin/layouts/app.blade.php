@@ -24,6 +24,7 @@
         ['admin.templates.index', 'Template Studio', 'layout', 'super'],
         ['admin.monetization.edit', 'Pricing Engine', 'coins', 'super'],
         ['admin.gateways.edit', 'Gateways & Bots', 'key', 'super'],
+        ['admin.legal.index', 'Terms & Privacy', 'file-text', 'super'],
         ['admin.admins.index', 'Platform Staff', 'users', 'super'],
     ];
     $sees = fn (string $level): bool => match ($level) {

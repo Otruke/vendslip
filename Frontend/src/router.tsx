@@ -11,6 +11,8 @@ const About = lazy(() => import('@/pages/public/About'))
 const Verify = lazy(() => import('@/pages/public/Verify'))
 const Pay = lazy(() => import('@/pages/public/Pay'))
 const NotFound = lazy(() => import('@/pages/public/NotFound'))
+const Terms = lazy(() => import('@/pages/public/Legal').then((m) => ({ default: m.Terms })))
+const Privacy = lazy(() => import('@/pages/public/Legal').then((m) => ({ default: m.Privacy })))
 
 const Login = lazy(() => import('@/pages/auth/Login'))
 const Register = lazy(() => import('@/pages/auth/Register'))
@@ -52,6 +54,8 @@ export const router = createBrowserRouter([
           { path: '/verify', element: page(<Verify />) },
           { path: '/verify/:code', element: page(<Verify />) },
           { path: '/pay/:uid', element: page(<Pay />) },
+          { path: '/terms', element: page(<Terms />) },
+          { path: '/privacy', element: page(<Privacy />) },
         ],
       },
       { path: '/login', element: page(<GuestOnly><Login /></GuestOnly>) },

@@ -101,3 +101,61 @@ document.addEventListener('pointerdown', (e) => {
 document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') document.querySelectorAll('details[data-close-outside][open]').forEach((d) => d.removeAttribute('open'));
 });
+
+// ── "i" info tips: hover/focus on desktop, tap to pin on phones; tap away or Escape closes ──
+let tip = null;
+let tipOwner = null;
+let tipPinned = false;
+function placeTip() {
+    if (!tip || !tipOwner) return;
+    const r = tipOwner.getBoundingClientRect();
+    const b = tip.getBoundingClientRect();
+    const left = Math.min(Math.max(12, r.left + r.width / 2 - b.width / 2), window.innerWidth - b.width - 12);
+    const above = r.bottom + b.height + 12 > window.innerHeight && r.top > b.height + 12;
+    tip.style.left = `${left}px`;
+    tip.style.top = `${above ? r.top - b.height - 8 : r.bottom + 8}px`;
+}
+function hideTip() {
+    tip?.remove();
+    tipOwner?.setAttribute('aria-expanded', 'false');
+    tipOwner?.removeAttribute('aria-describedby');
+    tip = null; tipOwner = null; tipPinned = false;
+}
+function showTip(owner) {
+    if (tipOwner === owner) return;
+    hideTip();
+    const body = owner.querySelector('[data-tip-body]');
+    if (!body) return;
+    tip = document.createElement('div');
+    tip.className = 'vs-tip';
+    tip.id = 'vs-tip';
+    tip.setAttribute('role', 'tooltip');
+    tip.textContent = body.textContent.trim();
+    document.body.append(tip);
+    tipOwner = owner;
+    owner.setAttribute('aria-expanded', 'true');
+    owner.setAttribute('aria-describedby', 'vs-tip');
+    placeTip();
+}
+document.addEventListener('click', (e) => {
+    const owner = e.target instanceof Element ? e.target.closest('[data-tip]') : null;
+    if (!owner) return;
+    e.preventDefault();
+    if (tipOwner === owner && tipPinned) { hideTip(); return; }
+    showTip(owner);
+    tipPinned = true;
+});
+document.addEventListener('pointerover', (e) => {
+    const owner = e.pointerType === 'mouse' && e.target instanceof Element ? e.target.closest('[data-tip]') : null;
+    if (owner && !tipPinned) showTip(owner);
+});
+document.addEventListener('pointerout', (e) => {
+    const owner = e.pointerType === 'mouse' && e.target instanceof Element ? e.target.closest('[data-tip]') : null;
+    if (owner && owner === tipOwner && !tipPinned && !owner.contains(e.relatedTarget)) hideTip();
+});
+document.addEventListener('focusin', (e) => { if (e.target instanceof Element && e.target.matches('[data-tip]')) showTip(e.target); });
+document.addEventListener('focusout', (e) => { if (e.target === tipOwner && !tipPinned) hideTip(); });
+document.addEventListener('pointerdown', (e) => { if (tipPinned && tipOwner && !tipOwner.contains(e.target) && !tip?.contains(e.target)) hideTip(); });
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && tip) hideTip(); });
+window.addEventListener('scroll', placeTip, true);
+window.addEventListener('resize', placeTip);

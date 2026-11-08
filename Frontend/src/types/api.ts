@@ -123,6 +123,19 @@ export type Session = {
   usage: { monthly_quota: number | null; free_used: number; free_remaining: number | null; paid_credits: number; period: string } | null
   /** Present while a VendSlip Super-Admin is in this account through an owner-approved support session. */
   support?: { admin_name: string; expires_at: string; return_url: string } | null
+  /** Terms of Service and Privacy Policy: the newest version and where this person stands. */
+  legal?: LegalStatus | null
+}
+
+export type LegalStatus = {
+  version: string
+  /** Same date as the version: the day it applies. */
+  effective_on: string
+  summary: string | null
+  accepted_version: string | null
+  up_to_date: boolean
+  /** True once the newest version applies and they haven't accepted it: they must, to carry on. */
+  required: boolean
 }
 
 export type DocumentItem = { id: number; sku_id: string | null; description: string; quantity: number; unit_price_minor: number; list_price_minor: number | null; line_total_minor: number }

@@ -12,11 +12,14 @@ use App\Enums\PlanTier;
 use App\Http\Controllers\Controller;
 use App\Models\BotDraftSession;
 use App\Models\Document;
+use App\Models\LegalAcceptance;
 use App\Models\Merchant;
 use App\Models\SupportAccessGrant;
 use App\Models\User;
 use App\Services\Billing\PlanEntitlements;
 use App\Services\Billing\QuotaService;
+use App\Services\Billing\RenewalReminders;
+use App\Services\Legal\LegalConsent;
 use App\Services\Security\AuditLogger;
 use App\Services\Security\SupportAccess;
 use Illuminate\Database\Eloquent\Builder;
@@ -68,6 +71,15 @@ final class MerchantController extends Controller
             'merchant' => $merchant,
             'owner' => User::query()->where('merchant_id', $merchant->id)->role('Owner')->first(),
             'members' => User::query()->where('merchant_id', $merchant->id)->count(),
+            'renewal' => [
+                'own' => $merchant->renewal_reminder_days,
+                'effective' => RenewalReminders::describe(app(RenewalReminders::class)->offsetsFor($merchant)),
+                'platform' => RenewalReminders::describe(app(RenewalReminders::class)->platformOffsets()),
+                'last' => DB::table('plan_renewal_reminders')->where('merchant_id', $merchant->id)->latest('sent_at')->first(['offset_days', 'sent_at']),
+            ],
+            'legal' => LegalAcceptance::query()->where('merchant_id', $merchant->id)->where('document', LegalAcceptance::TERMS)
+                ->with('user:id,name')->orderByDesc('version')->latest('accepted_at')->first(),
+            'legalVersion' => LegalConsent::version(),
             'documents' => $documents,
             'support' => $isSuper ? [
                 'pending' => $support->pending($merchant, $viewer),
@@ -100,6 +112,22 @@ final class MerchantController extends Controller
         ], AuditSeverity::WARNING);
 
         return back()->with('status', 'Ledger mutability policy updated.');
+    }
+
+    /** Super-Admin: this business's own renewal reminder timing (blank = platform default). */
+    public function updateRenewalReminders(Request $request, Merchant $merchant): RedirectResponse
+    {
+        $data = $request->validate(['renewal_reminder_days' => ['nullable', 'string', 'max:60']]);
+        $text = trim((string) ($data['renewal_reminder_days'] ?? ''));
+        if ($text !== '' && RenewalReminders::parse($text) === null) {
+            return back()->withInput()->withErrors(['renewal_reminder_days' => 'Use up to 8 whole numbers between -30 and 60, like 14, 7, 1, 0, -3 (or "off").']);
+        }
+        $value = $text === '' ? null : (RenewalReminders::parse($text) === [] ? 'off' : implode(',', RenewalReminders::parse($text) ?? []));
+        $before = $merchant->renewal_reminder_days;
+        $merchant->forceFill(['renewal_reminder_days' => $value])->save();
+        $this->audit->log('admin.renewal_reminders_changed', $request->user() instanceof User ? $request->user() : null, $merchant, ['before' => $before, 'after' => $value]);
+
+        return back()->with('status', $value === null ? 'This business now uses the platform reminder timing.' : 'Renewal reminder timing saved for this business.');
     }
 
     public function updatePlan(Request $request, Merchant $merchant): RedirectResponse

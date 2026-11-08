@@ -2,8 +2,8 @@
 
 Laravel 13 REST API (`/api/v1`) and the Blade Admin / Super-Admin portal (`/admin`).
 
-- Windows quick start: `../START-HERE.md` (`setup-windows.bat`, then `start-vendslip.bat`)
-- Full setup, bots, payments and production deploy: `../SETUP.md`
+- Windows quick start: `../info/START-HERE.md` (`setup-windows.bat`, then `start-vendslip.bat`)
+- Full setup, bots, payments and production deploy: `../info/SETUP.md`
 
 ```bash
 composer install

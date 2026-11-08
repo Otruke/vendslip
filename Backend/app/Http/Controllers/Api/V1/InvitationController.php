@@ -7,6 +7,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Models\StaffInvitation;
 use App\Models\User;
+use App\Services\Legal\LegalConsent;
 use App\Services\Security\AuditLogger;
 use App\Services\Security\SessionPayload;
 use Illuminate\Http\JsonResponse;
@@ -40,6 +41,10 @@ final class InvitationController extends Controller
         $data = $request->validate([
             'name' => ['required', 'string', 'max:120'],
             'password' => ['required', 'confirmed', Password::defaults()],
+            'accept_terms' => ['required', 'accepted'],
+        ], [
+            'accept_terms.accepted' => 'Please accept the Terms of Service and Privacy Policy to continue.',
+            'accept_terms.required' => 'Please accept the Terms of Service and Privacy Policy to continue.',
         ]);
 
         $user = DB::transaction(function () use ($token, $data): User {
@@ -64,6 +69,7 @@ final class InvitationController extends Controller
             return $user;
         });
 
+        app(LegalConsent::class)->record($user, LegalConsent::INVITATION, $request);
         Auth::guard('web')->login($user);
         $request->session()->regenerate();
         $this->audit->log('team.invitation_accepted', $user);

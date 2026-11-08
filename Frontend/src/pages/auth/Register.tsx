@@ -5,7 +5,8 @@ import { Link, useNavigate } from 'react-router-dom'
 import { z } from 'zod'
 import { isStrongPassword } from '@/lib/password'
 import { AuthLayout } from '@/components/layout/AuthLayout'
-import { Alert, Button, Input, PasswordChecklist } from '@/components/ui'
+import { Alert, Button, Checkbox, Input, PasswordChecklist } from '@/components/ui'
+import { LegalAgreement } from '@/pages/public/Legal'
 import { apiPost } from '@/hooks/queries'
 import { resetCsrf } from '@/lib/api'
 import { applyServerErrors } from '@/lib/forms'
@@ -20,16 +21,17 @@ const schema = z
     phone: z.string().trim().max(32).optional(),
     password: z.string().max(128).refine(isStrongPassword, 'Use 10+ characters with upper and lower case, a number and a symbol'),
     password_confirmation: z.string(),
+    accept_terms: z.boolean().refine((v) => v, 'Please accept the Terms of Service and Privacy Policy'),
   })
   .refine((v) => v.password === v.password_confirmation, { path: ['password_confirmation'], message: 'Passwords don’t match' })
 type Values = z.infer<typeof schema>
-const FIELDS = ['business_name', 'name', 'email', 'phone', 'password', 'password_confirmation'] as const
+const FIELDS = ['business_name', 'name', 'email', 'phone', 'password', 'password_confirmation', 'accept_terms'] as const
 
 export default function Register() {
   const navigate = useNavigate()
   const setSession = useAuthStore((s) => s.setSession)
   const [formError, setFormError] = useState<string | null>(null)
-  const { register, handleSubmit, setError, control, formState: { errors, isSubmitting } } = useForm<Values>({ resolver: zodResolver(schema) })
+  const { register, handleSubmit, setError, control, formState: { errors, isSubmitting } } = useForm<Values>({ resolver: zodResolver(schema), defaultValues: { accept_terms: false } })
   const password = useWatch({ control, name: 'password' }) ?? ''
 
   const onSubmit = async (values: Values) => {
@@ -59,8 +61,11 @@ export default function Register() {
           <PasswordChecklist value={password} />
         </div>
         <Input label="Confirm password" type="password" autoComplete="new-password" error={errors.password_confirmation?.message} {...register('password_confirmation')} />
+        <div>
+          <Checkbox className="items-start text-ink-secondary [&>input]:mt-0.5" label={<LegalAgreement />} {...register('accept_terms')} />
+          {errors.accept_terms?.message && <p className="mt-1 text-xs text-tone-open" role="alert">{errors.accept_terms.message}</p>}
+        </div>
         <Button type="submit" fullWidth size="lg" isLoading={isSubmitting}>Create account</Button>
-        <p className="text-center text-xs text-ink-muted">By continuing you agree to fair use and NDPA-compliant data processing.</p>
       </form>
     </AuthLayout>
   )

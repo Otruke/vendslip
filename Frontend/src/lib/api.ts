@@ -56,6 +56,12 @@ export function setUnauthorizedHandler(handler: () => void): void {
   onUnauthorized = handler
 }
 
+/** Called when the server refuses a change because newer Terms must be accepted first. */
+let onTermsRequired: (() => void) | null = null
+export function setTermsRequiredHandler(handler: () => void): void {
+  onTermsRequired = handler
+}
+
 api.interceptors.response.use(
   (response) => response,
   async (error: AxiosError<ErrorBody>) => {
@@ -63,6 +69,7 @@ api.interceptors.response.use(
     const body = error.response?.data
     if (status === 419) resetCsrf() // CSRF token mismatch: next write fetches a fresh cookie
     if (status === 401 && onUnauthorized && !error.config?.url?.includes('/auth/')) onUnauthorized()
+    if (status === 409 && body?.code === 'terms_update_required') onTermsRequired?.()
     const message =
       body?.message && body.message !== 'Server Error'
         ? body.message

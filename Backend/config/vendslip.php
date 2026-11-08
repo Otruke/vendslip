@@ -85,6 +85,18 @@ return [
         'validate_signature' => (bool) env('TWILIO_VALIDATE_SIGNATURE', true),
     ],
 
+    // Terms of Service and Privacy Policy. Bump the version whenever either changes materially:
+    // people must accept the new version again before their next payment.
+    'legal' => [
+        'version' => env('VENDSLIP_LEGAL_VERSION', '2026-11-08'),
+        'entity' => env('VENDSLIP_LEGAL_ENTITY', 'Techberryz Futurecore Limited'),
+        'address' => env('VENDSLIP_LEGAL_ADDRESS', 'Lagos, Nigeria'),
+        'privacy_email' => env('VENDSLIP_PRIVACY_EMAIL', 'privacy@vendslip.com'),
+        'support_email' => env('VENDSLIP_SUPPORT_EMAIL', 'support@vendslip.com'),
+        // Once a newer version takes effect, people must accept it before changing anything.
+        'require_current' => (bool) env('VENDSLIP_LEGAL_REQUIRE_CURRENT', true),
+    ],
+
     // Exchange rates for pricing plans in other currencies (free, no key; refreshed every 6 hours).
     'fx' => [
         'url' => env('VENDSLIP_FX_URL', 'https://open.er-api.com/v6/latest/USD'),
