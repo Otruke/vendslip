@@ -324,15 +324,21 @@ export type VerifyResult = {
   merchant: { name: string; logo_url: string | null; primary_color: string; verified_since: string }
 }
 
+/** A slip opened from its short link (FRONTEND_URL/s/{code}) or an invoice's older /pay link. */
 export type PublicInvoice = {
+  doc_type: DocumentType
   doc_number: string
+  short_code: string
+  /** Only for invoices: the id the pay call uses. */
+  pay_uid: string | null
   status: DocumentStatus
   currency: string
   customer_name: string
   issued_at: string
   due_date: string | null
-  items: { description: string; quantity: number; unit_price_minor: number; line_total_minor: number }[]
+  items: { description: string; quantity: number; unit_price_minor: number; list_price_minor: number | null; line_total_minor: number }[]
   subtotal_minor: number
+  line_discount_minor: number
   discount_minor: number
   tax_minor: number
   shipping_minor: number
@@ -341,7 +347,6 @@ export type PublicInvoice = {
   balance_due_minor: number
   verification_code: string
   verification_hash: string
-  pdf_url: string
   merchant: {
     name: string
     logo_url: string | null
@@ -378,4 +383,4 @@ export type ChannelsResponse = {
   }
 }
 
-export type ShareLinks = { pdf_url: string; verify_url: string; pay_url: string | null; message: string; whatsapp_url: string; telegram_url: string }
+export type ShareLinks = { pdf_url: string; share_url: string; verify_url: string; pay_url: string | null; message: string; whatsapp_url: string; telegram_url: string }

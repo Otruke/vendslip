@@ -137,3 +137,13 @@ export function Checkbox({ label, className, ...rest }: InputHTMLAttributes<HTML
     </label>
   )
 }
+
+/** A message for the whole form (e.g. "Couldn't sign in"): plain small red text, like a field's error. */
+export function FormError({ children, className }: { children: ReactNode; className?: string }) {
+  return <p role="alert" className={cn('text-xs text-tone-open', className)}>{children}</p>
+}
+
+/** A quiet confirmation for a form (e.g. "Check your email"): plain text, no box. */
+export function FormNote({ children, className }: { children: ReactNode; className?: string }) {
+  return <p role="status" className={cn('text-sm leading-relaxed text-ink-secondary', className)}>{children}</p>
+}

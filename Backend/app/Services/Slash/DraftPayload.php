@@ -182,7 +182,7 @@ final class DraftPayload
                 if (str_ends_with($lower, '%')) {
                     $bps = Money::percentToBps($lower);
                     if ($bps === null) {
-                        return "Couldn't read /discount \"{$value}\".";
+                        return "Couldn't read /discount \"{$value}\". Try 2000 (an amount off the whole order) or 10%.";
                     }
                     $this->data['discount_bps'] = $bps;
                     $this->data['discount_minor'] = null;
@@ -191,7 +191,7 @@ final class DraftPayload
                 }
                 $minor = Money::parseToMinor($value);
                 if ($minor === null) {
-                    return "Couldn't read /discount \"{$value}\".";
+                    return "Couldn't read /discount \"{$value}\". Try 2000 (an amount off the whole order) or 10%.";
                 }
                 $this->data['discount_minor'] = $minor;
                 $this->data['discount_bps'] = null;

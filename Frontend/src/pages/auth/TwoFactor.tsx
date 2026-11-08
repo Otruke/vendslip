@@ -2,7 +2,7 @@ import { ShieldCheck } from 'lucide-react'
 import { useState, type FormEvent } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { AuthLayout } from '@/components/layout/AuthLayout'
-import { Alert, Button, Input } from '@/components/ui'
+import { Button, FormError, Input } from '@/components/ui'
 import { apiPost } from '@/hooks/queries'
 import { errorMessage, resetCsrf } from '@/lib/api'
 import { useAuthStore } from '@/stores/auth'
@@ -35,7 +35,7 @@ export default function TwoFactor() {
   return (
     <AuthLayout title="Two-step verification" subtitle="Enter the 6-digit code from your authenticator app.">
       <form onSubmit={submit} className="space-y-4">
-        {error && <Alert tone="danger">{error}</Alert>}
+        {error && <FormError>{error}</FormError>}
         <Input label="Authentication code" inputMode="numeric" autoComplete="one-time-code" maxLength={6} autoFocus prefixIcon={<ShieldCheck />} value={code} onChange={(e) => setCode(e.target.value.replace(/\D/g, ''))} className="tabular text-lg tracking-[0.4em]" />
         <Button type="submit" fullWidth size="lg" isLoading={busy} disabled={code.length !== 6}>Verify</Button>
       </form>

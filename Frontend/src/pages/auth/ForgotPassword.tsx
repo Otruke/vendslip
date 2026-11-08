@@ -1,7 +1,7 @@
 import { useState, type FormEvent } from 'react'
 import { Link } from 'react-router-dom'
 import { AuthLayout } from '@/components/layout/AuthLayout'
-import { Alert, Button, Input } from '@/components/ui'
+import { Button, FormError, FormNote, Input } from '@/components/ui'
 import { apiPost } from '@/hooks/queries'
 import { errorMessage } from '@/lib/api'
 
@@ -27,9 +27,9 @@ export default function ForgotPassword() {
 
   return (
     <AuthLayout title="Reset your password" subtitle="We’ll email you a secure reset link." footer={<Link to="/login" className="font-semibold text-vendslip-primary">Back to sign in</Link>}>
-      {sent ? <Alert tone="success">{sent}</Alert> : (
+      {sent ? <FormNote>{sent}</FormNote> : (
         <form onSubmit={submit} className="space-y-4">
-          {error && <Alert tone="danger">{error}</Alert>}
+          {error && <FormError>{error}</FormError>}
           <Input label="Email" type="email" autoComplete="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
           <Button type="submit" fullWidth size="lg" isLoading={busy}>Send reset link</Button>
         </form>

@@ -2,7 +2,7 @@ import { useQueryClient } from '@tanstack/react-query'
 import { ArrowUpRight, FileText, ShieldCheck, X } from 'lucide-react'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Alert, Button, Checkbox, Modal } from '@/components/ui'
+import { Button, Checkbox, FormError, Modal } from '@/components/ui'
 import { apiPost } from '@/hooks/queries'
 import { errorMessage, resetCsrf } from '@/lib/api'
 import { useAuthStore } from '@/stores/auth'
@@ -108,7 +108,7 @@ function LegalDialog({ required = false, onClose }: { required?: boolean; onClos
         </div>
         <Checkbox className="items-start text-ink-secondary [&>input]:mt-0.5" checked={agreed} onChange={(e) => setAgreed(e.target.checked)}
           label="I’ve read and agree to the Terms of Service and Privacy Policy." />
-        {error && <Alert tone="danger">{error}</Alert>}
+        {error && <FormError>{error}</FormError>}
       </div>
     </Modal>
   )

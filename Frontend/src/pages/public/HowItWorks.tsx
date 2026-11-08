@@ -104,11 +104,11 @@ export default function HowItWorks() {
             <table className="w-full text-sm">
               <tbody className="divide-y divide-border-subtle" data-stagger="45" style={{ '--d': '250ms' } as CSSProperties}>
                 {[
-                  ['/name', 'Ada Obi'], ['/item', '2x Shoe @ 15000 | Belt @ 5k'], ['/item', 'Cap @ 4000 was 5000 (shows the saving)'], ['/amount', '30000 (instead of items)'],
-                  ['/type', 'receipt or invoice'], ['/discount', '10% or 2000'], ['/shipping', '3500'], ['/vat', '7.5, off, 7.5 incl'],
+                  ['/name', 'Ada Obi'], ['/item', '2x Shoe @ 15000 | Belt @ 5k'], ['/item', '2x Shoe @ 15000 less 1000 (1,000 off each)'], ['/item', 'Cap @ 4000 less 10% · Belt @ 5000 was 6000'], ['/item', '3x Wrapper @ 3000 less 1500 total (off the three)'], ['/amount', '30000 (instead of items)'],
+                  ['/type', 'receipt or invoice'], ['/discount', '2000 or 10% (off the whole order)'], ['/shipping', '3500'], ['/vat', '7.5, off, 7.5 incl'],
                   ['/paid', 'full or 20000'], ['/due', '7d or 30/11/2026'], ['/phone · /address · /note', 'free text'],
-                ].map(([k, v]) => (
-                  <tr key={k} className="vs-trow" data-reveal="rise"><td className="w-48 px-4 py-2.5 font-mono text-[13px] font-semibold text-vendslip-deep">{k}</td><td className="px-4 py-2.5 text-ink-secondary">{v}</td></tr>
+                ].map(([k, v], i) => (
+                  <tr key={`${k}-${i}`} className="vs-trow" data-reveal="rise"><td className="w-48 px-4 py-2.5 font-mono text-[13px] font-semibold text-vendslip-deep">{k}</td><td className="px-4 py-2.5 text-ink-secondary">{v}</td></tr>
                 ))}
               </tbody>
             </table>

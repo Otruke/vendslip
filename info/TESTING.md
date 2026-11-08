@@ -263,13 +263,16 @@ never passes through VendSlip.
 |---|---|---|
 | 1 | Send `/start` to the bot from a Telegram account that isn't linked | "Welcome to VendSlip! Link this chat first…" |
 | 2 | In VendSlip, as the owner → **Bot channels → Link a chat**. Use **Open in Telegram**, or send `/link CODE` | "Linked ✅ … can now send slips for Amina Luxury Couture." The chat appears under Bot channels |
-| 3 | `/help` | The list of commands |
+| 3 | `/help` | The list of commands (full reference: `BOT-COMMANDS.md`) |
 | 4 | `/name = Ada Obi` | Nothing yet (silent until the draft is complete) |
 | 5 | `/item = 2x Ankara @ 7500` | A summary table with **Confirm / Edit / Cancel** buttons |
 | 6 | `/discount = 10%` then `/shipping = 1500` | The summary updates with the new total |
 | 7 | `/item = Cap @ 4000 was 5000` then `/preview` | A second line showing the discount from the usual price |
+| 7a | **Item discounts:** `/item = 2x Ankara @ 7500 less 500 \| Gele @ 5000 less 10% \| 2x Wrapper @ 3000 less 1000 total` | Each line shows the old price crossed out: Ankara 7,000 each, Gele 4,500, Wrapper 2,500 each. *Item discounts* line: 2,500 |
+| 7b | **Whole-order discount:** `/discount = 2000` (an amount) or `/discount = 10%` | A separate *Discount* line under the subtotal |
+| 7c | `/item = 3x Ankara @ 7500 less 1000 total` | A message saying 1,000 doesn't split evenly over 3; nothing is added |
 | 8 | `/remove 2` | Item 2 is removed, the summary is shown again |
-| 9 | Tap **Confirm** | "Rendering your slip…", then the **PDF receipt** with a verification link |
+| 9 | Tap **Confirm** | "Rendering your slip…", then the **PDF receipt** and one short link (`…/s/Ab3dE9xQ2`). No `/api/` address anywhere |
 | 10 | Tap **Confirm** again on the old message | Nothing happens (the button is disabled; no second slip) |
 | 11 | Open the verification link; scan the PDF's QR with your phone | The public check page shows the slip as genuine |
 | 12 | In the dashboard → **Receipts & Invoices** | The slip is there, channel **Telegram** |

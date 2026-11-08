@@ -128,12 +128,28 @@ final class TelegramRichMessageBuilder
     /** @return array<string, mixed> */
     public function verifyKeyboard(DeliverSlip $d): array
     {
-        $row = [['text' => '🔎 Verify', 'url' => $d->verifyUrl]];
-        if ($d->payUrl !== null) {
-            $row[] = ['text' => '💳 Pay online', 'url' => $d->payUrl];
+        $url = $d->shareUrl !== '' ? $d->shareUrl : $d->verifyUrl;
+
+        return ['inline_keyboard' => [[['text' => $d->payUrl !== null ? '💳 View & pay' : '📄 View & download', 'url' => $url]]]];
+    }
+
+    /**
+     * Telegram refuses a whole message when a button points at an address it can't use (localhost,
+     * a private IP, plain http to a bare host). Then the slip is sent without the button: the link is
+     * in the text anyway.
+     */
+    public static function publicUrl(string $url): bool
+    {
+        $host = strtolower((string) parse_url($url, PHP_URL_HOST));
+        if (! preg_match('#^https?://#i', $url) || $host === '' || ! str_contains($host, '.')) {
+            return false;
+        }
+        if (in_array($host, ['127.0.0.1', '0.0.0.0'], true) || str_ends_with($host, '.local') || str_ends_with($host, '.localhost') || str_ends_with($host, '.test')) {
+            return false;
         }
 
-        return ['inline_keyboard' => [$row]];
+        return filter_var($host, FILTER_VALIDATE_IP) === false
+            || filter_var($host, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) !== false;
     }
 
     /** @return array<string, mixed> */

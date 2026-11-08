@@ -66,7 +66,7 @@ final class WhatsAppCloudSender implements MetaChannelSender
             return true;
         }
 
-        return $this->text($to, $action->caption."\n📄 ".$action->pdfUrl);
+        return $this->text($to, $action->caption);
     }
 
     /** @param array<string, mixed> $message */

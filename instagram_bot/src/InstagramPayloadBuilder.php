@@ -25,6 +25,6 @@ final class InstagramPayloadBuilder
 
     public function slip(DeliverSlip $action): Response
     {
-        return TwiML::message($action->caption."\n\n📄 Download slip: ".$action->pdfUrl);
+        return TwiML::message($action->caption);
     }
 }

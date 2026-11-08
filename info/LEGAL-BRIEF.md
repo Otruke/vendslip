@@ -12,6 +12,7 @@ How to use it:
 2. Walk through **Gaps, assumptions and decisions** first. Those are the business choices that carry legal risk.
 3. Use **Questions to take to the lawyer** as the meeting agenda.
 4. After review, publish the corrected wording as a new version from Super-Admin → Terms & Privacy. Everyone is then asked to accept it.
+5. Wherever **Techberryz Futurecore Limited** is found, make sure to replace them with your exact registered company name.
 
 This brief describes what is built; it is not legal advice.
 

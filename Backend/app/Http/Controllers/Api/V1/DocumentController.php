@@ -181,18 +181,20 @@ final class DocumentController extends ApiController
         $pdfUrl = URL::temporarySignedRoute('documents.public-pdf', now()->addMinutes((int) config('vendslip.pdf.signed_url_minutes')), ['uid' => $document->public_uid]);
         $total = Money::format($document->total_minor, $document->currency);
         $label = $document->doc_type === DocumentType::INVOICE ? 'invoice' : ($document->doc_type === DocumentType::RECEIPT ? 'receipt' : 'credit note');
-        $text = "Hi {$document->customer_name}, here is your {$label} {$document->doc_number} from {$document->merchant->name} ({$total}).\n{$pdfUrl}\nVerify: ".Urls::verify($document->verification_hash);
-        if ($document->doc_type === DocumentType::INVOICE && $document->balance_due_minor > 0) {
-            $text .= "\nPay online: ".Urls::pay($document->public_uid);
-        }
+        // Customers only ever get the short link on the web app's address (view, download, pay).
+        $shareUrl = $document->shareUrl();
+        $payable = $document->doc_type === DocumentType::INVOICE && $document->balance_due_minor > 0;
+        $text = "Hi {$document->customer_name}, here is your {$label} {$document->doc_number} from {$document->merchant->name} ({$total}).\n"
+            .($payable ? 'View & pay: ' : 'View & download: ').$shareUrl;
 
         return response()->json([
-            'pdf_url' => $pdfUrl,
+            'pdf_url' => $pdfUrl, // for the signed-in business only (its own download button)
+            'share_url' => $shareUrl,
             'verify_url' => Urls::verify($document->verification_hash),
-            'pay_url' => $document->doc_type === DocumentType::INVOICE ? Urls::pay($document->public_uid) : null,
+            'pay_url' => $document->doc_type === DocumentType::INVOICE ? $shareUrl : null,
             'message' => $text,
             'whatsapp_url' => 'https://wa.me/'.(Phone::internationalDigits($document->customer_phone) ?? '').'?text='.rawurlencode($text),
-            'telegram_url' => 'https://t.me/share/url?url='.rawurlencode($pdfUrl).'&text='.rawurlencode("{$document->doc_number} · {$total}"),
+            'telegram_url' => 'https://t.me/share/url?url='.rawurlencode($shareUrl).'&text='.rawurlencode("{$document->doc_number} · {$total}"),
         ]);
     }
 

@@ -1,4 +1,4 @@
-import { parseToMinor } from './money'
+import { parseToMinor, percentToBps } from './money'
 
 /**
  * VendSlip /slash parser — 1:1 mirror of Backend/app/Services/Slash/SlashCommandParser.php.
@@ -56,9 +56,9 @@ export function parseSlash(message: string): ParseResult {
 
     if (key === 'item') {
       for (const line of value.split(/\s*[|\n;]\s*/).map((p) => p.trim()).filter(Boolean)) {
-        const item = parseItem(line)
-        if (item) result.items.push(item)
-        else result.errors.push(`Couldn't read item "${line}". Try: 2x Shoe @ 15000`)
+        const item = readItem(line)
+        if (typeof item === 'string') result.errors.push(item)
+        else result.items.push(item)
       }
       return
     }
@@ -69,16 +69,52 @@ export function parseSlash(message: string): ParseResult {
 }
 
 export function parseItem(line: string): ParsedItem | null {
+  const item = readItem(line)
+  return typeof item === 'string' ? null : item
+}
+
+const AMOUNT = String.raw`(?:₦|NGN|N|\$)?\s*\d[\d,]*(?:\.\d+)?\s*[kKmM]?`
+const PERCENT = String.raw`\d{1,3}(?:\.\d{1,2})?\s*%`
+const SCOPE = String.raw`(each|per\s+(?:unit|item|one|piece)|total|all|for\s+all|on\s+all|in\s+total|line)?`
+const WHOLE = ['total', 'all', 'for all', 'on all', 'in total', 'line']
+const LESS_RE = new RegExp(String.raw`^(.*\S)\s+(?:less|off|disc|discount)\s*[:=]?\s*(${PERCENT}|${AMOUNT})\s*${SCOPE}\s*$`, 'iu')
+const OFF_RE = new RegExp(String.raw`^(.*\S)\s+(${PERCENT}|${AMOUNT})\s*off\s*${SCOPE}\s*$`, 'iu')
+const MINUS_RE = /^(.*\S)\s+-\s*(\d{1,3}(?:\.\d{1,2})?)\s*%\s*$/u
+const plain = (minor: number) => (minor % 100 === 0 ? String(minor / 100) : (minor / 100).toFixed(2))
+const scopeIsWhole = (scope: string | undefined) => WHOLE.includes((scope ?? '').toLowerCase().replace(/\s+/g, ' '))
+
+/**
+ * Like parseItem(), but says what is wrong. Also reads a discount on the item (same rules as the bot):
+ *   "2x Shoe @ 15000 less 1000"        1,000 off each one
+ *   "2x Shoe @ 15000 less 10%"         10% off (also "-10%", "10% off", "disc 10%")
+ *   "2x Shoe @ 15000 less 3000 total"  3,000 off the two together
+ */
+export function readItem(line: string): ParsedItem | string {
   const raw = line.trim()
-  if (raw === '') return null
+  const usage = `Couldn't read item "${raw}". Try: 2x Shoe @ 15000`
+  if (raw === '') return usage
+  let work = raw
+
+  let discount: { value: string; whole: boolean } | null = null
+  let dm = LESS_RE.exec(work)
+  if (dm) {
+    discount = { value: (dm[2] ?? '').trim(), whole: scopeIsWhole(dm[3]) }
+    work = (dm[1] ?? '').trim()
+  } else if ((dm = OFF_RE.exec(work)) && (dm[1] ?? '').includes('@')) {
+    discount = { value: (dm[2] ?? '').trim(), whole: scopeIsWhole(dm[3]) }
+    work = (dm[1] ?? '').trim()
+  } else if ((dm = MINUS_RE.exec(work))) {
+    discount = { value: `${dm[2]}%`, whole: false }
+    work = (dm[1] ?? '').trim()
+  }
 
   // "… @ 15000 was 18000": the normal (list) price, so the line's discount is traceable.
   let listPrice: number | null = null
-  let work = raw
   const lm = /^(.*\S)\s*\(?\s*(?:was|list|rrp|normally)\s*[:=]?\s*((?:₦|NGN|N|\$)?\s*\d[\d,]*(?:\.\d+)?\s*[kKmM]?)\s*\)?\s*$/iu.exec(work)
   if (lm) {
+    if (discount) return `Item "${raw}": use either "was" (the normal price) or "less" (the discount), not both.`
     listPrice = parseToMinor((lm[2] ?? '').trim())
-    if (listPrice === null) return null
+    if (listPrice === null) return usage
     work = (lm[1] ?? '').trim()
   }
 
@@ -118,15 +154,37 @@ export function parseItem(line: string): ParsedItem | null {
   }
 
   description = description.replace(/^[\s\-:]+|[\s\-:]+$/g, '')
-  if (description === '' || description.length > 500) return null
+  if (description === '' || description.length > 500) return usage
 
   let unitPrice: number | null = null
   if (priceText !== null) {
     unitPrice = parseToMinor(priceText)
-    if (unitPrice === null) return null
+    if (unitPrice === null) return usage
   }
   quantity ??= 1
-  if (quantity < 1) return null
+  if (quantity < 1) return usage
+
+  if (discount) {
+    if (unitPrice === null) return `Item "${raw}": add the price before the discount, e.g. 2x Shoe @ 15000 less 1000.`
+    let perUnit: number
+    if (discount.value.endsWith('%')) {
+      const bps = percentToBps(discount.value)
+      if (bps === null || bps === 0 || bps >= 10000) return `Item "${raw}": the discount must be more than 0% and less than 100%.`
+      perUnit = Math.floor((unitPrice * bps + 5000) / 10000)
+    } else {
+      const off = parseToMinor(discount.value)
+      if (off === null || off === 0) return usage
+      if (discount.whole && quantity > 1) {
+        if (off % quantity !== 0) return `Item "${raw}": ${plain(off)} off ${quantity} items doesn't split evenly. Give the discount on each one (e.g. less ${plain(Math.floor(off / quantity))} each), or use /discount = ${plain(off)} for the whole order.`
+        perUnit = off / quantity
+      } else {
+        perUnit = off
+      }
+    }
+    if (perUnit >= unitPrice) return `Item "${raw}": the discount is as much as the price or more.`
+    listPrice = unitPrice
+    unitPrice -= perUnit
+  }
 
   return { description, quantity, unit_price_minor: unitPrice, list_price_minor: listPrice, raw }
 }

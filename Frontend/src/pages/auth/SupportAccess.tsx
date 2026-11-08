@@ -2,7 +2,7 @@ import { useQueryClient } from '@tanstack/react-query'
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { AuthLayout } from '@/components/layout/AuthLayout'
-import { Alert, PageLoader } from '@/components/ui'
+import { FormError, PageLoader } from '@/components/ui'
 import { apiPost } from '@/hooks/queries'
 import { errorMessage, resetCsrf } from '@/lib/api'
 import { useAuthStore } from '@/stores/auth'
@@ -51,7 +51,7 @@ export default function SupportAccess() {
 
   return (
     <AuthLayout title="Support link didn’t work" subtitle="Support access needs a fresh code from the business owner.">
-      <Alert tone="danger">{error}</Alert>
+      <FormError className="text-sm">{error}</FormError>
     </AuthLayout>
   )
 }

@@ -50,6 +50,8 @@ export const useVerify = (code: string | undefined) =>
   useQuery({ queryKey: ['verify', code], queryFn: () => get<VerifyResult>(`/public/verify/${encodeURIComponent(code ?? '')}`), enabled: !!code, retry: false })
 export const usePublicInvoice = (uid: string | undefined) =>
   useQuery({ queryKey: ['invoice', uid], queryFn: () => get<PublicInvoice>(`/public/invoices/${uid}`), enabled: !!uid, retry: false })
+export const usePublicSlip = (code: string | undefined) =>
+  useQuery({ queryKey: ['slip', code], queryFn: () => get<PublicInvoice>(`/public/s/${code}`), enabled: !!code, retry: false })
 
 /* ── Session ────────────────────────────────────────────────────────── */
 export const fetchSession = () => get<Session>('/auth/me')

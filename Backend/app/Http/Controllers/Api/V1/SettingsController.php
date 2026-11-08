@@ -11,11 +11,14 @@ use App\Services\Security\AuditLogger;
 use App\Services\Security\SessionPayload;
 use App\Support\Countries;
 use App\Support\Currencies;
+use GdImage;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 
 final class SettingsController extends ApiController
 {
@@ -86,8 +89,10 @@ final class SettingsController extends ApiController
 
         $file = $request->file('logo');
         abort_unless($file !== null && ! is_array($file), 422);
-        $path = $file->storeAs('logos/'.$merchant->id, Str::lower(Str::random(20)).'.'.$file->guessExtension(), 'public');
-        abort_if($path === false, 500, 'Could not store the logo.');
+        // Re-drawn as a fresh PNG: anything hidden inside the uploaded file (scripts, metadata,
+        // malformed chunks) is dropped before it is stored, served or put into a PDF.
+        $path = 'logos/'.$merchant->id.'/'.Str::lower(Str::random(20)).'.png';
+        abort_if(Storage::disk('public')->put($path, self::cleanLogo($file)) === false, 500, 'Could not store the logo.');
         if ($merchant->logo_path !== null) {
             Storage::disk('public')->delete($merchant->logo_path);
         }
@@ -147,5 +152,36 @@ final class SettingsController extends ApiController
         }
 
         return response()->json($this->session->for($this->user($request)->refresh()));
+    }
+
+    /** Decode the upload and encode it again as PNG (transparency kept), at most 1000 px on the long side. */
+    private static function cleanLogo(UploadedFile $file): string
+    {
+        $fail = static fn (string $m): ValidationException => ValidationException::withMessages(['logo' => $m]);
+        if (! function_exists('imagecreatefromstring')) {
+            throw $fail('Logo uploads need the PHP GD extension, which is off on this server.');
+        }
+        $info = @getimagesize($file->getRealPath());
+        if ($info === false || ! in_array($info[2], [IMAGETYPE_JPEG, IMAGETYPE_PNG, IMAGETYPE_WEBP], true)) {
+            throw $fail('Upload a PNG, JPG or WebP image.');
+        }
+        $source = @imagecreatefromstring((string) file_get_contents($file->getRealPath()));
+        if (! $source instanceof GdImage) {
+            throw $fail('That image could not be read. Try saving it again as PNG.');
+        }
+        $w = imagesx($source);
+        $h = imagesy($source);
+        $scale = min(1, 1000 / max($w, $h));
+        $nw = max(1, (int) round($w * $scale));
+        $nh = max(1, (int) round($h * $scale));
+        $out = imagecreatetruecolor($nw, $nh);
+        imagealphablending($out, false);
+        imagesavealpha($out, true);
+        imagefill($out, 0, 0, (int) imagecolorallocatealpha($out, 0, 0, 0, 127));
+        imagecopyresampled($out, $source, 0, 0, 0, 0, $nw, $nh, $w, $h);
+        ob_start();
+        imagepng($out, null, 6);
+
+        return (string) ob_get_clean();
     }
 }

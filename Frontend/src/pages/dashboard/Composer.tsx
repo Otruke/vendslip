@@ -125,7 +125,7 @@ function FormPane({ inventoryEnabled }: { inventoryEnabled: boolean }) {
             ))}
           </ul>
         )}
-        {draft.items.length > 0 && <p className="mt-3 text-xs text-ink-muted">Selling below the normal price? The slip shows the old price crossed out and the saving. In chats, type <code className="font-mono">@ 25,000 was 30,000</code>.</p>}
+        {draft.items.length > 0 && <p className="mt-3 text-xs text-ink-muted">Selling below the normal price? The slip shows the old price crossed out and the saving. In chats, type <code className="font-mono">@ 30,000 less 5,000</code>, <code className="font-mono">less 10%</code> or <code className="font-mono">was 30,000</code>.</p>}
       </Card>
 
       <Card padding="sm" className="grid gap-4 sm:grid-cols-2">

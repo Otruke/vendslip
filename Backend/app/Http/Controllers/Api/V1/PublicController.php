@@ -24,6 +24,7 @@ use App\Services\Pricing\PlanPricing;
 use App\Services\Settings\PlatformSettings;
 use App\Support\Countries;
 use App\Support\Currencies;
+use App\Support\ShortCode;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\URL;
@@ -162,33 +163,68 @@ final class PublicController extends Controller
         ]);
     }
 
+    /** A public invoice by its long id (older /pay links keep working). */
     public function invoice(string $uid, PlanEntitlements $entitlements): JsonResponse
     {
-        $invoice = $this->findInvoice($uid)->load('items', 'merchant');
-        $merchant = $invoice->merchant;
-        $online = $entitlements->has($merchant, PlanEntitlements::PAYMENT_LINKS);
+        return response()->json($this->slipPayload($this->findInvoice($uid), $entitlements));
+    }
 
-        return response()->json([
-            'doc_number' => $invoice->doc_number,
-            'status' => $invoice->status->value,
-            'currency' => $invoice->currency,
-            'customer_name' => $invoice->customer_name,
-            'issued_at' => $invoice->issued_at->toIso8601String(),
-            'due_date' => $invoice->due_date?->toDateString(),
-            'items' => $invoice->items->map(static fn ($i): array => [
+    /** The page behind the short link a business sends its customer: FRONTEND_URL/s/{code}. */
+    public function slip(string $code, PlanEntitlements $entitlements): JsonResponse
+    {
+        return response()->json($this->slipPayload($this->findByShortCode($code), $entitlements))
+            ->header('X-Robots-Tag', 'noindex');
+    }
+
+    /** The PDF behind a short link: downloaded by the slip page, so no file address is ever shown. */
+    public function slipPdf(string $code, SlipRenderer $renderer): Response
+    {
+        $document = $this->findByShortCode($code);
+
+        return response($renderer->content($document), 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'attachment; filename="'.$document->doc_number.'.pdf"',
+            'Cache-Control' => 'private, max-age=300',
+            'X-Robots-Tag' => 'noindex',
+        ]);
+    }
+
+    /** @return array<string, mixed> */
+    private function slipPayload(Document $document, PlanEntitlements $entitlements): array
+    {
+        $document->loadMissing('items', 'merchant');
+        $merchant = $document->merchant;
+        $payable = $document->doc_type === DocumentType::INVOICE
+            && $document->status !== DocumentStatus::VOID
+            && $document->balance_due_minor > 0
+            && $entitlements->has($merchant, PlanEntitlements::PAYMENT_LINKS);
+
+        return [
+            'doc_type' => $document->doc_type->value,
+            'doc_number' => $document->doc_number,
+            'short_code' => $document->short_code,
+            // Only invoices are paid online; the pay call uses this id.
+            'pay_uid' => $document->doc_type === DocumentType::INVOICE ? $document->public_uid : null,
+            'status' => $document->status->value,
+            'currency' => $document->currency,
+            'customer_name' => $document->customer_name,
+            'issued_at' => $document->issued_at->toIso8601String(),
+            'due_date' => $document->due_date?->toDateString(),
+            'items' => $document->items->map(static fn ($i): array => [
                 'description' => $i->description, 'quantity' => $i->quantity,
-                'unit_price_minor' => $i->unit_price_minor, 'line_total_minor' => $i->line_total_minor,
+                'unit_price_minor' => $i->unit_price_minor, 'list_price_minor' => $i->list_price_minor,
+                'line_total_minor' => $i->line_total_minor,
             ]),
-            'subtotal_minor' => $invoice->subtotal_minor,
-            'discount_minor' => $invoice->discount_minor,
-            'tax_minor' => $invoice->tax_minor,
-            'shipping_minor' => $invoice->shipping_minor,
-            'total_minor' => $invoice->total_minor,
-            'amount_paid_minor' => $invoice->amount_paid_minor,
-            'balance_due_minor' => $invoice->balance_due_minor,
-            'verification_code' => $invoice->verification_code,
-            'verification_hash' => $invoice->verification_hash,
-            'pdf_url' => URL::temporarySignedRoute('documents.public-pdf', now()->addHours(2), ['uid' => $invoice->public_uid]),
+            'subtotal_minor' => $document->subtotal_minor,
+            'line_discount_minor' => $document->line_discount_minor,
+            'discount_minor' => $document->discount_minor,
+            'tax_minor' => $document->tax_minor,
+            'shipping_minor' => $document->shipping_minor,
+            'total_minor' => $document->total_minor,
+            'amount_paid_minor' => $document->amount_paid_minor,
+            'balance_due_minor' => $document->balance_due_minor,
+            'verification_code' => $document->verification_code,
+            'verification_hash' => $document->verification_hash,
             'merchant' => [
                 'name' => $merchant->name,
                 'logo_url' => $merchant->logoUrl(),
@@ -201,10 +237,10 @@ final class PublicController extends Controller
                 'payouts' => PayoutAccounts::forSlips($merchant),
             ],
             'gateways' => [
-                'flutterwave' => $online && $merchant->hasFlutterwave(),
-                'nowpayments' => $online && $merchant->hasNowPayments(),
+                'flutterwave' => $payable && $merchant->hasFlutterwave(),
+                'nowpayments' => $payable && $merchant->hasNowPayments(),
             ],
-        ]);
+        ];
     }
 
     public function payInvoice(Request $request, string $uid, CheckoutService $checkout): JsonResponse
@@ -229,6 +265,15 @@ final class PublicController extends Controller
             'Cache-Control' => 'private, max-age=300',
             'X-Robots-Tag' => 'noindex',
         ]);
+    }
+
+    private function findByShortCode(string $code): Document
+    {
+        abort_unless(ShortCode::looksValid($code), 404);
+
+        return Document::query()->where('short_code', $code)
+            ->where('status', '!=', DocumentStatus::DRAFT->value)
+            ->firstOrFail();
     }
 
     private function findInvoice(string $uid): Document

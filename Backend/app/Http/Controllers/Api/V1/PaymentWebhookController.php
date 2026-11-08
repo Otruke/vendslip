@@ -68,7 +68,7 @@ final class PaymentWebhookController extends Controller
         $status = $transaction->refresh()->status->value;
 
         $target = $isInvoice
-            ? 'pay/'.$transaction->document?->public_uid.'?ref='.$reference.'&status='.strtolower($status)
+            ? 's/'.$transaction->document?->short_code.'?ref='.$reference.'&status='.strtolower($status)
             : 'dashboard/billing?ref='.$reference.'&status='.strtolower($status);
 
         return redirect()->away(Urls::frontend($target));

@@ -38,6 +38,8 @@ Route::prefix('v1')->group(function (): void {
         Route::get('activity-feed', [PublicController::class, 'activityFeed']);
         Route::get('verify/{code}', [PublicController::class, 'verify']);
         Route::get('invoices/{uid}', [PublicController::class, 'invoice']);
+        Route::get('s/{code}', [PublicController::class, 'slip']);
+        Route::get('s/{code}/pdf', [PublicController::class, 'slipPdf'])->middleware('throttle:30,1,slip-pdf');
         Route::post('invoices/{uid}/pay', [PublicController::class, 'payInvoice']);
         Route::get('documents/{uid}/pdf', [PublicController::class, 'pdf'])->middleware('signed')->name('documents.public-pdf');
     });
@@ -81,13 +83,13 @@ Route::prefix('v1')->group(function (): void {
 
         // The account holder's own security: never available to a support session.
         Route::middleware(SupportSessionGuard::class.':forbid')->group(function (): void {
-            Route::put('account/profile', [AccountController::class, 'updateProfile']);
-            Route::put('account/password', [AccountController::class, 'updatePassword']);
+            Route::put('account/profile', [AccountController::class, 'updateProfile'])->middleware('throttle:10,1,account-profile');
+            Route::put('account/password', [AccountController::class, 'updatePassword'])->middleware('throttle:6,1,account-password');
             Route::post('account/avatar', [AccountController::class, 'uploadAvatar'])->middleware('throttle:10,1');
             Route::delete('account/avatar', [AccountController::class, 'deleteAvatar']);
-            Route::post('account/two-factor', [AccountController::class, 'enableTwoFactor']);
-            Route::post('account/two-factor/confirm', [AccountController::class, 'confirmTwoFactor']);
-            Route::delete('account/two-factor', [AccountController::class, 'disableTwoFactor']);
+            Route::post('account/two-factor', [AccountController::class, 'enableTwoFactor'])->middleware('throttle:6,1,account-2fa');
+            Route::post('account/two-factor/confirm', [AccountController::class, 'confirmTwoFactor'])->middleware('throttle:6,1,account-2fa-confirm');
+            Route::delete('account/two-factor', [AccountController::class, 'disableTwoFactor'])->middleware('throttle:6,1,account-2fa-off');
             Route::post('legal/accept', [LegalController::class, 'accept']);
         });
         Route::get('users/{user}/avatar', [AccountController::class, 'showAvatar'])->whereNumber('user');
@@ -134,7 +136,7 @@ Route::prefix('v1')->group(function (): void {
                 Route::delete('settings/payout-accounts/{id}', [PayoutAccountController::class, 'destroy'])->whereNumber('id');
             });
             Route::put('settings/branding', [SettingsController::class, 'updateBranding']);
-            Route::post('settings/logo', [SettingsController::class, 'uploadLogo']);
+            Route::post('settings/logo', [SettingsController::class, 'uploadLogo'])->middleware('throttle:10,1,logo');
             Route::delete('settings/logo', [SettingsController::class, 'deleteLogo']);
             Route::put('settings/gateways', [SettingsController::class, 'updateGateways'])->middleware(SupportSessionGuard::class.':forbid');
             Route::post('onboarding/complete', [SettingsController::class, 'completeOnboarding']);
@@ -149,7 +151,7 @@ Route::prefix('v1')->group(function (): void {
             });
             Route::get('team', [TeamController::class, 'index']);
             Route::middleware(SupportSessionGuard::class.':forbid')->group(function (): void {
-                Route::post('team/invitations', [TeamController::class, 'invite']);
+                Route::post('team/invitations', [TeamController::class, 'invite'])->middleware('throttle:20,60,team-invites');
                 Route::delete('team/invitations/{id}', [TeamController::class, 'revokeInvitation'])->whereNumber('id');
                 Route::put('team/members/{id}', [TeamController::class, 'updateMember'])->whereNumber('id');
                 Route::delete('team/members/{id}', [TeamController::class, 'removeMember'])->whereNumber('id');
@@ -157,7 +159,7 @@ Route::prefix('v1')->group(function (): void {
 
             Route::get('channels', [ChannelController::class, 'index']);
             Route::middleware(SupportSessionGuard::class.':forbid')->group(function (): void {
-                Route::post('channels/link-code', [ChannelController::class, 'linkCode']);
+                Route::post('channels/link-code', [ChannelController::class, 'linkCode'])->middleware('throttle:10,10,link-codes');
                 Route::delete('channels/identities/{id}', [ChannelController::class, 'unlink'])->whereNumber('id');
             });
 

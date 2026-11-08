@@ -74,10 +74,12 @@ api.interceptors.response.use(
       body?.message && body.message !== 'Server Error'
         ? body.message
         : status === 0
-          ? 'Network error. Check your connection.'
-          : status === 429
-            ? 'Too many attempts. Please wait a moment.'
-            : 'Something went wrong. Please try again.'
+          ? 'Can’t connect. Check your internet connection and try again.'
+          : status === 502 || status === 503 || status === 504
+            ? 'VendSlip can’t be reached right now. Please try again in a moment.'
+            : status === 429
+              ? 'Too many attempts. Please wait a minute and try again.'
+              : 'Something went wrong. Please try again.'
     return Promise.reject(new ApiError(message, status, body?.code ?? null, body?.errors ?? {}))
   },
 )

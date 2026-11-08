@@ -19,7 +19,9 @@ use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rules\Password as PasswordRule;
@@ -93,6 +95,10 @@ final class AuthController extends Controller
 
         /** @var User|null $user */
         $user = User::query()->where('email', $email)->first();
+        if ($user === null) {
+            // Same work as a real check, so the response time doesn't reveal which emails have accounts.
+            Hash::check($credentials['password'], self::dummyHash());
+        }
         if ($user === null || ! Auth::guard('web')->getProvider()->validateCredentials($user, ['password' => $credentials['password']])) {
             $this->audit->log('auth.login_failed', $user, null, ['email' => $email], AuditSeverity::WARNING);
             throw ValidationException::withMessages(['email' => 'These credentials do not match our records.']);
@@ -170,7 +176,9 @@ final class AuthController extends Controller
     public function forgotPassword(Request $request): JsonResponse
     {
         $request->validate(['email' => ['required', 'email']]);
-        Password::sendResetLink(['email' => mb_strtolower((string) $request->input('email'))]);
+        $email = mb_strtolower((string) $request->input('email'));
+        // Sent after the reply, so registered and unknown emails take the same time to answer.
+        dispatch(static fn () => Password::sendResetLink(['email' => $email]))->afterResponse();
 
         // Always the same answer: never reveal whether an email is registered.
         return response()->json(['message' => 'If that email is registered, a reset link is on its way.']);
@@ -194,7 +202,8 @@ final class AuthController extends Controller
         );
 
         if ($status !== Password::PASSWORD_RESET) {
-            throw ValidationException::withMessages(['email' => __($status)]);
+            // One answer for an unknown email, a wrong token or an old link: nothing to learn from it.
+            throw ValidationException::withMessages(['email' => 'This reset link is invalid or has expired. Request a new one.']);
         }
 
         return response()->json(['message' => 'Password updated. You can sign in now.']);
@@ -220,5 +229,11 @@ final class AuthController extends Controller
         }
 
         return $slug;
+    }
+
+    /** A bcrypt hash of a random value: lets a login for an unknown email cost the same as a real one. */
+    public static function dummyHash(): string
+    {
+        return (string) Cache::rememberForever('auth.timing_dummy_hash', static fn (): string => Hash::make(Str::random(40)));
     }
 }

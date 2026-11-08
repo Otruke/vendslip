@@ -29,7 +29,7 @@ final class FacebookPayloadBuilder
         $attach = (bool) ($this->config['attach_pdf'] ?? true);
 
         return TwiML::message(
-            $attach ? $action->caption : $action->caption."\n📄 ".$action->pdfUrl,
+            $action->caption,
             $attach ? $action->pdfUrl : null,
         );
     }

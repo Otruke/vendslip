@@ -8,6 +8,8 @@ return [
     | in PDFs and bot replies point there.
     */
     'frontend_url' => rtrim((string) env('FRONTEND_URL', 'http://localhost:5173'), '/'),
+    // Optional shorter domain for the links sent to customers (must serve the web app). Blank = FRONTEND_URL.
+    'share_url' => rtrim((string) env('VENDSLIP_SHARE_URL', ''), '/'),
 
     /*
     | HMAC-SHA256 key for slip verification hashes. Set VENDSLIP_VERIFICATION_KEY in
@@ -85,8 +87,8 @@ return [
         'validate_signature' => (bool) env('TWILIO_VALIDATE_SIGNATURE', true),
     ],
 
-    // Terms of Service and Privacy Policy. Bump the version whenever either changes materially:
-    // people must accept the new version again before their next payment.
+    // Terms of Service and Privacy Policy. 'version' is the first version; later ones are published
+    // from Super-Admin → Terms & Privacy, and people are asked to accept them from their effective date.
     'legal' => [
         'version' => env('VENDSLIP_LEGAL_VERSION', '2026-11-08'),
         'entity' => env('VENDSLIP_LEGAL_ENTITY', 'Techberryz Futurecore Limited'),

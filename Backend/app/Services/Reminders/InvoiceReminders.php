@@ -11,7 +11,6 @@ use App\Models\Merchant;
 use App\Notifications\InvoiceReminderNotification;
 use App\Services\Billing\PlanEntitlements;
 use App\Support\Money;
-use App\Support\Urls;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -137,7 +136,7 @@ final class InvoiceReminders
                 balance: Money::format($invoice->balance_due_minor, $invoice->currency),
                 dueDate: $due->format('d M Y'),
                 days: max(0, $days),
-                payUrl: Urls::pay($invoice->public_uid),
+                payUrl: $invoice->shareUrl(),
             ));
         } catch (Throwable $e) {
             DB::table('invoice_reminders')->where('document_id', $invoice->id)->where('stage', $stage)->delete();

@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 import { useState, type FormEvent } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { AuthLayout } from '@/components/layout/AuthLayout'
-import { Alert, Button, Checkbox, Input, PageLoader, PasswordChecklist } from '@/components/ui'
+import { Button, Checkbox, FormError, FormNote, Input, PageLoader, PasswordChecklist } from '@/components/ui'
 import { LegalAgreement } from '@/pages/public/Legal'
 import { apiPost } from '@/hooks/queries'
 import { api, errorMessage, resetCsrf } from '@/lib/api'
@@ -23,7 +23,7 @@ export default function AcceptInvite() {
 
   if (invite.isLoading) return <PageLoader />
   if (invite.isError || !invite.data) {
-    return <AuthLayout title="Invitation expired"><Alert tone="danger">This invitation is invalid or has expired. Ask the business owner to send a new one.</Alert></AuthLayout>
+    return <AuthLayout title="Invitation expired"><FormNote>This invitation is invalid or has expired. Ask the business owner to send a new one.</FormNote></AuthLayout>
   }
 
   const submit = async (e: FormEvent) => {
@@ -44,7 +44,7 @@ export default function AcceptInvite() {
   return (
     <AuthLayout title={`Join ${invite.data.merchant_name}`} subtitle={`You’re invited as ${invite.data.role_label}.`}>
       <form onSubmit={submit} className="space-y-4">
-        {error && <Alert tone="danger">{error}</Alert>}
+        {error && <FormError>{error}</FormError>}
         <Input label="Email" value={invite.data.email} disabled />
         <Input label="Your name" required value={name} onChange={(e) => setName(e.target.value)} />
         <div>

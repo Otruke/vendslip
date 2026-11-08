@@ -1,7 +1,7 @@
 import { useState, type FormEvent } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { AuthLayout } from '@/components/layout/AuthLayout'
-import { Alert, Button, Input, PasswordChecklist } from '@/components/ui'
+import { Button, FormError, FormNote, Input, PasswordChecklist } from '@/components/ui'
 import { apiPost } from '@/hooks/queries'
 import { errorMessage } from '@/lib/api'
 
@@ -30,9 +30,9 @@ export default function ResetPassword() {
 
   return (
     <AuthLayout title="Choose a new password" footer={<Link to="/login" className="font-semibold text-vendslip-primary">Back to sign in</Link>}>
-      {done ? <Alert tone="success" title="Password updated">You can now sign in with your new password.</Alert> : (
+      {done ? <FormNote><strong className="font-semibold text-ink-primary">Password updated.</strong> You can now sign in with your new password.</FormNote> : (
         <form onSubmit={submit} className="space-y-4">
-          {error && <Alert tone="danger">{error}</Alert>}
+          {error && <FormError>{error}</FormError>}
           <div>
             <Input label="New password" type="password" autoComplete="new-password" required value={password} onChange={(e) => setPassword(e.target.value)} />
             <PasswordChecklist value={password} />

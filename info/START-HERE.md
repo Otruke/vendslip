@@ -14,6 +14,7 @@ vendSlip\
 │   ├── START-HERE.md        ← this file
 │   ├── SETUP.md             ← full developer + production guide
 │   ├── TESTING.md           ← testing payments, Telegram and WhatsApp
+│   ├── BOT-COMMANDS.md      ← every way to write chat commands
 │   ├── META-SETUP.md        ← WhatsApp, Messenger, Instagram (Meta)
 │   ├── TWILIO-SETUP.md      ← WhatsApp, Messenger (Twilio)
 │   ├── LEGAL-BRIEF.md       ← regulations, for the lawyer

@@ -119,7 +119,7 @@ final class CheckoutService
             );
         } else {
             $successUrl = $isInvoice
-                ? Urls::frontend('pay/'.$transaction->document?->public_uid.'?ref='.$transaction->reference)
+                ? Urls::slip((string) $transaction->document?->short_code).'?ref='.$transaction->reference
                 : Urls::frontend('dashboard/billing?ref='.$transaction->reference);
             $invoice = $this->nowPayments->createInvoice(
                 $credentials,

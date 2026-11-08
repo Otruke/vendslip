@@ -10,6 +10,7 @@ use App\Models\ChannelIdentity;
 use App\Models\Document;
 use App\Services\Settings\PlatformSettings;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\URL;
 use Tests\TestCase;
 use Twilio\Security\RequestValidator;
 
@@ -114,6 +115,9 @@ final class BotFlowTest extends TestCase
 
     public function test_telegram_secret_and_callback_confirm_flow(): void
     {
+        // Live-like addresses: Telegram can fetch the PDF and open the button link.
+        URL::forceRootUrl('https://api.vendslip.example');
+        config(['vendslip.frontend_url' => 'https://vendslip.example']);
         Http::fake(['api.telegram.org/*' => Http::response(['ok' => true, 'result' => ['message_id' => 77]])]);
         $this->postJson('/api/v1/webhooks/telegram', ['update_id' => 1])->assertUnauthorized();
 
@@ -140,7 +144,35 @@ final class BotFlowTest extends TestCase
         Http::assertSent(fn ($r) => str_ends_with($r->url(), '/editMessageReplyMarkup') && ($r['reply_markup']['inline_keyboard'][0][0]['disabled'] ?? false) === true);
         Http::assertSent(fn ($r) => str_ends_with($r->url(), '/sendRichMessageDraft') && $r['can_stop'] === false);
         Http::assertSent(fn ($r) => str_ends_with($r->url(), '/sendRichMessage') && ($r['rich_message']['blocks'][1]['type'] ?? null) === 'document');
-        $this->assertSame('TELEGRAM', Document::query()->firstOrFail()->channel->value);
+        $doc = Document::query()->firstOrFail();
+        $this->assertSame('TELEGRAM', $doc->channel->value);
+        // The caption and button carry only the short link on the web app.
+        Http::assertSent(fn ($r) => str_ends_with($r->url(), '/sendRichMessage') && ($r['rich_message']['blocks'][0]['text'] ?? '') !== ''
+            && str_ends_with($r['rich_message']['blocks'][0]['text'], 'View & download: https://vendslip.example/s/'.$doc->short_code)
+            && ($r['reply_markup']['inline_keyboard'][0][0]['url'] ?? null) === 'https://vendslip.example/s/'.$doc->short_code);
+    }
+
+    public function test_telegram_uploads_the_pdf_when_it_cannot_fetch_it(): void
+    {
+        // Local testing: localhost addresses Telegram can't reach or accept in a button.
+        config(['vendslip.frontend_url' => 'http://localhost:5173']);
+        Http::fake(['api.telegram.org/*' => Http::response(['ok' => true, 'result' => ['message_id' => 90]])]);
+        [, $user] = $this->merchantWithOwner();
+        $this->actingAs($user);
+        $code = $this->postJson('/api/v1/channels/link-code')->json('code');
+        auth()->guard('web')->logout();
+        $tg = fn (array $update) => $this->withHeader('X-Telegram-Bot-Api-Secret-Token', 'tg-secret')->postJson('/api/v1/webhooks/telegram', $update);
+        $msg = fn (int $id, string $text) => ['update_id' => $id, 'message' => ['message_id' => $id, 'text' => $text, 'from' => ['id' => 556, 'first_name' => 'Tobi'], 'chat' => ['id' => 556, 'type' => 'private']]];
+        $tg($msg(20, '/start '.$code))->assertOk();
+        $tg($msg(21, "/name = Ada\n/item = Shoe @ 15000"))->assertOk();
+        $tg($msg(22, '/confirm'))->assertOk();
+
+        $doc = Document::query()->firstOrFail();
+        Http::assertSent(fn ($r) => str_ends_with($r->url(), '/sendDocument') && $r->isMultipart()
+            && collect($r->data())->contains(fn ($part) => ($part['name'] ?? null) === 'document' && ($part['filename'] ?? null) === $doc->doc_number.'.pdf' && str_starts_with((string) $part['contents'], '%PDF'))
+            && collect($r->data())->contains(fn ($part) => ($part['name'] ?? null) === 'caption' && str_ends_with((string) $part['contents'], '/s/'.$doc->short_code) && ! str_contains((string) $part['contents'], '/api/'))
+            && ! collect($r->data())->contains(fn ($part) => ($part['name'] ?? null) === 'reply_markup'));
+        Http::assertNotSent(fn ($r) => str_ends_with($r->url(), '/sendRichMessage') && isset($r['rich_message']['blocks'][1]['document']));
     }
 
     public function test_telegram_group_summaries_are_ephemeral(): void
@@ -156,5 +188,27 @@ final class BotFlowTest extends TestCase
         $tg(['update_id' => 21, 'message' => ['message_id' => 2, 'text' => '/name = Ada /amount = 9000', 'from' => ['id' => 777], 'chat' => $group]]);
 
         Http::assertSent(fn ($r) => str_ends_with($r->url(), '/sendRichMessage') && ($r['ephemeral_message_parameters']['receiver_user_id'] ?? null) === 777);
+    }
+
+    public function test_item_and_order_discounts_together_in_chat(): void
+    {
+        $this->linkWhatsapp();
+        $this->whatsapp("/name = Ada\n/vat = off\n/discount = 2000\n/shipping = 1500")->assertSee('<Response/>', false);
+        $summary = $this->whatsapp('/item = 2x Ankara @ 7500 less 500 | Gele @ 5000 less 10% | 2x Wrapper @ 3000 less 1000 total')->assertOk();
+        // 2 × 7,000 + 4,500 + 2 × 2,500 = 23,500; item savings 2,500; less 2,000; plus 1,500 delivery = 23,000.
+        $summary->assertSee('(was ₦7,500.00)', false)->assertSee('Item discounts: -₦2,500.00', false)->assertSee('Discount: -₦2,000.00', false)->assertSee('₦23,000.00', false);
+
+        $this->whatsapp('1')->assertOk();
+        $doc = Document::query()->firstOrFail();
+        $this->assertSame([2_350_000, 250_000, 200_000, 150_000, 0, 2_300_000], [$doc->subtotal_minor, $doc->line_discount_minor, $doc->discount_minor, $doc->shipping_minor, $doc->tax_minor, $doc->total_minor]);
+        $this->assertSame([750_000, 500_000, 300_000], $doc->items()->orderBy('id')->pluck('list_price_minor')->all());
+    }
+
+    public function test_an_uneven_line_discount_is_explained_not_guessed(): void
+    {
+        $this->linkWhatsapp();
+        $this->whatsapp("/name = Ada\n/item = 3x Ankara @ 7500 less 1000 total")->assertOk()
+            ->assertSee('split evenly', false)->assertSee('/discount = 1000', false);
+        $this->assertSame(0, Document::query()->count());
     }
 }

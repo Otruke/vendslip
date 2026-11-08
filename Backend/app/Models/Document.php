@@ -8,6 +8,8 @@ use App\Enums\Channel;
 use App\Enums\DocumentStatus;
 use App\Enums\DocumentType;
 use App\Models\Concerns\BelongsToMerchant;
+use App\Support\ShortCode;
+use App\Support\Urls;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
@@ -25,6 +27,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property DocumentType $doc_type
  * @property string $doc_number
  * @property string $public_uid
+ * @property string|null $short_code public share code: FRONTEND_URL/s/{code}
  * @property DocumentStatus $status
  * @property Channel $channel
  * @property string $currency
@@ -68,13 +71,32 @@ class Document extends Model
     /** @var list<string> */
     protected $fillable = [
         'merchant_id', 'customer_id', 'template_id', 'created_by_user_id', 'parent_document_id',
-        'doc_type', 'doc_number', 'public_uid', 'status', 'channel', 'currency',
+        'doc_type', 'doc_number', 'public_uid', 'short_code', 'status', 'channel', 'currency',
         'customer_name', 'customer_phone', 'customer_email', 'customer_address',
         'subtotal_minor', 'discount_minor', 'line_discount_minor', 'vat_rate_bps', 'vat_inclusive', 'tax_minor', 'shipping_minor',
         'total_minor', 'amount_paid_minor', 'balance_due_minor',
         'consumed_paid_credit', 'has_watermark', 'revision_number', 'verification_hash', 'verification_code',
         'pdf_storage_path', 'notes', 'due_date', 'issued_at', 'voided_at', 'void_reason',
     ];
+
+    protected static function booted(): void
+    {
+        // Every slip gets its short public link code when it is created.
+        static::creating(static function (Document $document): void {
+            if ($document->short_code === null) {
+                do {
+                    $code = ShortCode::make();
+                } while (static::query()->withoutGlobalScopes()->where('short_code', $code)->exists());
+                $document->short_code = $code;
+            }
+        });
+    }
+
+    /** The one link a business sends its customer: view, download and (invoices) pay. */
+    public function shareUrl(): string
+    {
+        return Urls::slip((string) $this->short_code);
+    }
 
     /** @return array<string, string> */
     protected function casts(): array

@@ -100,9 +100,9 @@ final class SlashCommandParser
 
             if ($key === 'item') {
                 foreach ($this->splitItems($value) as $line) {
-                    $item = $this->parseItem($line);
-                    if ($item === null) {
-                        $result->errors[] = "Couldn't read item \"{$line}\". Try: 2x Shoe @ 15000";
+                    $item = $this->readItem($line);
+                    if (is_string($item)) {
+                        $result->errors[] = $item;
                     } else {
                         $result->items[] = $item;
                     }
@@ -133,18 +133,51 @@ final class SlashCommandParser
      */
     public function parseItem(string $line): ?ParsedItem
     {
+        $item = $this->readItem($line);
+
+        return $item instanceof ParsedItem ? $item : null;
+    }
+
+    /**
+     * Like parseItem(), but says what is wrong. Also reads a discount on the item:
+     *   "2x Shoe @ 15000 less 1000"         ₦1,000 off each one (sold at 14,000 each)
+     *   "2x Shoe @ 15000 less 10%"          10% off each one (also "-10%", "off 10%", "disc 10%")
+     *   "2x Shoe @ 15000 less 3000 total"   ₦3,000 off the two together ("all", "for all", "in total")
+     * The price before the discount is kept as the normal price, so the slip shows the saving.
+     */
+    public function readItem(string $line): ParsedItem|string
+    {
         $raw = trim($line);
+        $usage = "Couldn't read item \"{$raw}\". Try: 2x Shoe @ 15000";
         if ($raw === '') {
-            return null;
+            return $usage;
+        }
+        $work = $raw;
+
+        // A discount on this item: "less 1000", "off 10%", "disc 500 each", "less 3000 total", "-10%".
+        $discount = null;
+        $amount = '(?:₦|NGN|N|\$)?\s*\d[\d,]*(?:\.\d+)?\s*[kKmM]?';
+        if (preg_match('/^(.*\S)\s+(?:less|off|disc|discount)\s*[:=]?\s*(\d{1,3}(?:\.\d{1,2})?\s*%|'.$amount.')\s*(each|per\s+(?:unit|item|one|piece)|total|all|for\s+all|on\s+all|in\s+total|line)?\s*$/iu', $work, $dm) === 1) {
+            $discount = ['value' => trim($dm[2]), 'whole' => in_array(preg_replace('/\s+/', ' ', strtolower($dm[3] ?? '')), ['total', 'all', 'for all', 'on all', 'in total', 'line'], true)];
+            $work = trim($dm[1]);
+        } elseif (preg_match('/^(.*\S)\s+(\d{1,3}(?:\.\d{1,2})?\s*%|'.$amount.')\s*off\s*(each|per\s+(?:unit|item|one|piece)|total|all|for\s+all|on\s+all|in\s+total|line)?\s*$/iu', $work, $dm) === 1 && str_contains($dm[1], '@')) {
+            // "@ 15000 10% off", "@ 15000 1000 off each", "@ 15000 3000 off total"
+            $discount = ['value' => trim($dm[2]), 'whole' => in_array(preg_replace('/\s+/', ' ', strtolower($dm[3] ?? '')), ['total', 'all', 'for all', 'on all', 'in total', 'line'], true)];
+            $work = trim($dm[1]);
+        } elseif (preg_match('/^(.*\S)\s+-\s*(\d{1,3}(?:\.\d{1,2})?)\s*%\s*$/u', $work, $dm) === 1) {
+            $discount = ['value' => $dm[2].'%', 'whole' => false];
+            $work = trim($dm[1]);
         }
 
         // "… @ 15000 was 18000": the normal (list) price, so the line's discount is traceable.
         $listPrice = null;
-        $work = $raw;
         if (preg_match('/^(.*\S)\s*\(?\s*(?:was|list|rrp|normally)\s*[:=]?\s*((?:₦|NGN|N|\$)?\s*\d[\d,]*(?:\.\d+)?\s*[kKmM]?)\s*\)?\s*$/iu', $work, $lm) === 1) {
+            if ($discount !== null) {
+                return "Item \"{$raw}\": use either \"was\" (the normal price) or \"less\" (the discount), not both.";
+            }
             $listPrice = Money::parseToMinor(trim($lm[2]));
             if ($listPrice === null) {
-                return null;
+                return $usage;
             }
             $work = trim($lm[1]);
         }
@@ -183,22 +216,63 @@ final class SlashCommandParser
 
         $description = trim($description, " \t-:");
         if ($description === '' || mb_strlen($description) > 500) {
-            return null;
+            return $usage;
         }
 
         $unitPrice = null;
         if ($priceText !== null) {
             $unitPrice = Money::parseToMinor($priceText);
             if ($unitPrice === null) {
-                return null;
+                return $usage;
             }
         }
 
         $quantity ??= 1;
         if ($quantity < 1) {
-            return null;
+            return $usage;
+        }
+
+        if ($discount !== null) {
+            if ($unitPrice === null) {
+                return "Item \"{$raw}\": add the price before the discount, e.g. 2x Shoe @ 15000 less 1000.";
+            }
+            if (str_ends_with($discount['value'], '%')) {
+                $bps = Money::percentToBps($discount['value']);
+                if ($bps === null || $bps === 0 || $bps >= 10000) {
+                    return "Item \"{$raw}\": the discount must be more than 0% and less than 100%.";
+                }
+                // A percentage is the same on each one or on the whole line.
+                $perUnit = intdiv($unitPrice * $bps + 5000, 10000);
+            } else {
+                $off = Money::parseToMinor($discount['value']);
+                if ($off === null || $off === 0) {
+                    return $usage;
+                }
+                if ($discount['whole'] && $quantity > 1) {
+                    if ($off % $quantity !== 0) {
+                        return sprintf(
+                            'Item "%s": %s off %d items doesn\'t split evenly. Give the discount on each one (e.g. less %s each), or use /discount = %s for the whole order.',
+                            $raw, self::plain($off), $quantity, self::plain(intdiv($off, $quantity)), self::plain($off),
+                        );
+                    }
+                    $perUnit = intdiv($off, $quantity);
+                } else {
+                    $perUnit = $off;
+                }
+            }
+            if ($perUnit >= $unitPrice) {
+                return "Item \"{$raw}\": the discount is as much as the price or more.";
+            }
+            $listPrice = $unitPrice;
+            $unitPrice -= $perUnit;
         }
 
         return new ParsedItem($description, $quantity, $unitPrice, $raw, $listPrice);
+    }
+
+    /** 150000 → "1500", 150050 → "1500.50": an amount as people type it, without a currency sign. */
+    private static function plain(int $minor): string
+    {
+        return $minor % 100 === 0 ? (string) intdiv($minor, 100) : number_format($minor / 100, 2, '.', '');
     }
 }

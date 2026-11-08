@@ -27,7 +27,7 @@ final class WhatsAppPayloadBuilder
     public function slip(DeliverSlip $action): Response
     {
         $attach = (bool) ($this->config['attach_pdf'] ?? true);
-        $caption = $attach ? $action->caption : $action->caption."\nPDF: ".$action->pdfUrl;
+        $caption = $action->caption; // already carries the short link; the file address is never shown
 
         return TwiML::message($caption, $attach ? $action->pdfUrl : null);
     }

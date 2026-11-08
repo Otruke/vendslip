@@ -167,7 +167,9 @@ final class MetaWebhookTest extends TestCase
         $document = Document::query()->firstOrFail();
         $this->assertSame('document', $doc['type']);
         $this->assertSame($document->doc_number.'.pdf', $doc['document']['filename']);
-        $this->assertStringContainsString('/verify/', $doc['document']['caption']);
+        // The customer sees only the short link on the web app; the signed file address is for Meta to fetch.
+        $this->assertMatchesRegularExpression('#View & download: https?://[^/]+/s/[2-9a-km-zA-HJ-NP-Z]{9}$#', $doc['document']['caption']);
+        $this->assertStringNotContainsString('/api/', $doc['document']['caption']);
         $this->assertStringContainsString('signature=', $doc['document']['link']);
         $this->assertSame('WHATSAPP', $document->channel->value);
 
@@ -200,7 +202,8 @@ final class MetaWebhookTest extends TestCase
 
         $last = collect($this->sent())->last();
         $this->assertSame('text', $last['type']);
-        $this->assertStringContainsString('signature=', $last['text']['body']);
+        $this->assertMatchesRegularExpression('#/s/[2-9a-km-zA-HJ-NP-Z]{9}$#', $last['text']['body']);
+        $this->assertStringNotContainsString('/api/', $last['text']['body']);
     }
 
     public function test_messenger_quick_replies_and_pdf_file(): void

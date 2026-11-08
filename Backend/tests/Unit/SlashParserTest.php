@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Unit;
 
 use App\Services\Slash\DraftPayload;
+use App\Services\Slash\ParsedItem;
 use App\Services\Slash\SlashCommandParser;
 use Carbon\CarbonImmutable;
 use PHPUnit\Framework\TestCase;
@@ -109,5 +110,44 @@ final class SlashParserTest extends TestCase
         $this->assertSame('2026-11-12', DraftPayload::parseDueDate('12/11/2026', $today)?->toDateString());
         $this->assertSame('2026-11-30', DraftPayload::parseDueDate('2026-11-30', $today)?->toDateString());
         $this->assertNull(DraftPayload::parseDueDate('31/02/2026', $today));
+    }
+
+    public function test_item_discounts_per_unit_percent_and_whole_line(): void
+    {
+        $cases = [
+            '2x Ankara @ 7500 less 500' => [2, 700_000, 750_000],          // 500 off each
+            '2x Ankara @ 7500 less 500 each' => [2, 700_000, 750_000],
+            '2x Ankara @ 7500 500 off' => [2, 700_000, 750_000],
+            '2x Ankara @ 7.5k disc 1k' => [2, 650_000, 750_000],
+            '2x Ankara @ 7500 less 10%' => [2, 675_000, 750_000],          // 10% off
+            '2x Ankara @ 7500 -10%' => [2, 675_000, 750_000],
+            'Lace @ 20000 off 15%' => [1, 1_700_000, 2_000_000],
+            '2x Ankara @ 7500 less 1000 total' => [2, 700_000, 750_000],   // 1000 off the two together
+            '4 Wrapper @ 3000 less 2000 for all' => [4, 250_000, 300_000],
+            'Shoe 15000 less 1000' => [1, 1_400_000, 1_500_000],
+        ];
+        foreach ($cases as $line => [$qty, $unit, $list]) {
+            $item = $this->parser->readItem($line);
+            $this->assertInstanceOf(ParsedItem::class, $item, $line);
+            $this->assertSame([$qty, $unit, $list], [$item->quantity, $item->unitPriceMinor, $item->listPriceMinor], $line);
+        }
+
+        // Words that merely contain "off" are still part of the name.
+        $this->assertSame('Shoulder off top', $this->parser->parseItem('Shoulder off top @ 5000')?->description);
+        $this->assertNull($this->parser->parseItem('Shoulder off top @ 5000')?->listPriceMinor);
+    }
+
+    public function test_item_discount_mistakes_get_a_clear_message(): void
+    {
+        $this->assertStringContainsString("doesn't split evenly", (string) $this->parser->readItem('3x Ankara @ 7500 less 1000 total'));
+        $this->assertStringContainsString('/discount = 1000', (string) $this->parser->readItem('3x Ankara @ 7500 less 1000 total'));
+        $this->assertStringContainsString('as much as the price', (string) $this->parser->readItem('Ankara @ 7500 less 7500'));
+        $this->assertStringContainsString('less than 100%', (string) $this->parser->readItem('Ankara @ 7500 less 100%'));
+        $this->assertStringContainsString('add the price', (string) $this->parser->readItem('Ankara less 500'));
+        $this->assertStringContainsString('not both', (string) $this->parser->readItem('Cap @ 4000 was 5000 less 100'));
+
+        $r = $this->parser->parse('/item = 3x Ankara @ 7500 less 1000 total | Gele @ 5000');
+        $this->assertCount(1, $r->items);
+        $this->assertCount(1, $r->errors);
     }
 }

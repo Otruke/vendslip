@@ -5,7 +5,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { z } from 'zod'
 import { isStrongPassword } from '@/lib/password'
 import { AuthLayout } from '@/components/layout/AuthLayout'
-import { Alert, Button, Checkbox, Input, PasswordChecklist } from '@/components/ui'
+import { Button, Checkbox, FormError, Input, PasswordChecklist } from '@/components/ui'
 import { LegalAgreement } from '@/pages/public/Legal'
 import { apiPost } from '@/hooks/queries'
 import { resetCsrf } from '@/lib/api'
@@ -49,7 +49,7 @@ export default function Register() {
   return (
     <AuthLayout title="Start free" subtitle="15 slips a month on us. No card needed." footer={<>Already have an account? <Link to="/login" className="font-semibold text-vendslip-primary">Sign in</Link></>}>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
-        {formError && <Alert tone="danger">{formError}</Alert>}
+        {formError && <FormError>{formError}</FormError>}
         <Input label="Business name" placeholder="Ada’s Closet" error={errors.business_name?.message} {...register('business_name')} />
         <div className="grid gap-4 sm:grid-cols-2">
           <Input label="Your name" autoComplete="name" error={errors.name?.message} {...register('name')} />

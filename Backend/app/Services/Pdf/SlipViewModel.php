@@ -31,7 +31,7 @@ final class SlipViewModel
         $verifyUrl = Urls::verify($document->verification_hash);
         $payUrl = $document->doc_type === DocumentType::INVOICE && $document->balance_due_minor > 0
             && ($merchant->hasFlutterwave() || $merchant->hasNowPayments())
-            ? Urls::pay($document->public_uid) : null;
+            ? ($document->short_code !== null ? $document->shareUrl() : Urls::pay($document->public_uid)) : null; // previews of unsaved samples have no code
 
         $logoPath = $merchant->logoAbsolutePath();
         $logo = $logoPath !== null ? 'data:'.(mime_content_type($logoPath) ?: 'image/png').';base64,'.base64_encode((string) file_get_contents($logoPath)) : null;

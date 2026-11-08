@@ -15,9 +15,12 @@ use App\Services\Bot\BotOrchestrator;
 use App\Services\Bot\InboundMessage;
 use App\Services\Bot\SummaryFormatter;
 use App\Services\Security\AuditLogger;
+use App\Services\Pdf\SlipRenderer;
 use App\Services\Settings\PlatformSettings;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Throwable;
 
 /**
  * POST /api/v1/webhooks/telegram — Telegram Bot API 10.3.
@@ -208,23 +211,35 @@ final class Telegram103WebhookHandler
     private function deliver(DeliverSlip $action, InboundMessage $message): void
     {
         $extra = $this->ephemeral->ephemeralParams($message);
-        $keyboard = $this->builder->verifyKeyboard($action);
+        $keyboard = TelegramRichMessageBuilder::publicUrl($action->shareUrl !== '' ? $action->shareUrl : $action->verifyUrl)
+            ? ['reply_markup' => $this->builder->verifyKeyboard($action)]
+            : [];
         $rich = (bool) $this->config['rich_messages'] && (bool) config('vendslip.telegram.rich_messages', true);
 
-        $result = $rich
-            ? $this->api->call('sendRichMessage', ['chat_id' => $message->externalChatId, 'rich_message' => $this->builder->delivery($action), 'reply_markup' => $keyboard, ...$extra])
+        // 1. Rich message with the PDF embedded (Telegram fetches the file from our public address).
+        $result = $rich && TelegramRichMessageBuilder::publicUrl($action->pdfUrl)
+            ? $this->api->call('sendRichMessage', ['chat_id' => $message->externalChatId, 'rich_message' => $this->builder->delivery($action), ...$keyboard, ...$extra])
             : ['ok' => false];
+        // 2. The PDF uploaded straight from here: works even when Telegram can't reach our server.
         if (! $result['ok']) {
-            $result = $this->api->call('sendDocument', [
-                'chat_id' => $message->externalChatId,
-                'document' => $action->pdfUrl,
-                'caption' => mb_substr($action->caption, 0, 1024),
-                'reply_markup' => $keyboard,
-                ...$extra,
-            ]);
+            try {
+                $pdf = app(SlipRenderer::class)->content($action->document);
+            } catch (Throwable $e) {
+                Log::warning('telegram.pdf_render_failed', ['document' => $action->document->id, 'error' => $e->getMessage()]);
+                $pdf = null;
+            }
+            if ($pdf !== null) {
+                $result = $this->api->upload('sendDocument', [
+                    'chat_id' => $message->externalChatId,
+                    'caption' => mb_substr($action->caption, 0, 1024),
+                    ...$keyboard,
+                    ...$extra,
+                ], 'document', $pdf, $action->filename);
+            }
         }
+        // 3. Text only: the caption carries the short link to view and download.
         if (! $result['ok']) {
-            $this->api->call('sendMessage', ['chat_id' => $message->externalChatId, 'text' => $action->caption."\n📄 ".$action->pdfUrl, ...$extra]);
+            $this->api->call('sendMessage', ['chat_id' => $message->externalChatId, 'text' => $action->caption, ...$keyboard, ...$extra]);
         }
     }
 

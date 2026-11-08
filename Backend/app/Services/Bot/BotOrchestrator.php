@@ -30,6 +30,7 @@ use App\Services\Slash\SlashCommandParser;
 use App\Support\Money;
 use App\Support\Urls;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\URL;
 use Throwable;
 
@@ -287,17 +288,18 @@ final class BotOrchestrator
             && ($merchant->hasFlutterwave() || $merchant->hasNowPayments())
             ? Urls::pay($document->public_uid) : null;
 
-        $caption = "{$label} {$document->doc_number} · {$total}\nFor {$document->customer_name}\nVerify: ".Urls::verify($document->verification_hash);
-        if ($payUrl !== null) {
-            $caption .= "\nPay online: {$payUrl}";
-        }
+        // One short link on the web app's own address: the customer views, downloads and (invoices) pays there.
+        $shareUrl = $document->shareUrl();
+        $caption = "{$label} {$document->doc_number} · {$total}\nFor {$document->customer_name}\n"
+            .($payUrl !== null ? 'View & pay: ' : 'View & download: ').$shareUrl;
 
         return new DeliverSlip(
             session: $claimed->refresh(),
             document: $document,
             pdfUrl: URL::temporarySignedRoute('documents.public-pdf', now()->addMinutes((int) config('vendslip.pdf.signed_url_minutes')), ['uid' => $document->public_uid]),
             verifyUrl: Urls::verify($document->verification_hash),
-            payUrl: $payUrl,
+            payUrl: $payUrl !== null ? $shareUrl : null,
+            shareUrl: $shareUrl,
             caption: $caption,
             filename: $document->doc_number.'.pdf',
         );
@@ -372,10 +374,18 @@ final class BotOrchestrator
         if ($code === '') {
             return new SendText('Send /link followed by the code from your dashboard, e.g. /link K7P2QX9A', true);
         }
+        // A chat can't keep guessing codes: 5 wrong tries, then a 15-minute pause.
+        $limitKey = 'bot-link:'.$message->channel->value.':'.$message->externalUserId;
+        if (RateLimiter::tooManyAttempts($limitKey, 5)) {
+            return new SendText('Too many wrong codes. Wait '.max(1, (int) ceil(RateLimiter::availableIn($limitKey) / 60)).' minutes, then send a fresh code from Dashboard → Channels.', true);
+        }
         $identity = $this->identities->link($message->channel, $message->externalUserId, $message->displayName, $code);
         if ($identity === null) {
+            RateLimiter::hit($limitKey, 900);
+
             return new SendText('That code is invalid or expired. Get a fresh one in Dashboard → Channels.', true);
         }
+        RateLimiter::clear($limitKey);
         $identity->load('user.merchant');
 
         return new SendText(BotTexts::linked((string) $identity->user->merchant?->name, $identity->user->name));

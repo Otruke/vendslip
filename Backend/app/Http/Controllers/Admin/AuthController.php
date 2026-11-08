@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Admin;
 
 use App\Enums\AuditSeverity;
+use App\Http\Controllers\Api\V1\AuthController as ApiAuthController;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Services\Security\AuditLogger;
@@ -39,18 +40,25 @@ final class AuthController extends Controller
     public function login(Request $request): RedirectResponse
     {
         $data = $request->validate(['email' => ['required', 'email'], 'password' => ['required', 'string']]);
+        // Limited per address AND per account, so spreading attempts over many IPs doesn't help.
         $key = 'admin-login:'.$request->ip();
-        if (RateLimiter::tooManyAttempts($key, 5)) {
-            throw ValidationException::withMessages(['email' => 'Too many attempts. Try again in '.RateLimiter::availableIn($key).' seconds.']);
+        $accountKey = 'admin-login-account:'.sha1(mb_strtolower($data['email']));
+        foreach ([$key => 5, $accountKey => 5] as $limitKey => $max) {
+            if (RateLimiter::tooManyAttempts($limitKey, $max)) {
+                throw ValidationException::withMessages(['email' => 'Too many attempts. Try again in '.RateLimiter::availableIn($limitKey).' seconds.']);
+            }
         }
 
         $user = User::query()->where('email', mb_strtolower($data['email']))->first();
-        if ($user === null || ! Hash::check($data['password'], $user->password) || ! $user->is_active || ! $user->isPlatformStaff()) {
+        $passwordOk = Hash::check($data['password'], $user !== null ? $user->password : ApiAuthController::dummyHash());
+        if ($user === null || ! $passwordOk || ! $user->is_active || ! $user->isPlatformStaff()) {
             RateLimiter::hit($key, 300);
+            RateLimiter::hit($accountKey, 900);
             $this->audit->log('admin.login_failed', $user, null, ['email' => mb_strtolower($data['email'])], AuditSeverity::WARNING);
             throw ValidationException::withMessages(['email' => 'These credentials do not match an administrator account.']);
         }
         RateLimiter::clear($key);
+        RateLimiter::clear($accountKey);
 
         if ($user->hasTwoFactorEnabled()) {
             $request->session()->put(self::PENDING, $user->id);

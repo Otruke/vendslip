@@ -56,13 +56,14 @@ abstract class AbstractMessagingSender implements MetaChannelSender
 
     public function slip(string $to, DeliverSlip $action): bool
     {
-        $this->text($to, $action->caption);
+        // The caption carries the short link, so the customer can always open the slip even if the file can't attach.
+        $sent = $this->text($to, $action->caption);
         if ((bool) ($this->config['attach_pdf'] ?? true)
             && $this->send($to, ['attachment' => ['type' => 'file', 'payload' => ['url' => $action->pdfUrl, 'is_reusable' => false]]])) {
             return true;
         }
 
-        return $this->text($to, '📄 Download your slip: '.$action->pdfUrl);
+        return $sent;
     }
 
     /** @param array<string, mixed> $message */
